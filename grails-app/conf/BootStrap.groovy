@@ -45,7 +45,7 @@ class BootStrap {
             Role regSecRole = Role.findByAuthority("ROLE_REGISTRATION_SECRETARY")
             Role clubSecRole = Role.findByAuthority("ROLE_CLUB_SECRETARY")
             Role readOnlyRole = Role.findByAuthority("ROLE_READ_ONLY")
-            regSecUser = new User(username: "admin@gmail.com", enabled: true, password: "password").save(flush: true)
+            regSecUser = new User(username: "admin@gmail.com", enabled: true, password: "bwp1reg5ystem").save(flush: true)
             UserRole.create(regSecUser, regSecRole, true)
             UserRole.create(regSecUser, clubSecRole, true)
             UserRole.create(regSecUser, readOnlyRole, true)
