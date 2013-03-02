@@ -8,10 +8,13 @@ import org.apache.commons.lang.StringUtils
 
 public class ASAMemberDataRetrieval {
 
+    public static final String ASA_MEMBERSHIP_CHECK_URL = "https://www.swimmingresults.org/membershipcheck/member_details.php"
+    public static final String ASA_NUMBER_PARAMETER_NAME = "myiref"
+
     private final String url
 
     public ASAMemberDataRetrieval() {
-        this("https://www.swimmingresults.org/membershipcheck/member_details.php")
+        this(ASA_MEMBERSHIP_CHECK_URL)
     }
 
     protected ASAMemberDataRetrieval(String url) {
@@ -24,7 +27,7 @@ public class ASAMemberDataRetrieval {
         final HTTPBuilder http = new HTTPBuilder(url)
         try {
 
-            final GPathResult html = http.get(query: [tiref: Integer.toString(asaNumber)])
+            final GPathResult html = http.get(query: ["$ASA_NUMBER_PARAMETER_NAME": Integer.toString(asaNumber)])
             GPathResult element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
             if (element == null) {
                 throw new ASAMemberDataRetrievalException("Error getting data for ASA number: $asaNumber. Error reading html data.")

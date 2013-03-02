@@ -1,4 +1,5 @@
 <%@ page import="org.bwpl.registration.validation.Status" %>
+<%@ page import="org.bwpl.registration.asa.ASAMemberDataRetrieval" %>
 <div id="registrations">
     <table class="bwpl-table">
         <thead>
@@ -23,7 +24,7 @@
         <g:each in="${registrations}" var="r">
             <tr class="${r.statusAsEnum.toString().toLowerCase()}">
                 <td><g:link controller="registration" action="show" id="${r.id}">${r.name}</g:link></td>
-                <td><a href="https://www.swimmingresults.org/membershipcheck/member_details.php?tiref=${r.asaNumber}">${r.asaNumber}</a></td>
+                <td><a href="${ASAMemberDataRetrieval.ASA_MEMBERSHIP_CHECK_URL}?${ASAMemberDataRetrieval.ASA_NUMBER_PARAMETER_NAME}=${r.asaNumber}">${r.asaNumber}</a></td>
                 <td>${r.role}</td>
                 <td>${r.registrationDateAsString}</td>
                 <g:if test="${controllerName == "registration"}">
