@@ -13,8 +13,14 @@
             </g:else>
         </tr>
         <tr>
-            <td>Role:</td><td><input type="text" disabled="true" name="role" value="${r?.role}"/></td>
-            <td>ASA Number:</td><td><input type="text" disabled="true" name="asaNumber" value="${r?.asaNumber}"/></td>
+            <g:if test="${(Status.INVALID == r?.statusAsEnum) && (!r?.hasBeenValidated())}">
+                <td>Role:</td><td><g:select name="role" from="${["Player", "Coach"]}" value="${r?.role}"/></td>
+                <td>ASA Number:</td><td><g:textField name="asaNumber" required="true" value="${r?.asaNumber}"/></td>
+            </g:if>
+            <g:else>
+                <td>Role:</td><td><input type="text" disabled="true" name="role" value="${r?.role}"/></td>
+                <td>ASA Number:</td><td><input type="text" disabled="true" name="asaNumber" value="${r?.asaNumber}"/></td>
+            </g:else>
         </tr>
         <tr>
             <td>Reg date:</td><td><input type="text" disabled="true" name="registrationDate" value="${r?.registrationDateAsString}"/></td>
