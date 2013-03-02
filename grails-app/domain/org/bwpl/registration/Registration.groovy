@@ -1,0 +1,133 @@
+package org.bwpl.registration
+
+import org.bwpl.registration.validation.Action
+import org.bwpl.registration.validation.Status
+import org.bwpl.registration.utils.DateTimeUtils
+
+class Registration {
+
+    static final String csvFieldNames =
+        "\"Firstname\",\"Lastname\",\"ASA number\",\"Role\",\"Registration date\",\"Status\",\"Notes\""
+
+    static mapping = {
+        cache true
+        statusEntries cache: true
+    }
+
+    static constraints = {
+
+        asaNumber(validator: { it > 0 })
+        firstName(blank: false)
+        lastName(blank: false)
+        role(inList: ["Player", "Coach"])
+        status(blank: false, inList: ["Invalid", "Valid", "Deleted"])
+    }
+
+    static belongsTo = [team: Team]
+    static hasMany = [statusEntries: RegistrationStatus]
+
+    Integer asaNumber
+    String firstName
+    String lastName
+    String role
+    Date registrationDate
+    String status
+    String statusNote
+
+    String getName() {
+        return "$firstName $lastName"
+    }
+
+    String getRegistrationDateAsString() {
+        return DateTimeUtils.printDate(registrationDate)
+    }
+
+    Status getStatusAsEnum() {
+        return Status.fromString(status)
+    }
+
+    String getStatusNote() {
+        return statusNote
+    }
+
+    @Override
+    String toString() {
+        return name
+    }
+
+    String toCsvString() {
+
+        StringBuilder sb = new StringBuilder()
+        sb << "\"$firstName\","
+        sb << "\"$lastName\","
+        sb << "\"$asaNumber\","
+        sb << "\"$role\","
+        sb << "\"$registrationDateAsString\","
+        sb << "\"${statusAsEnum.toString()}\","
+        sb << "\"$statusNote\""
+        return sb.toString()
+    }
+
+    List<RegistrationStatus> getStatusEntriesAsList() {
+
+        if (this.statusEntries == null) return []
+        List<RegistrationStatus> statusEntries = new ArrayList<RegistrationStatus>(this.statusEntries)
+        statusEntries.sort { a, b ->
+            return b.date <=> a.date
+        }
+        return statusEntries
+    }
+
+    RegistrationStatus getCurrentStatus() {
+
+        if (this.statusEntries == null) return null
+        List<RegistrationStatus> statusEntries = getStatusEntriesAsList()
+        return statusEntries.head()
+    }
+
+    void updateStatus(User user, Action action, Status status, String notes) {
+
+        RegistrationStatus currentEntry = currentStatus
+        boolean doAddNewStatus = doAddNewStatus(currentStatus, action, status)
+        if (doAddNewStatus) {
+
+            Date dateStamp = new Date()
+            if (action == Action.ADDED) registrationDate = dateStamp
+            RegistrationStatus newEntry = new RegistrationStatus()
+            newEntry.date = dateStamp
+            newEntry.user = user
+            newEntry.actionAsEnum = action
+            newEntry.statusAsEnum = status
+            newEntry.notes = notes
+            addToStatusEntries(newEntry)
+            this.status = status.toString()
+            this.statusNote = notes
+        }
+        else {
+
+            currentEntry.date = new Date()
+            currentEntry.user = user
+            currentEntry.actionAsEnum = action
+            currentEntry.notes = notes
+            this.statusNote = notes
+        }
+    }
+
+    boolean hasBeenValidated() {
+
+        if (this.statusEntries == null) return false
+        RegistrationStatus registrationStatus = statusEntries.find {it.statusAsEnum == Status.VALID}
+        return registrationStatus != null
+    }
+
+    private static boolean doAddNewStatus(RegistrationStatus currentStatus, Action newAction, Status newStatus) {
+
+        if (currentStatus == null) return true
+        if (currentStatus.actionAsEnum == Action.ADDED) {
+            if (newAction != Action.ADDED) {
+                return true
+            }
+        }
+        return currentStatus.statusAsEnum != newStatus
+    }
+}

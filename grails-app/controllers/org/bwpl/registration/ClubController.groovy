@@ -1,0 +1,239 @@
+package org.bwpl.registration
+
+import org.bwpl.registration.upload.TeamUploader
+
+import org.apache.commons.lang.StringUtils
+import grails.plugins.springsecurity.Secured
+import org.bwpl.registration.nav.NavItems
+import org.bwpl.registration.utils.SecurityUtils
+import org.bwpl.registration.validation.RegistrationStats
+import org.bwpl.registration.upload.UploadException
+import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.CsvWriter
+
+import org.bwpl.registration.validation.Status
+import org.apache.commons.lang.RandomStringUtils
+
+class ClubController {
+
+    static defaultAction = "list"
+    NavItems nav
+    SecurityUtils securityUtils
+
+    def list = {
+
+        List<Club> clubs = Club.list()
+        clubs.sort{it.name}
+        int maxListSize = getMaxListSize(clubs.size(), 3)
+        List<List<Club>> clubLists = clubs.collate(maxListSize)
+
+        [user: securityUtils.currentUser,
+         navItems: nav.getNavItems(),
+         clubLists: clubLists,
+         userClub: securityUtils.currentUserClub]
+    }
+
+    @Secured(["ROLE_READ_ONLY"])
+    def show = {
+
+        Club club = Club.get(params.id)
+        List<Team> teams = new ArrayList<Team>(club.teams)
+        teams.sort{it.name}
+        List<Registration> registrations = getRegistrations(club, params.rfilter)
+        boolean hasAnyRegistrations = !club.registrations.isEmpty()
+        boolean canUpdate = securityUtils.canUserUpdate(club)
+        boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
+        boolean doDisplayValidateButton = canUpdate && !registrations.isEmpty() && !params.rfilter
+
+        def model = [user: securityUtils.currentUser,
+                     title: club.name,
+                     navItems: nav.getNavItems(),
+                     subNavItems: nav.getClubNavItems(club, params.rfilter),
+                     club: club,
+                     userClub: securityUtils.currentUserClub,
+                     teams: teams,
+                     hasAnyRegistrations: hasAnyRegistrations,
+                     registrations: registrations,
+                     stats: new RegistrationStats(registrations),
+                     canUpdate: canUpdate,
+                     isUserRegistrationSecretary: isUserRegistrationSecretary,
+                     doDisplayValidateButton: doDisplayValidateButton]
+
+        if ("deleted" == params.rfilter) {
+            return model
+        }
+        else if ((teams.size() > 1) && (!registrations.isEmpty())) {
+            return model
+        }
+        else {
+            redirect([controller: "team", action: "show", id: teams[0].id])
+        }
+    }
+
+    @Secured(["ROLE_READ_ONLY"])
+    def export = {
+
+        Club club = Club.get(params.id)
+        String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
+        String fileName = "bwpl-registrations-${club.nameAsMungedString}-${dateTimeStamp}.csv"
+        response.setHeader("Content-disposition", "attachment; filename=$fileName")
+        response.contentType = "text/csv"
+        response.outputStream << CsvWriter.csvFieldNames << "\n"
+        response.outputStream << CsvWriter.getRegistrationsAsCsvString(club) << "\n"
+        response.flushBuffer()
+    }
+
+    @Secured(["ROLE_REGISTRATION_SECRETARY"])
+    def upload = {
+        [user: securityUtils.currentUser,
+         title: "Upload Club data",
+         navItems: nav.getNavItems()]
+    }
+
+    @Secured(["ROLE_REGISTRATION_SECRETARY"])
+    def uploadClubData = {
+
+        try {
+            def f = request.getFile("clubs")
+            new TeamUploader().upload(f)
+            flash.message = "Successfully uploaded team data"
+        }
+        catch (UploadException e) {
+            flash.errors = e.message
+        }
+        redirect(action: "list")
+    }
+
+    @Secured(["ROLE_REGISTRATION_SECRETARY"])
+    def create = {
+        render(view: "edit", model: [user: securityUtils.currentUser,
+                                     title: "Add Club",
+                                     navItems: nav.getNavItems()])
+    }
+
+    @Secured(["ROLE_REGISTRATION_SECRETARY"])
+    def edit = {
+
+        Club club = Club.get(params.id)
+        [user: securityUtils.currentUser,
+         title: "Edit Club",
+         navItems: nav.getNavItems(),
+         clubInstance: club]
+    }
+
+    @Secured(["ROLE_REGISTRATION_SECRETARY"])
+    def updateAndReturnToList = {
+
+        updateData(params)
+        redirect(action: "list")
+    }
+
+    @Secured(["ROLE_REGISTRATION_SECRETARY"])
+    def update = {
+
+        Club club = updateData(params)
+        flash.message = "${club.name} updated"
+        redirect(action: "edit", params: [id: club.id])
+    }
+
+    @Secured(["ROLE_REGISTRATION_SECRETARY"])
+    def delete = {
+
+        Club c = Club.get(params.id)
+        c.delete()
+        redirect(action: "list")
+    }
+
+    private static Club updateData(def params) {
+
+        Club club = null
+        List<Team> teams = null
+        List<User> secretaries = null
+
+        if (StringUtils.isEmpty(params.id)) {
+            club = new Club()
+            teams = []
+            secretaries = []
+        }
+        else {
+            club = Club.get(params.id)
+            teams = new ArrayList<Team>(club.teams)
+            secretaries = new ArrayList<User>(club.secretaries)
+        }
+
+        club.name = params["club-name"]
+        club.asaName = params["club-asaName"]
+
+        secretaries.each { sec ->
+            if (params["secretary-delete-$sec.id"]) {
+                club.removeFromSecretaries(sec)
+            }
+            else {
+                sec.with {
+                    firstname = params["secretary-firstname-$sec.id"]
+                    lastname = params["secretary-lastname-$sec.id"]
+                    username = params["secretary-email-$sec.id"]
+                }
+            }
+        }
+        if (StringUtils.isNotBlank(params["secretary-email-new"])) {
+            User sec = new User()
+            sec.with {
+                firstname = params["secretary-firstname-new"]
+                lastname = params["secretary-lastname-new"]
+                username = params["secretary-email-new"]
+                password = "password" //TODO RandomStringUtils.random(10, true, true)
+                accountLocked = false
+                passwordExpired = false
+                enabled = true
+            }
+            sec.save()
+            Role clubSecRole = Role.findByAuthority("ROLE_CLUB_SECRETARY")
+            Role readOnlyRole = Role.findByAuthority("ROLE_READ_ONLY")
+            UserRole.create(sec, clubSecRole)
+            UserRole.create(sec, readOnlyRole)
+            club.addToSecretaries(sec)
+        }
+
+        teams.each { t ->
+            if (params["team-delete-$t.id"]) {
+                club.removeFromTeams(t)
+            }
+            else {
+                t.name = params["team-name-$t.id"]
+                t.isMale = "M".equals(params["team-gender-$t.id"])
+                t.division = Integer.parseInt(params["team-division-$t.id"])
+            }
+        }
+        if (StringUtils.isNotBlank(params["team-name-new"])) {
+            Team newTeam = new Team()
+            newTeam.name = params["team-name-new"]
+            newTeam.isMale = "M".equals(params["team-gender-new"])
+            newTeam.division = Integer.parseInt(params["team-division-new"])
+            club.addToTeams(newTeam)
+        }
+
+        club.save()
+        return club
+    }
+
+    private static int getMaxListSize(int countOfClubs, int countOfLists) {
+
+        int maxListSize = countOfClubs.intdiv(countOfLists)
+        int remainder = countOfClubs.mod(countOfLists)
+        if (remainder > 0) return maxListSize + 1
+        return maxListSize
+    }
+
+    private static List<Registration> getRegistrations(Club club, String registrationFilter) {
+
+        List<Registration> registrations = []
+        if ("deleted".equals(registrationFilter)) {
+            registrations = new ArrayList<Registration>(club.registrations.findAll{it.statusAsEnum == Status.DELETED})
+        }
+        else {
+            registrations = new ArrayList<Registration>(club.registrations.findAll{it.statusAsEnum != Status.DELETED})
+        }
+        return registrations.sort{it.name}
+    }
+}

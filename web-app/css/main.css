@@ -1,0 +1,335 @@
+/* fonts */
+body, input, select, textarea {
+    font-size: 14px;
+    font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+}
+
+.float {
+    float: left;
+}
+
+/* Headings */
+
+h1 {
+    color: #000000;
+    font-weight: bold;
+    font-size: 18px;
+    padding: 0 1px 0 0;
+}
+
+h2 {
+    color: #000000;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 0 1px 0 0;
+}
+
+/* Tables */
+
+.bwpl-header {
+    border-width: 0;
+    border-collapse: collapse;
+}
+
+.bwpl-header table th, table td {
+    padding-top: 0;
+    padding-bottom: 0;
+    border-width: 0;
+}
+
+.bwpl-header td {
+    padding-right: 10px;
+}
+
+.bwpl-table {
+    font-size: 12px;
+    color: #333333;
+    border-width: 1px;
+    border-color: #000000;
+    border-collapse: collapse;
+}
+
+.bwpl-table th {
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #000000;
+    background-color: #dedede;
+    text-align: left;
+}
+
+.bwpl-table tr {
+    background-color: #ffffff;
+}
+
+.bwpl-table tr.invalid {
+    background-color: #ff7256;
+}
+
+.bwpl-table tr.valid {
+    background-color: #ffffff;
+}
+
+.bwpl-table tr.deleted {
+    background-color: #99CCFF;
+}
+
+.bwpl-table td {
+    vertical-align: top;
+    border-width: 1px;
+    padding: 8px;
+    border-style: solid;
+    border-color: #666666;
+}
+
+.bwpl-form-table {
+    font-size: 14px;
+    color: #333333;
+    border-width: 1px;
+    border-color: #666666;
+    border-collapse: collapse;
+}
+
+.bwpl-form-table th {
+    border-width: 1px;
+    padding: 8px;
+    background-color: #ffffff;
+    text-align: left;
+}
+
+.bwpl-form-table tr {
+    background-color: #ffffff;
+}
+
+.bwpl-form-table td {
+    vertical-align: top;
+    border-width: 1px;
+    padding: 8px;
+}
+
+/* Nav Bar */
+
+.bwpl-nav {
+    overflow: hidden;
+}
+
+.bwpl-nav ul {
+    padding-left: 0;
+    margin-left: 0;
+    background-color: #036;
+    color: White;
+    float: left;
+}
+
+.bwpl-nav ul li {
+    font-size: 14px;
+    display: inline;
+}
+
+.bwpl-nav ul li a {
+    padding: 0.2em 1em;
+    background-color: #036;
+    color: White;
+    text-decoration: none;
+    float: left;
+    border-right: 2px solid #fff;
+}
+
+.bwpl-nav ul li a:hover {
+    background-color: #369;
+    color: #fff;
+}
+
+/* Team Menu Tabs */
+
+.bwpl-tabs {
+    padding: 3px 0;
+    margin-left: 0;
+    border-bottom: 1px solid #778;
+    font: 12px Verdana, sans-serif;
+}
+
+.bwpl-tabs li {
+    list-style: none;
+    margin: 0;
+    display: inline;
+}
+
+.bwpl-tabs li a {
+    padding: 3px 0.5em;
+    margin-left: 0px;
+    border: 1px solid #778;
+    border-bottom: none;
+    background: #DDE;
+    text-decoration: none;
+}
+
+.bwpl-tabs li a:link { color: #448; }
+.bwpl-tabs li a:visited { color: #448; }
+
+.bwpl-tabs li a:hover {
+    color: #000;
+    background: #AAE;
+    border-color: #227;
+}
+
+.bwpl-tabs li a#current {
+    font-weight: bold;
+    background: white;
+    border-bottom: 1px solid white;
+}
+
+/* Club List */
+
+.bwpl-club-list ul {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.bwpl-club-list li {
+    list-style: square;
+    margin: 0;
+    padding: 0.25em;
+}
+
+a {
+    text-decoration: none;
+    color: #00008b;
+}
+
+a:visited {
+    text-decoration: none;
+    color: #00008b;
+}
+
+a:hover {
+    text-decoration: underline;
+    color: blue;
+}
+
+
+/* Forms */
+
+fieldset {
+    margin: 0.6em 1.25em 0 1.25em;
+    padding: 0.3em 1.8em 1.25em;
+    position: relative;
+    zoom: 1;
+    border: none;
+}
+
+input, select, textarea {
+    background-color: #fcfcfc;
+    border: 1px solid #cccccc;
+    font-size: 14px;
+    padding: 0.2em 0.4em;
+}
+
+select {
+    padding: 0.2em 0.2em 0.2em 0;
+}
+
+select[multiple] {
+    vertical-align: top;
+}
+
+textarea {
+    overflow: auto; /* IE always renders vertical scrollbar without this */
+    vertical-align: top;
+}
+
+input[type=checkbox], input[type=radio] {
+    background-color: transparent;
+    border: 0;
+    padding: 0;
+}
+
+input:focus, select:focus, textarea:focus {
+    background-color: #ffffff;
+    border: 1px solid #eeeeee;
+    outline: 0;
+    -moz-box-shadow: 0 0 0.5em #ffffff;
+    -webkit-box-shadow: 0 0 0.5em #ffffff;
+    box-shadow: 0 0 0.5em #ffffff;
+}
+
+.required-indicator {
+    color: #48802C;
+    display: inline-block;
+    font-weight: bold;
+    margin-left: 0.3em;
+    position: relative;
+    top: 0.1em;
+}
+
+/* Buttons */
+
+.buttons {
+    background-color: #036;
+    border: 1px solid #29447E;
+    font-size: 14px;
+    font-weight: normal;
+    padding: 4px 6px;
+    height: 24px;
+    color: #fff;
+}
+
+.buttons:hover {
+    background-color: #369;
+    color: #fff;
+}
+
+/* Messages and Errors */
+
+.errors,
+.message {
+    font-size: 0.8em;
+    line-height: 2;
+    margin: 1em 2em;
+    padding: 0.25em;
+}
+
+.message {
+    background: #f3f3ff;
+    border: 1px solid #b2d1ff;
+    color: #006dba;
+}
+
+.errors {
+    background: #fff3f3;
+    border: 1px solid #ffaaaa;
+    color: #cc0000;
+}
+
+.errors li {
+    list-style: none;
+}
+
+
+/* form fields with errors */
+
+.error input, .error select, .error textarea {
+    background: #fff3f3;
+    border-color: #ffaaaa;
+    color: #cc0000;
+}
+
+.error input:focus, .error select:focus, .error textarea:focus {
+    -moz-box-shadow: 0 0 0.5em #ffaaaa;
+    -webkit-box-shadow: 0 0 0.5em #ffaaaa;
+    box-shadow: 0 0 0.5em #ffaaaa;
+}
+
+/* same effects for browsers that support HTML5 client-side validation (these have to be specified separately or IE will ignore the entire rule) */
+
+input:invalid, select:invalid, textarea:invalid {
+    background: #fff3f3;
+    border-color: #ffaaaa;
+    color: #cc0000;
+}
+
+input:invalid:focus, select:invalid:focus, textarea:invalid:focus {
+    -moz-box-shadow: 0 0 0.5em #ffaaaa;
+    -webkit-box-shadow: 0 0 0.5em #ffaaaa;
+    box-shadow: 0 0 0.5em #ffaaaa;
+}
