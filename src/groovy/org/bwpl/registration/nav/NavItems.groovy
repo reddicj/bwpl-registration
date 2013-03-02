@@ -30,6 +30,7 @@ class NavItems {
 
         List<NavItem> navItems = []
         if (team == null) return
+        if (team.club.teams.size() == 1) navItems << NavItem.getExportClubRegistrations(team.club.id)
         if (securityUtils.canUserUpdate(team.club)) {
             navItems << NavItem.getUploadRegistrations(team.id)
             navItems << NavItem.getAddRegistration(team.id)
