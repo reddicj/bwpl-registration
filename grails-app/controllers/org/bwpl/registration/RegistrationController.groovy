@@ -98,6 +98,8 @@ class RegistrationController {
 
         if (StringUtils.isNotBlank(params["firstName"])) r.firstName = params["firstName"]
         if (StringUtils.isNotBlank(params["lastName"])) r.lastName = params["lastName"]
+        if (StringUtils.isNotBlank(params["role"])) r.role = params["role"]
+        if (StringUtils.isNotBlank(params["asaNumber"])) r.asaNumber = Integer.parseInt(params["asaNumber"])
 
         if (securityUtils.isCurrentUserRegistrationSecretary()) {
             Status status = Status.fromString(params["status"])
