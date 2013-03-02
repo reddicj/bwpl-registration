@@ -17,9 +17,9 @@ class RegistrationTeamDataHandler implements CsvHandler {
 
     void processTokens(int lineNumber, String[] values) {
 
-        String errors = getErrors(lineNumber, values)
+        String errors = getErrors(values)
         if (!errors.isEmpty()) {
-            throw new UploadException("Error reading registration data --> $errors")
+            throw new UploadException("Error reading registration data --> Line $lineNumber: $errors")
         }
 
         String firstName = WordUtils.capitalize(values[0])
@@ -41,29 +41,29 @@ class RegistrationTeamDataHandler implements CsvHandler {
         team.save()
     }
 
-    private String getErrors(int lineNumber, String[] values) {
+    private String getErrors(String[] values) {
 
         if (values.length != fieldNames.size()) {
 
             String expected = "Expected fields: ${fieldNames.join(", ")}"
             String actual = "Actual fields: ${values.join(", ")}"
-            return "Line $lineNumber: $expected, $actual"
+            return "$expected, $actual"
         }
         else {
 
             List<String> errors = []
 
-            checkForNullOrEmptyValue(lineNumber, "Firstname", values[0], errors)
-            checkValueIsAlpha(lineNumber, "Firstname", values[0], errors)
+            checkForNullOrEmptyValue("Firstname", values[0], errors)
+            checkValueIsAlpha("Firstname", values[0], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Lastname", values[1], errors)
-            checkValueIsAlpha(lineNumber, "Lastname", values[1], errors)
+            checkForNullOrEmptyValue("Lastname", values[1], errors)
+            checkValueIsAlpha("Lastname", values[1], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "ASA number", values[2], errors)
-            checkValueIsNumeric(lineNumber, "ASA number", values[2], errors)
+            checkForNullOrEmptyValue("ASA number", values[2], errors)
+            checkValueIsNumeric("ASA number", values[2], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Role", values[3], errors)
-            checkValueInList(lineNumber, "Role", values[3], ["Player", "Coach"], errors)
+            checkForNullOrEmptyValue("Role", values[3], errors)
+            checkValueInList("Role", values[3], ["Player", "Coach"], errors)
 
             return errors.join(", ")
         }

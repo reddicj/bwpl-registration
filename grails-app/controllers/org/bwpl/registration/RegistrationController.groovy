@@ -1,5 +1,7 @@
 package org.bwpl.registration
 
+import static org.bwpl.registration.utils.ValidationUtils.*
+
 import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.utils.SecurityUtils
@@ -65,6 +67,16 @@ class RegistrationController {
     def add = {
 
         Team t = Team.get(params.teamId)
+        String errors = getRegistrationFormErrors(params)
+
+        if (!errors.isEmpty()) {
+            flash.errors = "Error adding registration for $t.name ($t.club.name) --> $errors"
+            def redirectParams = [teamId: params.teamId, firstName: params["firstName"], lastName: params["lastName"],
+                                  role: params["role"], asaNumber: params["asaNumber"]]
+            redirect(action: "create", params: redirectParams)
+            return
+        }
+
         Registration r = new Registration()
         r.firstName = params["firstName"]
         r.lastName = params["lastName"]
@@ -73,6 +85,8 @@ class RegistrationController {
         r.updateStatus(securityUtils.currentUser, Action.ADDED, Status.INVALID, "")
         t.addToRegistrations(r)
         t.save()
+
+        flash.message = "Registration $r.name for $r.team.name ($r.team.club.name) added."
         redirect(controller: "team", action: "show", id: t.id)
     }
 
@@ -81,6 +95,13 @@ class RegistrationController {
 
         Team t = Team.get(params.teamId)
         Registration r = Registration.get(params.id)
+        String errors = getRegistrationFormErrors(params)
+
+        if (!errors.isEmpty()) {
+            flash.errors = "Error updating registration $r.name for $r.team.name ($r.team.club.name) --> $errors"
+            redirect(action: "edit", id: params.id)
+            return
+        }
 
         if (!securityUtils.isCurrentUserRegistrationSecretary()) {
 
@@ -96,16 +117,18 @@ class RegistrationController {
             }
         }
 
-        if (StringUtils.isNotBlank(params["firstName"])) r.firstName = params["firstName"]
-        if (StringUtils.isNotBlank(params["lastName"])) r.lastName = params["lastName"]
-        if (StringUtils.isNotBlank(params["role"])) r.role = params["role"]
-        if (StringUtils.isNotBlank(params["asaNumber"])) r.asaNumber = Integer.parseInt(params["asaNumber"])
+        r.firstName = params["firstName"]
+        r.lastName = params["lastName"]
+        r.role = params["role"]
+        r.asaNumber = Integer.parseInt(params["asaNumber"])
 
         if (securityUtils.isCurrentUserRegistrationSecretary()) {
             Status status = Status.fromString(params["status"])
             r.updateStatus(securityUtils.currentUser, Action.VALIDATED, status, params["statusNotes"])
         }
         r.save()
+
+        flash.message = "Registration $r.name for $t.name ($t.club.name) updated."
         redirect(controller: "team", action: "show", id: t.id)
     }
 
@@ -116,9 +139,10 @@ class RegistrationController {
         if (securityUtils.isCurrentUserRegistrationSecretary() || (!r.hasBeenValidated())) {
             r.updateStatus(securityUtils.currentUser, Action.DELETED, Status.DELETED, "")
             r.save()
+            flash.message = "Registration $r.name for $r.team.name ($r.team.club.name) deleted."
         }
         else {
-            flash.errors = "Cannot delete registration ${r.name} for ${r.team.name} (${r.team.club.name}) as this registration is or has been validated. Please contact the Registration Secretary."
+            flash.errors = "Cannot delete registration $r.name for $r.team.name ($r.team.club.name) as this registration is or has been validated. Please contact the Registration Secretary."
         }
         redirect(uri: params.targetUri)
     }
@@ -284,5 +308,24 @@ class RegistrationController {
         }
         results.sort{it.name}
         return results
+    }
+
+    private static String getRegistrationFormErrors(def params) {
+
+        List<String> errors = []
+
+        checkForNullOrEmptyValue("Firstname", params["firstName"], errors)
+        checkValueIsAlpha("Firstname", params["firstName"], errors)
+
+        checkForNullOrEmptyValue("Lastname", params["lastName"], errors)
+        checkValueIsAlpha("Lastname", params["lastName"], errors)
+
+        checkForNullOrEmptyValue("Role", params["role"], errors)
+        checkValueInList("Role", params["role"], ["Player", "Coach"], errors)
+
+        checkForNullOrEmptyValue("ASA Number", params["asaNumber"], errors)
+        checkValueIsNumeric("ASA number", params["asaNumber"], errors)
+
+        return errors.join(", ")
     }
 }

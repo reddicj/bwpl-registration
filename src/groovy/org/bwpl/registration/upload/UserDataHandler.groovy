@@ -12,9 +12,9 @@ class UserDataHandler implements CsvHandler {
 
     void processTokens(int lineNumber, String[] values) {
 
-        String errors = getErrors(lineNumber, values)
+        String errors = getErrors(values)
         if (!errors.isEmpty()) {
-            throw new UploadException("Error reading user data --> $errors")
+            throw new UploadException("Error reading user data --> Line $lineNumber: $errors")
         }
 
         String firstname = values[0]
@@ -36,7 +36,7 @@ class UserDataHandler implements CsvHandler {
         if ("CLUB_SECRETARY".equals(role)) {
 
             if (values.length != 5) {
-                throw new UploadException("Error reading user data --> ${getFieldCountError(lineNumber, values)}")
+                throw new UploadException("Error reading user data --> ${getFieldCountError(values)}")
             }
 
             Role clubSecRole = Role.findByAuthority("ROLE_CLUB_SECRETARY")
@@ -58,37 +58,37 @@ class UserDataHandler implements CsvHandler {
         }
     }
 
-    private String getErrors(int lineNumber, String[] values) {
+    private String getErrors(String[] values) {
 
         if ((values.length < 4) || (values.length > 5)) {
-            return getFieldCountError(lineNumber, values)
+            return getFieldCountError(values)
         }
         else {
 
             List<String> errors = []
 
-            checkForNullOrEmptyValue(lineNumber, "Firstname", values[0], errors)
-            checkValueIsAlpha(lineNumber, "Firstname", values[0], errors)
+            checkForNullOrEmptyValue("Firstname", values[0], errors)
+            checkValueIsAlpha("Firstname", values[0], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Lastname", values[1], errors)
-            checkValueIsAlpha(lineNumber, "Lastname", values[1], errors)
+            checkForNullOrEmptyValue("Lastname", values[1], errors)
+            checkValueIsAlpha("Lastname", values[1], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Email", values[2], errors)
-            checkValueIsValidEmail(lineNumber, "Email", values[2], errors)
+            checkForNullOrEmptyValue("Email", values[2], errors)
+            checkValueIsValidEmail("Email", values[2], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Role", values[3], errors)
-            checkValueInList(lineNumber, "Role", values[3], ["CLUB_SECRETARY", "READ_ONLY"], errors)
+            checkForNullOrEmptyValue("Role", values[3], errors)
+            checkValueInList("Role", values[3], ["CLUB_SECRETARY", "READ_ONLY"], errors)
 
-            if (values.length == 5) checkValueIsAlpha(lineNumber, "Club", values[4], errors)
+            if (values.length == 5) checkValueIsAlpha("Club", values[4], errors)
 
             return errors.join(", ")
         }
     }
 
-    private String getFieldCountError(int lineNumber, String[] values) {
+    private String getFieldCountError(String[] values) {
 
         String expected = "Expected fields: ${fieldNames.join(", ")}"
         String actual = "Actual fields: ${values.join(", ")}"
-        return "Line $lineNumber: $expected, $actual"
+        return "$expected, $actual"
     }
 }

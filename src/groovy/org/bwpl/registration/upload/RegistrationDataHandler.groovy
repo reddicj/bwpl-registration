@@ -16,9 +16,9 @@ class RegistrationDataHandler implements CsvHandler {
 
     void processTokens(int lineNumber, String[] values) {
 
-        List<String> errors = getErrors(lineNumber, values)
+        String errors = getErrors(values)
         if (!errors.isEmpty()) {
-            throw new UploadException(errors.join(", "))
+            throw new UploadException("Error reading registration data --> Line $lineNumber: $errors")
         }
 
         String clubName = values[0]
@@ -48,37 +48,37 @@ class RegistrationDataHandler implements CsvHandler {
         team.save()
     }
 
-    private List<String> getErrors(int lineNumber, String[] values) {
+    private String getErrors(String[] values) {
 
         if (values.length != fieldNames.size()) {
 
             String expected = "Expected fields: ${fieldNames.join(", ")}"
             String actual = "Actual fields: ${values.join(", ")}"
-            return ["Line $lineNumber: $expected, $actual"]
+            return "$expected, $actual"
         }
         else {
 
             List<String> errors = []
 
-            checkForNullOrEmptyValue(lineNumber, "Club name", values[0], errors)
-            checkValueIsAlphaNumericSpace(lineNumber, "Club name", values[0], errors)
+            checkForNullOrEmptyValue("Club name", values[0], errors)
+            checkValueIsAlphaNumericSpace("Club name", values[0], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Team name", values[1], errors)
-            checkValueContainsValidNameCharacters(lineNumber, "Team name", values[1], errors)
+            checkForNullOrEmptyValue("Team name", values[1], errors)
+            checkValueContainsValidNameCharacters("Team name", values[1], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Firstname", values[2], errors)
-            checkValueIsAlpha(lineNumber, "Firstname", values[2], errors)
+            checkForNullOrEmptyValue("Firstname", values[2], errors)
+            checkValueIsAlpha("Firstname", values[2], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Lastname", values[3], errors)
-            checkValueIsAlpha(lineNumber, "Lastname", values[3], errors)
+            checkForNullOrEmptyValue("Lastname", values[3], errors)
+            checkValueIsAlpha("Lastname", values[3], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "ASA number", values[4], errors)
-            checkValueIsNumeric(lineNumber, "ASA number", values[4], errors)
+            checkForNullOrEmptyValue("ASA number", values[4], errors)
+            checkValueIsNumeric("ASA number", values[4], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Role", values[5], errors)
-            checkValueInList(lineNumber, "Role", values[5], ["Player", "Coach"], errors)
+            checkForNullOrEmptyValue("Role", values[5], errors)
+            checkValueInList("Role", values[5], ["Player", "Coach"], errors)
 
-            return errors
+            return errors.join(", ")
         }
     }
 }

@@ -11,9 +11,9 @@ class TeamDataHandler implements CsvHandler {
 
     void processTokens(int lineNumber, String[] values) {
 
-        String errors = getErrors(lineNumber, values)
+        String errors = getErrors(values)
         if (!errors.isEmpty()) {
-            throw new UploadException("Error reading team data --> $errors")
+            throw new UploadException("Error reading team data --> Line $lineNumber: $errors")
         }
 
         String clubName = values[0]
@@ -40,32 +40,32 @@ class TeamDataHandler implements CsvHandler {
         club.save()
     }
 
-    private String getErrors(int lineNumber, String[] values) {
+    private String getErrors(String[] values) {
 
         if (values.length != fieldNames.size()) {
 
             String expected = "Expected fields: ${fieldNames.join(", ")}"
             String actual = "Actual fields: ${values.join(", ")}"
-            return "Line $lineNumber: $expected, $actual"
+            return "$expected, $actual"
         }
         else {
 
             List<String> errors = []
 
-            checkForNullOrEmptyValue(lineNumber, "Club name", values[0], errors)
-            checkValueIsAlphaNumericSpace(lineNumber, "Club name", values[0], errors)
+            checkForNullOrEmptyValue("Club name", values[0], errors)
+            checkValueIsAlphaNumericSpace("Club name", values[0], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "ASA club name", values[1], errors)
-            checkValueContainsValidNameCharacters(lineNumber, "ASA club name", values[1], errors)
+            checkForNullOrEmptyValue("ASA club name", values[1], errors)
+            checkValueContainsValidNameCharacters("ASA club name", values[1], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Team name", values[2], errors)
-            checkValueContainsValidNameCharacters(lineNumber, "Team name", values[2], errors)
+            checkForNullOrEmptyValue("Team name", values[2], errors)
+            checkValueContainsValidNameCharacters("Team name", values[2], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Gender", values[3], errors)
-            checkValueInList(lineNumber, "Gender", values[3], ["M", "F"], errors)
+            checkForNullOrEmptyValue("Gender", values[3], errors)
+            checkValueInList("Gender", values[3], ["M", "F"], errors)
 
-            checkForNullOrEmptyValue(lineNumber, "Division", values[4], errors)
-            checkValueIsNumeric(lineNumber, "Division", values[4], errors)
+            checkForNullOrEmptyValue("Division", values[4], errors)
+            checkValueIsNumeric("Division", values[4], errors)
 
             return errors.join(", ")
         }

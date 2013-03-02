@@ -1,10 +1,8 @@
 package org.bwpl.registration.utils
 
 import org.apache.commons.lang.StringUtils
-
-import org.springframework.web.multipart.MultipartFile
-import java.util.regex.Pattern
 import org.apache.commons.validator.EmailValidator
+import org.springframework.web.multipart.MultipartFile
 
 class ValidationUtils {
 
@@ -17,57 +15,56 @@ class ValidationUtils {
 
         if (file.isEmpty()) {
             errors << "No file selected or file is empty."
-            return
         }
     }
 
-    static void checkForNullOrEmptyValue(int lineNumber, String name, String value, List<String> errors) {
+    static void checkForNullOrEmptyValue(String name, String value, List<String> errors) {
 
         if (StringUtils.isBlank(value)) {
-            errors << "Line $lineNumber: $name is null or empty"
+            errors << "$name is null or empty"
         }
     }
 
-    static void checkValueInList(int lineNumber, String name, String value, List<String> allowedValues, List<String> errors) {
+    static void checkValueInList(String name, String value, List<String> allowedValues, List<String> errors) {
 
         if (!allowedValues.contains(value)) {
-            errors << "Line $lineNumber: $name must be one of the following values: ${allowedValues.join(", ")}"
+            errors << "$name must be one of the following values: ${allowedValues.join(", ")}"
         }
     }
 
-    static void checkValueIsNumeric(int lineNumber, String name, String value, List<String> errors) {
+    static void checkValueIsNumeric(String name, String value, List<String> errors) {
 
         if (!StringUtils.isNumeric(value)) {
-            errors << "Line $lineNumber: $name is not a number: $value"
+            errors << "$name is not a number: $value"
         }
     }
 
-    static void checkValueIsAlphaNumericSpace(int lineNumber, String name, String value, List<String> errors) {
+    static void checkValueIsAlphaNumericSpace(String name, String value, List<String> errors) {
 
         if (!StringUtils.isAlphanumericSpace(value)) {
-            errors << "Line $lineNumber: $name contains non alphanumeric, space characters: $value"
+            errors << "$name contains non alphanumeric, space characters: $value"
         }
     }
 
-    static void checkValueContainsValidNameCharacters(int lineNumber, String name, String value, List<String> errors) {
+    static void checkValueContainsValidNameCharacters(String name, String value, List<String> errors) {
 
         String v = StringUtils.remove(value, '-')
         if (!StringUtils.isAlphanumericSpace(v)) {
-            errors << "Line $lineNumber: $name contains non valid name characters: $value"
+            errors << "$name contains non valid name characters: $value"
         }
     }
 
-    static void checkValueIsAlpha(int lineNumber, String name, String value, List<String> errors) {
+    static void checkValueIsAlpha(String name, String value, List<String> errors) {
 
         if (!StringUtils.isAlpha(value)) {
-            errors << "Line $lineNumber: $name contains non alphabetical characters: $value"
+            errors << "$name contains non alphabetical characters: $value"
         }
     }
 
-    static void checkValueIsValidEmail(int lineNumber, String name, String value, List<String> errors) {
+    static void checkValueIsValidEmail(String name, String value, List<String> errors) {
 
         if (!EmailValidator.instance.isValid(value)) {
-            errors << "Line $lineNumber: $name is not a valid email address format: $value"
+            errors << "$name is not a valid email address format: $value"
         }
     }
 
