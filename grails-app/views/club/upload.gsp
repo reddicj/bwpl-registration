@@ -7,7 +7,7 @@
 <body>
 <div id="uploadClubs">
 <g:uploadForm action="uploadClubData">
-    <input type="file" name="clubs" />
+    <input type="file" name="clubs" required="true"/>
     <g:submitButton name="upload" value="Upload" class="buttons"/>
 </g:uploadForm>
 </div>
