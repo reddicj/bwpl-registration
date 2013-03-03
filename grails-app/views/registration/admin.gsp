@@ -39,5 +39,7 @@
 <ul class="bwpl-club-list">
     <li><g:link action="export">Export All Registrations</g:link></li>
 </ul>
+<hr/>
+<p>Version: <g:meta name="app.version"/> / Built: <g:meta name="app.build.date"/></p>
 </body>
 </html>
