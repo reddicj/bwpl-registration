@@ -78,9 +78,9 @@ class RegistrationController {
         }
 
         Registration r = new Registration()
-        r.firstName = params["firstName"]
-        r.lastName = params["lastName"]
-        r.role = params["role"]
+        r.firstName = WordUtils.capitalize(params["firstName"])
+        r.lastName = WordUtils.capitalize(params["lastName"])
+        r.role = WordUtils.capitalize(params["role"])
         r.asaNumber = Integer.parseInt(params["asaNumber"])
         r.updateStatus(securityUtils.currentUser, Action.ADDED, Status.INVALID, "")
         t.addToRegistrations(r)
@@ -117,9 +117,9 @@ class RegistrationController {
             }
         }
 
-        r.firstName = params["firstName"]
-        r.lastName = params["lastName"]
-        r.role = params["role"]
+        r.firstName = WordUtils.capitalize(params["firstName"])
+        r.lastName = WordUtils.capitalize(params["lastName"])
+        r.role = WordUtils.capitalize(params["role"])
         r.asaNumber = Integer.parseInt(params["asaNumber"])
 
         if (securityUtils.isCurrentUserRegistrationSecretary()) {
@@ -289,6 +289,8 @@ class RegistrationController {
     private static List<Registration> getSearchResults(String firstName, String lastName) {
 
         List<Registration> results = null
+        if (!StringUtils.isAlpha(firstName)) return []
+        if (!StringUtils.isAlpha(lastName)) return []
         if (StringUtils.isNotBlank(firstName)) {
             firstName = WordUtils.capitalize(firstName.trim())
             if (StringUtils.isNotBlank(lastName)) {
