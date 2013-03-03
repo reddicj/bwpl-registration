@@ -23,6 +23,7 @@ class NavItems {
     List<NavItem> getClubNavItems(Club club, String rfilter) {
 
         if (rfilter) return []
+        if (club.registrations.isEmpty()) return []
         return [NavItem.getExportClubRegistrations(club.id)]
     }
 
@@ -30,7 +31,9 @@ class NavItems {
 
         List<NavItem> navItems = []
         if (team == null) return
-        if (team.club.teams.size() == 1) navItems << NavItem.getExportClubRegistrations(team.club.id)
+        if ((!team.registrations.isEmpty()) && (team.club.teams.size() == 1)) {
+            navItems << NavItem.getExportClubRegistrations(team.club.id)
+        }
         if (securityUtils.canUserUpdate(team.club)) {
             navItems << NavItem.getUploadRegistrations(team.id)
             navItems << NavItem.getAddRegistration(team.id)

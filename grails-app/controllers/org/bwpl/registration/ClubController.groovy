@@ -101,7 +101,7 @@ class ClubController {
         catch (UploadException e) {
             flash.errors = e.message
         }
-        redirect(action: "list")
+        redirect(controller: "registration", action: "admin")
     }
 
     @Secured(["ROLE_REGISTRATION_SECRETARY"])
