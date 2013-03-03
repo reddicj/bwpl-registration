@@ -79,7 +79,7 @@ class UserDataHandler implements CsvHandler {
             checkForNullOrEmptyValue("Role", values[3], errors)
             checkValueInList("Role", values[3], ["CLUB_SECRETARY", "READ_ONLY"], errors)
 
-            if (values.length == 5) checkValueIsAlpha("Club", values[4], errors)
+            if (values.length == 5) checkValueIsAlphaNumericSpace("Club", values[4], errors)
 
             return errors.join(", ")
         }
