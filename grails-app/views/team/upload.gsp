@@ -7,7 +7,7 @@
 <body>
 <div id="uploadRegistrations">
     <g:uploadForm action="uploadRegistrations" id="${team.id}">
-        <input type="file" name="registrations"/>
+        <input type="file" name="registrations" required="true"/>
         <g:submitButton name="upload" value="Upload" class="buttons"/>
     </g:uploadForm>
 </div>

@@ -7,7 +7,7 @@
 <body>
 <div>
     <g:uploadForm action="uploadUsers">
-        <input type="file" name="users"/>
+        <input type="file" name="users" required="true"/>
         <g:submitButton name="upload" value="Upload" class="buttons"/>
     </g:uploadForm>
 </div>

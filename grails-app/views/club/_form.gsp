@@ -8,8 +8,8 @@
         </thead>
         <tbody>
         <tr>
-            <td><g:textField name="club-name" required="" value="${clubInstance?.name}"/></td>
-            <td><g:textField name="club-asaName" required="" value="${clubInstance?.asaName}"/></td>
+            <td><g:textField name="club-name" required="true" value="${clubInstance?.name}"/></td>
+            <td><g:textField name="club-asaName" required="true" value="${clubInstance?.asaName}"/></td>
         </tr>
         </tbody>
     </table>
@@ -26,9 +26,9 @@
             </thead>
             <tbody>
             <tr>
-                <td><g:textField name="secretary-firstname-$secretary.id" required="" value="${secretary.firstname}"/></td>
-                <td><g:textField name="secretary-lastname-$secretary.id" required="" value="${secretary.lastname}"/></td>
-                <td><g:textField name="secretary-email-$secretary.id" required="" value="${secretary.username}"/></td>
+                <td><g:textField name="secretary-firstname-$secretary.id" value="${secretary.firstname}"/></td>
+                <td><g:textField name="secretary-lastname-$secretary.id" value="${secretary.lastname}"/></td>
+                <td><g:textField name="secretary-email-$secretary.id" value="${secretary.username}"/></td>
                 <td><g:checkBox name="secretary-delete-$secretary.id"/></td>
             </tr>
             </tbody>
@@ -43,9 +43,9 @@
             </thead>
             <tbody>
             <tr>
-                <td><g:textField name="secretary-firstname-new" required="" value=""/></td>
-                <td><g:textField name="secretary-lastname-new" required="" value=""/></td>
-                <td><g:textField name="secretary-email-new" required="" value=""/></td>
+                <td><g:textField name="secretary-firstname-new" value=""/></td>
+                <td><g:textField name="secretary-lastname-new" value=""/></td>
+                <td><g:textField name="secretary-email-new" value=""/></td>
             </tr>
             </tbody>
         </table>
