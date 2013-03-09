@@ -6,7 +6,7 @@ import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.UserUploader
 
-class UserController {
+class AdminController {
 
     SecurityUtils securityUtils
     NavItems nav
@@ -31,6 +31,4 @@ class UserController {
         }
         redirect(controller: "registration", action: "admin")
     }
-
-
 }

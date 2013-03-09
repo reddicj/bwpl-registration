@@ -1,4 +1,4 @@
-<g:if test="${!navItems.isEmpty()}">
+<g:if test="${(navItems != null) && !navItems.isEmpty()}">
     <div class="bwpl-nav">
         <ul style="width: 100%">
             <g:each in="${navItems}" var="navItem">

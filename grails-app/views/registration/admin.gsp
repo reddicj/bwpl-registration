@@ -20,7 +20,7 @@
         <li><g:link controller="club" action="create">Add Club</g:link></li>
         <li><g:link controller="club" action="upload">Upload Club data</g:link></li>
         <li><g:link action="upload">Upload All Registrations</g:link></li>
-        <li><g:link controller="user" action="upload">Upload User data</g:link></li>
+        <li><g:link controller="admin" action="upload">Upload User data</g:link></li>
     </ul>
     <div>&nbsp;</div>
     <hr/>

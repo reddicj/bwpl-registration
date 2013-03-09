@@ -31,6 +31,10 @@ class User {
 		password column: '`password`'
 	}
 
+    String getEmail() {
+        return username
+    }
+
     String getName() {
 
         StringBuilder sb = new StringBuilder()
