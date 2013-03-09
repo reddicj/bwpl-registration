@@ -135,8 +135,22 @@ class NavItem {
         return teamRegistrations
     }
 
+    static NavItem getDeleteAllRegistrations(long teamId) {
+
+        NavItem deleteAllRegistrations = new NavItem()
+        deleteAllRegistrations.with {
+            displayName = "Delete All"
+            controllerName = "team"
+            actionName = "deleteRegistrations"
+            params = [id: teamId.toString()]
+            onclick = "return confirm('Are you sure you want to delete all team registrations?');"
+        }
+        return deleteAllRegistrations
+    }
+
     String displayName
     String controllerName
     String actionName
+    String onclick = ""
     Map<String, String> params = new HashMap<String, String>()
 }

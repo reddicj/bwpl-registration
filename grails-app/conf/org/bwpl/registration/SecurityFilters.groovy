@@ -8,7 +8,7 @@ class SecurityFilters {
 
     def filters = {
 
-        TeamControllerAccessFilter(controller: "team", action: "(upload|uploadRegistrations)") {
+        TeamControllerAccessFilter(controller: "team", action: "(upload|uploadRegistrations|deleteRegistrations)") {
 
             before = {
 

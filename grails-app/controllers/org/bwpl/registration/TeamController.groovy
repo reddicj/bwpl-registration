@@ -7,6 +7,7 @@ import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.RegistrationStats
 import org.bwpl.registration.validation.Status
+import org.bwpl.registration.validation.Action
 
 class TeamController {
 
@@ -67,6 +68,32 @@ class TeamController {
             flash.errors = e.message
         }
         redirect(action: "show", id: team.id.toString())
+    }
+
+    // Secured by SecurityFilters.TeamControllerAccessFilter
+    @Secured(["ROLE_CLUB_SECRETARY"])
+    def deleteRegistrations = {
+
+        Team team = Team.get(params.id)
+        int countOfDeleted = 0
+        int countOfNotDeleted = 0
+        team.registrations.each { r ->
+
+            if (!r.hasBeenValidated()) {
+                r.updateStatus(securityUtils.currentUser, Action.DELETED, Status.DELETED, "")
+                r.save()
+                countOfDeleted++
+            }
+            else countOfNotDeleted++
+        }
+
+        StringBuilder sb = new StringBuilder()
+        sb << "$countOfDeleted registrations for $team.name ($team.club.name) deleted. "
+        sb << "$countOfNotDeleted registrations for $team.name ($team.club.name) not deleted. "
+        sb << "You cannot delete registrations that have already been validated."
+        flash.message = sb.toString()
+
+        redirect(action: "show", id: team.id)
     }
 
     private static List<Registration> getRegistrations(Team team, String registrationFilter) {

@@ -37,6 +37,7 @@ class NavItems {
         if (securityUtils.canUserUpdate(team.club)) {
             navItems << NavItem.getUploadRegistrations(team.id)
             navItems << NavItem.getAddRegistration(team.id)
+            navItems << NavItem.getDeleteAllRegistrations(team.id)
         }
         return navItems
     }
