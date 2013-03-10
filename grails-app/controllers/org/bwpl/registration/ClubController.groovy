@@ -25,16 +25,9 @@ class ClubController {
     def asaemail = {
 
         Club club = Club.get(params.id)
-
-        List<Registration> invalidRegistrations = new ArrayList<Registration>(club.registrations)
-        invalidRegistrations = invalidRegistrations.findAll {it.statusAsEnum == Status.INVALID}
-        invalidRegistrations.sort {it.name}
-
         ASAEmail asaEmail = new ASAEmail()
         asaEmail.currentUser = securityUtils.currentUser
         asaEmail.club = club
-        asaEmail.invalidRegistrations = invalidRegistrations
-
         [navItems: nav.getNavItems(), email: asaEmail]
     }
 

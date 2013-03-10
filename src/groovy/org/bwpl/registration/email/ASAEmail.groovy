@@ -4,6 +4,7 @@ import org.bwpl.registration.Club
 import org.bwpl.registration.User
 import org.bwpl.registration.Registration
 import groovy.text.SimpleTemplateEngine
+import org.bwpl.registration.validation.Status
 
 class ASAEmail {
 
@@ -11,7 +12,6 @@ class ASAEmail {
 
     User currentUser
     Club club
-    List<Registration> invalidRegistrations
     String lineBreak = "\n"
 
     String getMailToLink() {
@@ -49,6 +49,10 @@ class ASAEmail {
     }
 
     private String getRegistrations() {
+
+        List<Registration> invalidRegistrations = new ArrayList<Registration>(club.registrations)
+        invalidRegistrations = invalidRegistrations.findAll {it.statusAsEnum == Status.INVALID}
+        invalidRegistrations.sort {it.name}
 
         StringBuilder sb = new StringBuilder()
         invalidRegistrations.each { sb << "$it.name ($it.asaNumber)$lineBreak" }
