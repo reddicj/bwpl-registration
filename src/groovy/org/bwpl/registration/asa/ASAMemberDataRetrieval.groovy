@@ -11,6 +11,9 @@ public class ASAMemberDataRetrieval {
     public static final String ASA_MEMBERSHIP_CHECK_URL = "https://www.swimmingresults.org/membershipcheck/member_details.php"
     public static final String ASA_NUMBER_PARAMETER_NAME = "myiref"
 
+    private static final int ASA_NUMBER_JAMES_REDDICK = 283261
+    private static final String serviceAvailabilityErrorMessage = getServiceAvailabilityMessage()
+
     private final String url
 
     public ASAMemberDataRetrieval() {
@@ -60,6 +63,37 @@ public class ASAMemberDataRetrieval {
         catch (HttpHostConnectException e) {
             throw new ASAMemberDataRetrievalException(e)
         }
+        catch (Exception e) {
+            throw new ASAMemberDataRetrievalException(e)
+        }
         return asaMemberData
+    }
+
+    public String getServiceAvailabilityError() {
+
+        ASAMemberData asaData = null
+        try {
+            asaData = get(ASA_NUMBER_JAMES_REDDICK)
+        }
+        catch (ASAMemberDataRetrievalException e) {
+            return serviceAvailabilityErrorMessage
+        }
+
+        boolean ok = asaData.name.contains("James") &&
+                     asaData.name.contains("Reddick") &&
+                     asaData.asaNumber == ASA_NUMBER_JAMES_REDDICK &&
+                     asaData.isMale
+
+        if (!ok) return serviceAvailabilityErrorMessage
+        return ""
+    }
+
+    private static String getServiceAvailabilityMessage() {
+
+        StringBuilder msg = new StringBuilder()
+        msg << "Validation error --> cannot communicate with the ASA Membership system. "
+        msg << "It may be temporarily unavailable. Please try again later. "
+        msg << "If the problem persists then email the Registration Secretary."
+        return msg.toString()
     }
 }
