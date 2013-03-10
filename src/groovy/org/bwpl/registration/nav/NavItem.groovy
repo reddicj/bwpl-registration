@@ -87,6 +87,18 @@ class NavItem {
         return userClub
     }
 
+    static NavItem getASAEmail(long clubId) {
+
+        NavItem asaEmail = new NavItem()
+        asaEmail.with {
+            displayName = "ASA Email"
+            controllerName = "club"
+            actionName = "asaemail"
+            params = [id: clubId.toString()]
+        }
+        return asaEmail
+    }
+
     static NavItem getExportClubRegistrations(long clubId) {
 
         NavItem exportClubRegistrations = new NavItem()

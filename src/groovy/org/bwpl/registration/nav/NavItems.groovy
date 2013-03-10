@@ -22,9 +22,12 @@ class NavItems {
 
     List<NavItem> getClubNavItems(Club club, String rfilter) {
 
-        if (rfilter) return []
-        if (club.registrations.isEmpty()) return []
-        return [NavItem.getExportClubRegistrations(club.id)]
+        List<NavItem> navItems = []
+        if (rfilter) return navItems
+        if (club.registrations.isEmpty()) return navItems
+        navItems << NavItem.getExportClubRegistrations(club.id)
+        if (securityUtils.canUserUpdate(club)) navItems << NavItem.getASAEmail(club.id)
+        return navItems
     }
 
     List<NavItem> getTeamNavItems(Team team) {

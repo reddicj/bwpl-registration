@@ -12,13 +12,31 @@ import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.CsvWriter
 
 import org.bwpl.registration.validation.Status
-import org.apache.commons.lang.RandomStringUtils
+
+import org.bwpl.registration.email.ASAEmail
 
 class ClubController {
 
     static defaultAction = "list"
     NavItems nav
     SecurityUtils securityUtils
+
+    @Secured(["ROLE_READ_ONLY"])
+    def asaemail = {
+
+        Club club = Club.get(params.id)
+
+        List<Registration> invalidRegistrations = new ArrayList<Registration>(club.registrations)
+        invalidRegistrations = invalidRegistrations.findAll {it.statusAsEnum == Status.INVALID}
+        invalidRegistrations.sort {it.name}
+
+        ASAEmail asaEmail = new ASAEmail()
+        asaEmail.currentUser = securityUtils.currentUser
+        asaEmail.club = club
+        asaEmail.invalidRegistrations = invalidRegistrations
+
+        [navItems: nav.getNavItems(), email: asaEmail]
+    }
 
     def list = {
 

@@ -16,6 +16,7 @@ class User {
 	boolean accountLocked
 	boolean passwordExpired
 
+    static User registrationSecretary = null
     static belongsTo = [club: Club]
 
 	static constraints = {
