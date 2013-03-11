@@ -77,9 +77,25 @@ class ASAMemberData {
         return false
     }
 
-    boolean isValidMembershipCategory() {
+    boolean isValidMembershipCategory(String role) {
+
+        if (role == "Player") {
+            return isValidPlayerCategory()
+        }
+        else {
+            return isValidNonPlayerCategory()
+        }
+    }
+
+    boolean isValidPlayerCategory() {
         return "ASA Cat 2".equals(membershipCategory) ||
-                "SASA Swimmer".equals(membershipCategory) ||
-                "WASA Cat 2".equals(membershipCategory)
+               "SASA Swimmer".equals(membershipCategory) ||
+               "WASA Cat 2".equals(membershipCategory)
+    }
+
+    boolean isValidNonPlayerCategory() {
+        return isValidPlayerCategory() ||
+               "ASA Cat 3".equals(membershipCategory) ||
+               "WASA Cat 3".equals(membershipCategory)
     }
 }

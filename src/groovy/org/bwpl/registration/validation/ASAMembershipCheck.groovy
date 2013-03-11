@@ -25,15 +25,15 @@ class ASAMembershipCheck {
             if (!asaMember.isNameMatch(registration.firstName, registration.lastName)) {
                 errors << "Name does not match, ASA name: $asaMember.name."
             }
-            if (team.isMale != asaMember.isMale) {
-                errors << "Incorrect gender for team."
+            if ((registration.role == "Player") && (team.isMale != asaMember.isMale)) {
+                errors << "Player incorrect gender for team."
             }
             if (!asaMember.isMemberOfClub(registrationClub.asaName)) {
-                errors << "Not registered with $registrationClub.name."
+                errors << "Not ASA registered with $registrationClub.name."
                 return errors
             }
-            if (!asaMember.isValidMembershipCategory()) {
-                errors << "Invalid membership category: $asaMember.membershipCategory"
+            if (!asaMember.isValidMembershipCategory(registration.role)) {
+                errors << "Invalid ASA membership category for a BWPL ${registration.role.toLowerCase()}: $asaMember.membershipCategory."
             }
             return errors
         }
