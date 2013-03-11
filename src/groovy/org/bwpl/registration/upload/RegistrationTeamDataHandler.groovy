@@ -63,7 +63,7 @@ class RegistrationTeamDataHandler implements CsvHandler {
             checkValueIsNumeric("ASA number", values[2], errors)
 
             checkForNullOrEmptyValue("Role", values[3], errors)
-            checkValueInList("Role", values[3], ["Player", "Coach"], errors)
+            checkValueInListIgnoreCase("Role", values[3], ["Player", "Coach"], errors)
 
             return errors.join(", ")
         }

@@ -32,6 +32,16 @@ class ValidationUtils {
         }
     }
 
+    static void checkValueInListIgnoreCase(String name, String value, List<String> allowedValues, List<String> errors) {
+
+        for (String allowedValue : allowedValues) {
+            if (StringUtils.equalsIgnoreCase(allowedValue, value)) {
+                return
+            }
+        }
+        errors << "$name must be one of the following values: ${allowedValues.join(", ")}"
+    }
+
     static void checkValueIsNumeric(String name, String value, List<String> errors) {
 
         if (!StringUtils.isNumeric(value)) {
