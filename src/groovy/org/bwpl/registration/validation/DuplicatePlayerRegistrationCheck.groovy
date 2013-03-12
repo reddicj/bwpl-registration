@@ -16,6 +16,6 @@ class DuplicatePlayerRegistrationCheck {
         if (existingRegistrations.isEmpty()) {
             return ""
         }
-        return "Registered with ${existingRegistrations[0].team.club.name} (${existingRegistrations[0].team.name})."
+        return "BWPL registered with ${existingRegistrations[0].team.club.name} (${existingRegistrations[0].team.name})."
     }
 }
