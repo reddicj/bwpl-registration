@@ -62,6 +62,10 @@ h2 {
     background-color: #ffffff;
 }
 
+.bwpl-table tr.new {
+    background-color: #99FF66;
+}
+
 .bwpl-table tr.invalid {
     background-color: #ff7256;
 }

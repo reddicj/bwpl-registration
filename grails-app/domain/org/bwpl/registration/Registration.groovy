@@ -20,7 +20,7 @@ class Registration {
         firstName(blank: false)
         lastName(blank: false)
         role(inList: ["Player", "Coach"])
-        status(blank: false, inList: ["Invalid", "Valid", "Deleted"])
+        status(blank: false, inList: ["New", "Invalid", "Valid", "Deleted"])
     }
 
     static belongsTo = [team: Team]

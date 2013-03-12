@@ -13,7 +13,7 @@ class RegistrationStatus {
     static constraints = {
 
         action(blank: false, inList: ["Added", "Deleted", "Validated"])
-        status(blank: false, inList: ["Invalid", "Valid", "Deleted"])
+        status(blank: false, inList: ["New", "Invalid", "Valid", "Deleted"])
     }
 
     static belongsTo = [registration: Registration]

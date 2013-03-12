@@ -82,7 +82,7 @@ class RegistrationController {
         r.lastName = WordUtils.capitalize(params["lastName"])
         r.role = WordUtils.capitalize(params["role"])
         r.asaNumber = Integer.parseInt(params["asaNumber"])
-        r.updateStatus(securityUtils.currentUser, Action.ADDED, Status.INVALID, "")
+        r.updateStatus(securityUtils.currentUser, Action.ADDED, Status.NEW, "")
         t.addToRegistrations(r)
         t.save()
 
@@ -251,19 +251,13 @@ class RegistrationController {
 
         if (StringUtils.isNotEmpty(params.teamId)) {
             Set<Registration> registrations = Team.get(params.teamId).registrations
-            return registrations.findAll {it.statusAsEnum == Status.INVALID}
+            return registrations.findAll {it.statusAsEnum in [Status.NEW, Status.INVALID]}
         }
         if (StringUtils.isNotEmpty(params.clubId)) {
             Set<Registration> registrations = Club.get(params.clubId).registrations
-            return registrations.findAll {it.statusAsEnum == Status.INVALID}
+            return registrations.findAll {it.statusAsEnum in [Status.NEW, Status.INVALID]}
         }
-
-        if (SpringSecurityUtils.ifAllGranted("ROLE_REGISTRATION_SECRETARY")) {
-            return Registration.findAllByStatus(Status.INVALID.toString())
-        }
-        else {
-            return new HashSet<Registration>()
-        }
+        return new HashSet<Registration>()
     }
 
     private static List<Registration> getRegistrations(String registrationFilter) {
@@ -341,5 +335,6 @@ class RegistrationController {
             registration = Registration.findByTeamAndFirstNameAndLastName(team, firstname, lastname)
             if (registration) return "registration with name $registration.name already exists."
         }
+        return ""
     }
 }

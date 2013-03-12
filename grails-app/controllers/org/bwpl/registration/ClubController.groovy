@@ -11,8 +11,6 @@ import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.CsvWriter
 
-import org.bwpl.registration.validation.Status
-
 import org.bwpl.registration.email.ASAEmail
 import org.bwpl.registration.utils.DataUtils
 

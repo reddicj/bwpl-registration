@@ -37,7 +37,7 @@ class RegistrationTeamDataHandler implements CsvHandler {
         registration.firstName = firstName
         registration.lastName = lastName
         registration.role = role
-        registration.updateStatus(currentUser, Action.ADDED, Status.INVALID, "")
+        registration.updateStatus(currentUser, Action.ADDED, Status.NEW, "")
         team.addToRegistrations(registration)
         team.save()
     }
@@ -78,6 +78,7 @@ class RegistrationTeamDataHandler implements CsvHandler {
                 registration = Registration.findByTeamAndFirstNameAndLastName(team, firstName, lastName)
                 if (registration) return "$registration.name for $registration.team.name ($registration.team.club.name) already exists."
             }
+            return ""
         }
     }
 }

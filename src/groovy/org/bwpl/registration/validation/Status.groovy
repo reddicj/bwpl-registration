@@ -4,10 +4,10 @@ import org.apache.commons.lang.StringUtils
 
 public enum Status {
 
-    INVALID, VALID, DELETED
+    NEW, INVALID, VALID, DELETED
 
     private static Map<String, Status> fromStringMap =
-        ["INVALID":INVALID, "VALID":VALID, "DELETED":DELETED]
+        ["NEW":NEW, "INVALID":INVALID, "VALID":VALID, "DELETED":DELETED]
 
     static Status fromString(String str) {
 
