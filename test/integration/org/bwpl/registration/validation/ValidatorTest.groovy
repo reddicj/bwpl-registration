@@ -84,7 +84,7 @@ class ValidatorTest {
 
         r2 = Registration.findById(r2.id)
         assertThat(r2.statusAsEnum).isEqualTo(Status.INVALID)
-        assertThat(r2.statusNote).contains("Registered with Poly")
+        assertThat(r2.statusNote).contains("BWPL registered with Poly")
     }
 
     @Test

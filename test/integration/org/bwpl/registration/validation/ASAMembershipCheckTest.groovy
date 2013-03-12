@@ -85,7 +85,7 @@ class ASAMembershipCheckTest {
         ASAMembershipCheck asaMembershipCheck = new ASAMembershipCheck()
         List<String> errors = asaMembershipCheck.getErrors(r)
         assertThat(errors.isEmpty()).isFalse()
-        assertThat(errors[0]).isEqualTo("Incorrect gender for team.")
+        assertThat(errors[0]).isEqualTo("Player incorrect gender for team.")
     }
 
     @Test
@@ -111,7 +111,7 @@ class ASAMembershipCheckTest {
         ASAMembershipCheck asaMembershipCheck = new ASAMembershipCheck()
         List<String> errors = asaMembershipCheck.getErrors(r)
         assertThat(errors.isEmpty()).isFalse()
-        assertThat(errors[0]).isEqualTo("Not registered with Penguin.")
+        assertThat(errors[0]).isEqualTo("Not ASA registered with Penguin.")
     }
 
     @Test
@@ -137,7 +137,7 @@ class ASAMembershipCheckTest {
         ASAMembershipCheck asaMembershipCheck = new ASAMembershipCheck()
         List<String> errors = asaMembershipCheck.getErrors(r)
         assertThat(errors.isEmpty()).isFalse()
-        assertThat(errors[0]).isEqualTo("Invalid membership category: ASA Cat 1")
+        assertThat(errors[0]).startsWith("Invalid ASA membership category for a BWPL")
     }
 
     @Test

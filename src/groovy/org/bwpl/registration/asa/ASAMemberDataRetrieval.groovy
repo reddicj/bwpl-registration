@@ -63,9 +63,6 @@ public class ASAMemberDataRetrieval {
         catch (HttpHostConnectException e) {
             throw new ASAMemberDataRetrievalException(e)
         }
-        catch (Exception e) {
-            throw new ASAMemberDataRetrievalException(e)
-        }
         return asaMemberData
     }
 

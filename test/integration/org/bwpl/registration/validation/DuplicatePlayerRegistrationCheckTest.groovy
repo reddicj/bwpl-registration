@@ -92,7 +92,7 @@ class DuplicatePlayerRegistrationCheckTest {
 
         DuplicatePlayerRegistrationCheck duplicateRegistrationCheck = new DuplicatePlayerRegistrationCheck()
         String error = duplicateRegistrationCheck.getError(r1)
-        assertThat(error).isEqualTo("Registered with Penguin (Penguin Men).")
+        assertThat(error).isEqualTo("BWPL registered with Penguin (Penguin Men).")
     }
 
     @Test
