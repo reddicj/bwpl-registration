@@ -67,10 +67,10 @@ class RegistrationController {
     def add = {
 
         Team t = Team.get(params.teamId)
-        String errors = getRegistrationFormErrors(params)
+        String errors = getRegistrationFormErrors(t, params)
 
         if (!errors.isEmpty()) {
-            flash.errors = "Error adding registration for $t.name ($t.club.name) --> $errors"
+            flash.errors = "Error adding registration for $t.name ($t.club.name) - $errors"
             def redirectParams = [teamId: params.teamId, firstName: params["firstName"], lastName: params["lastName"],
                                   role: params["role"], asaNumber: params["asaNumber"]]
             redirect(action: "create", params: redirectParams)
@@ -95,10 +95,10 @@ class RegistrationController {
 
         Team t = Team.get(params.teamId)
         Registration r = Registration.get(params.id)
-        String errors = getRegistrationFormErrors(params)
+        String errors = getRegistrationFormErrors(t, params)
 
         if (!errors.isEmpty()) {
-            flash.errors = "Error updating registration $r.name for $r.team.name ($r.team.club.name) --> $errors"
+            flash.errors = "Error updating registration $r.name for $r.team.name ($r.team.club.name) - $errors"
             redirect(action: "edit", id: params.id)
             return
         }
@@ -312,7 +312,7 @@ class RegistrationController {
         return results
     }
 
-    private static String getRegistrationFormErrors(def params) {
+    private static String getRegistrationFormErrors(Team team, def params) {
 
         List<String> errors = []
 
@@ -328,6 +328,18 @@ class RegistrationController {
         checkForNullOrEmptyValue("ASA Number", params["asaNumber"], errors)
         checkValueIsNumeric("ASA number", params["asaNumber"], errors)
 
-        return errors.join(", ")
+        if (!errors.isEmpty()) {
+            return errors.join(", ")
+        }
+        else {
+            // check if registration already exists
+            String firstname = WordUtils.capitalize(params["firstName"])
+            String lastname = WordUtils.capitalize(params["lastName"])
+            int asaNumber = Integer.parseInt(params["asaNumber"])
+            Registration registration = Registration.findByTeamAndAsaNumber(team, asaNumber)
+            if (registration) return "registration with ASA number $registration.asaNumber ($registration.name) already exists."
+            registration = Registration.findByTeamAndFirstNameAndLastName(team, firstname, lastname)
+            if (registration) return "registration with name $registration.name already exists."
+        }
     }
 }
