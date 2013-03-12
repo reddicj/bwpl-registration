@@ -8,6 +8,7 @@ import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.RegistrationStats
 import org.bwpl.registration.validation.Status
 import org.bwpl.registration.validation.Action
+import org.bwpl.registration.utils.DataUtils
 
 class TeamController {
 
@@ -21,7 +22,7 @@ class TeamController {
         Team team = Team.get(params.id)
         List<Team> teams = new ArrayList<Team>(team.club.teams)
         teams.sort{it.name}
-        List<Registration> registrations = getRegistrations(team, params.rfilter)
+        List<Registration> registrations = DataUtils.getRegistrations(team.registrations, params.rfilter, params.sort)
         boolean hasAnyRegistrations = !team.club.registrations.isEmpty()
         boolean canUpdate = securityUtils.canUserUpdate(team.club)
         boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
@@ -94,12 +95,5 @@ class TeamController {
         flash.message = sb.toString()
 
         redirect(action: "show", id: team.id)
-    }
-
-    private static List<Registration> getRegistrations(Team team, String registrationFilter) {
-
-        List<Registration> registrations =
-            new ArrayList<Registration>(team.registrations.findAll{it.statusAsEnum != Status.DELETED})
-        return registrations.sort{it.name}
     }
 }

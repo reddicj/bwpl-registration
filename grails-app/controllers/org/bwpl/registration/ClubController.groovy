@@ -14,6 +14,7 @@ import org.bwpl.registration.utils.CsvWriter
 import org.bwpl.registration.validation.Status
 
 import org.bwpl.registration.email.ASAEmail
+import org.bwpl.registration.utils.DataUtils
 
 class ClubController {
 
@@ -50,7 +51,7 @@ class ClubController {
         Club club = Club.get(params.id)
         List<Team> teams = new ArrayList<Team>(club.teams)
         teams.sort{it.name}
-        List<Registration> registrations = getRegistrations(club, params.rfilter)
+        List<Registration> registrations = DataUtils.getRegistrations(club.registrations, params.rfilter, params.sort)
         boolean hasAnyRegistrations = !club.registrations.isEmpty()
         boolean canUpdate = securityUtils.canUserUpdate(club)
         boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
@@ -234,17 +235,5 @@ class ClubController {
         int remainder = countOfClubs.mod(countOfLists)
         if (remainder > 0) return maxListSize + 1
         return maxListSize
-    }
-
-    private static List<Registration> getRegistrations(Club club, String registrationFilter) {
-
-        List<Registration> registrations = []
-        if ("deleted".equals(registrationFilter)) {
-            registrations = new ArrayList<Registration>(club.registrations.findAll{it.statusAsEnum == Status.DELETED})
-        }
-        else {
-            registrations = new ArrayList<Registration>(club.registrations.findAll{it.statusAsEnum != Status.DELETED})
-        }
-        return registrations.sort{it.name}
     }
 }

@@ -4,7 +4,14 @@
     <table class="bwpl-table">
         <thead>
         <tr>
-            <th>Name</th>
+            <g:if test="${controllerName in ["club", "team"]}">
+                <th><g:link controller="${controllerName}" action="show" id="${params.id}" params="${[sort: 'firstname', rfilter: params.rfilter]}">Firstname</g:link></th>
+                <th><g:link controller="${controllerName}" action="show" id="${params.id}" params="${[sort: 'lastname', rfilter: params.rfilter]}">Lastname</g:link></th>
+            </g:if>
+            <g:else>
+                <th>Firstname</th>
+                <th>Lastname</th>
+            </g:else>
             <th>ASA No</th>
             <th>Role</th>
             <th>Registration Date</th>
@@ -23,7 +30,8 @@
         <tbody>
         <g:each in="${registrations}" var="r">
             <tr class="${r.statusAsEnum.toString().toLowerCase()}">
-                <td><g:link controller="registration" action="show" id="${r.id}">${r.name}</g:link></td>
+                <td><g:link controller="registration" action="show" id="${r.id}">${r.firstName}</g:link></td>
+                <td><g:link controller="registration" action="show" id="${r.id}">${r.lastName}</g:link></td>
                 <td><a href="${ASAMemberDataRetrieval.ASA_MEMBERSHIP_CHECK_URL}?${ASAMemberDataRetrieval.ASA_NUMBER_PARAMETER_NAME}=${r.asaNumber}">${r.asaNumber}</a></td>
                 <td>${r.role}</td>
                 <td>${r.registrationDateAsString}</td>

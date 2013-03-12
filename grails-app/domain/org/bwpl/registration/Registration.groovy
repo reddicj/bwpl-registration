@@ -38,6 +38,10 @@ class Registration {
         return "$firstName $lastName"
     }
 
+    String getLastnameFirstname() {
+        return "$lastName $firstName "
+    }
+
     String getRegistrationDateAsString() {
         return DateTimeUtils.printDate(registrationDate)
     }
