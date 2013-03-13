@@ -4,10 +4,10 @@ import org.apache.commons.lang.StringUtils
 
 public enum Action {
 
-    ADDED, DELETED, VALIDATED
+    ADDED, DELETED, UNDELETED, VALIDATED
 
     private static Map<String, Action> fromStringMap =
-        ["ADDED":ADDED, "DELETED":DELETED, "VALIDATED":VALIDATED]
+        ["ADDED":ADDED, "DELETED":DELETED, "UNDELETED":UNDELETED, "VALIDATED":VALIDATED]
 
     static Action fromString(String str) {
 

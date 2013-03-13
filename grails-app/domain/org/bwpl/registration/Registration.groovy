@@ -3,6 +3,7 @@ package org.bwpl.registration
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
 import org.bwpl.registration.utils.DateTimeUtils
+import org.joda.time.DateTime
 
 class Registration {
 
@@ -115,6 +116,13 @@ class Registration {
             currentEntry.notes = notes
             this.statusNote = notes
         }
+    }
+
+    boolean canUpdate() {
+
+        if (DateTimeUtils.isBeforeSeasonStart()) return true
+        if (statusAsEnum == Status.NEW) return true
+        return !hasBeenValidated()
     }
 
     boolean hasBeenValidated() {

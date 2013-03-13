@@ -110,7 +110,7 @@ class RegistrationController {
                 redirect(action: "edit", id: r.id)
                 return
             }
-            if (r.hasBeenValidated()) {
+            if (!r.canUpdate()) {
                 flash.errors = "Cannot update a registration that has already been validated."
                 redirect(action: "edit", id: r.id)
                 return
@@ -136,13 +136,28 @@ class RegistrationController {
     def delete = {
 
         Registration r = Registration.get(params.id)
-        if (securityUtils.isCurrentUserRegistrationSecretary() || (!r.hasBeenValidated())) {
+        if (securityUtils.isCurrentUserRegistrationSecretary() || r.canUpdate()) {
             r.updateStatus(securityUtils.currentUser, Action.DELETED, Status.DELETED, "")
             r.save()
             flash.message = "Registration $r.name for $r.team.name ($r.team.club.name) deleted."
         }
         else {
             flash.errors = "Cannot delete registration $r.name for $r.team.name ($r.team.club.name) as this registration is or has been validated. Please contact the Registration Secretary."
+        }
+        redirect(uri: params.targetUri)
+    }
+
+    @Secured(["ROLE_CLUB_SECRETARY"])
+    def undelete = {
+
+        Registration r = Registration.get(params.id)
+        if (securityUtils.isCurrentUserRegistrationSecretary() || r.canUpdate()) {
+            r.updateStatus(securityUtils.currentUser, Action.UNDELETED, Status.NEW, "")
+            r.save()
+            flash.message = "Registration $r.name for $r.team.name ($r.team.club.name) undeleted."
+        }
+        else {
+            flash.errors = "Cannot undelete registration $r.name for $r.team.name ($r.team.club.name) as this registration is or has been validated. Please contact the Registration Secretary."
         }
         redirect(uri: params.targetUri)
     }

@@ -11,6 +11,21 @@ class DateTimeUtils {
     private static final DateTimeFormatter fileNameDateTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss")
     private final DateTime d
 
+    static DateTime getRegistrationDeadline() {
+        DateTime dt = new DateTime()
+        return dt.withYear(2013).withMonthOfYear(7).withDayOfMonth(31)
+    }
+
+    static DateTime getSeasonStartDate() {
+        DateTime dt = new DateTime()
+        return dt.withYear(2013).withMonthOfYear(9).withDayOfMonth(1)
+    }
+
+    static boolean isBeforeSeasonStart() {
+        DateTimeUtils currentDate = new DateTimeUtils(new DateTime())
+        return currentDate.isBefore(DateTimeUtils.seasonStartDate)
+    }
+
     static String printDateTime(DateTime d) {
         return dateFormatter.print(d)
     }

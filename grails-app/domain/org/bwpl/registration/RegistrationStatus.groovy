@@ -12,7 +12,7 @@ class RegistrationStatus {
 
     static constraints = {
 
-        action(blank: false, inList: ["Added", "Deleted", "Validated"])
+        action(blank: false, inList: ["Added", "Deleted", "Undeleted", "Validated"])
         status(blank: false, inList: ["New", "Invalid", "Valid", "Deleted"])
     }
 

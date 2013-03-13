@@ -3,7 +3,7 @@
     <table class="bwpl-form-table">
         <tbody>
         <tr>
-            <g:if test="${(Status.INVALID == r?.statusAsEnum) && (!r?.hasBeenValidated())}">
+            <g:if test="${r?.canUpdate()}">
                 <td>Firstname:</td><td><g:textField name="firstName" required="true" value="${r?.firstName}"/></td>
                 <td>Lastname:</td><td><g:textField name="lastName" required="true"  value="${r?.lastName}"/></td>
             </g:if>
@@ -13,7 +13,7 @@
             </g:else>
         </tr>
         <tr>
-            <g:if test="${(Status.INVALID == r?.statusAsEnum) && (!r?.hasBeenValidated())}">
+            <g:if test="${r?.canUpdate()}">
                 <td>Role:</td><td><g:select name="role" from="${["Player", "Coach"]}" value="${r?.role}"/></td>
                 <td>ASA Number:</td><td><g:textField name="asaNumber" required="true" value="${r?.asaNumber}"/></td>
             </g:if>
@@ -34,7 +34,7 @@
             <tbody>
 
                 <tr>
-                    <td>Status:</td><td><g:select name="status" from="${["Valid", "Invalid"]}" value=""/></td>
+                    <td>Status:</td><td><g:select name="status" from="${["New", "Valid", "Invalid", "Deleted"]}" value=""/></td>
                 </tr>
                 <tr>
                     <td>Details:</td><td colspan="3"><g:textArea name="statusNotes" rows="3" cols="70"/></td>
