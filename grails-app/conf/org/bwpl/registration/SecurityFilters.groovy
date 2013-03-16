@@ -8,6 +8,19 @@ class SecurityFilters {
 
     def filters = {
 
+        ClubControllerAccessFilter(controller: "club", action: "asaemail") {
+
+            before = {
+
+                Club club = getClubForClubContext(params)
+
+                if (!securityUtils.canUserUpdate(club)) {
+                    redirect(controller: "login", action: "auth")
+                    return false
+                }
+            }
+        }
+
         TeamControllerAccessFilter(controller: "team", action: "(upload|uploadRegistrations|deleteRegistrations)") {
 
             before = {
@@ -44,6 +57,18 @@ class SecurityFilters {
                 }
             }
         }
+    }
+
+    private static Club getClubForClubContext(def params) {
+
+        Club club = null
+        if (params.id) {
+            club = Club.get(params.id)
+        }
+        if (club == null) {
+            throw new IllegalArgumentException("Error club is null")
+        }
+        return club
     }
 
     private static Team getTeamForTeamContext(def params) {

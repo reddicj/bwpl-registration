@@ -38,9 +38,9 @@ class CsvReader {
         }
     }
 
-    private static String[] getCsvTokens(String it) {
+    static String[] getCsvTokens(String str) {
 
-        StrTokenizer tokenizer = StrTokenizer.getCSVInstance(it)
+        StrTokenizer tokenizer = StrTokenizer.getCSVInstance(str)
         tokenizer.setTrimmerMatcher(StrMatcher.spaceMatcher())
         return tokenizer.getTokenArray()
     }

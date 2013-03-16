@@ -8,7 +8,8 @@ import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.RegistrationStats
 import org.bwpl.registration.validation.Status
 import org.bwpl.registration.validation.Action
-import org.bwpl.registration.utils.DataUtils
+
+import org.bwpl.registration.utils.RegistrationDataUtils
 
 class TeamController {
 
@@ -22,7 +23,7 @@ class TeamController {
         Team team = Team.get(params.id)
         List<Team> teams = new ArrayList<Team>(team.club.teams)
         teams.sort{it.name}
-        List<Registration> registrations = DataUtils.getRegistrations(team.registrations, params.rfilter, params.sort)
+        List<Registration> registrations = RegistrationDataUtils.getRegistrations(team.registrations, params.rfilter, params.sort)
         boolean hasAnyRegistrations = !team.club.registrations.isEmpty()
         boolean canUpdate = securityUtils.canUserUpdate(team.club)
         boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()

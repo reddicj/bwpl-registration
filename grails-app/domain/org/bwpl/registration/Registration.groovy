@@ -1,9 +1,10 @@
 package org.bwpl.registration
 
+import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang.WordUtils
+import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
-import org.bwpl.registration.utils.DateTimeUtils
-import org.joda.time.DateTime
 
 class Registration {
 
@@ -26,6 +27,32 @@ class Registration {
 
     static belongsTo = [team: Team]
     static hasMany = [statusEntries: RegistrationStatus]
+
+    static List<Registration> search(String firstName, String lastName) {
+
+        List<Registration> results = null
+        if (!StringUtils.isAlpha(firstName)) return []
+        if (!StringUtils.isAlpha(lastName)) return []
+        if (StringUtils.isNotBlank(firstName)) {
+            firstName = WordUtils.capitalize(firstName.trim())
+            if (StringUtils.isNotBlank(lastName)) {
+                lastName = WordUtils.capitalize(lastName.trim())
+                results = Registration.findAllByFirstNameAndLastName(firstName, lastName)
+            }
+            else {
+                results = Registration.findAllByFirstName(firstName)
+            }
+        }
+        else if (StringUtils.isNotBlank(lastName)) {
+            lastName = WordUtils.capitalize(lastName.trim())
+            results = Registration.findAllByLastName(lastName)
+        }
+        else {
+            results = []
+        }
+        results.sort{it.name}
+        return results
+    }
 
     Integer asaNumber
     String firstName

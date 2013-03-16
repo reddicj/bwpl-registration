@@ -1,23 +1,15 @@
 package org.bwpl.registration
 
-import static org.bwpl.registration.utils.ValidationUtils.*
-
-import org.apache.commons.lang.StringUtils
-import org.bwpl.registration.nav.NavItems
-import org.bwpl.registration.utils.SecurityUtils
-import org.bwpl.registration.validation.RegistrationStats
-import org.bwpl.registration.validation.ValidationQueue
-import org.codehaus.groovy.grails.plugins.springsecurity.SpringSecurityUtils
-import org.bwpl.registration.utils.DateTimeUtils
-import org.bwpl.registration.utils.CsvWriter
-
-import org.bwpl.registration.validation.Status
-import org.bwpl.registration.validation.Action
-import org.bwpl.registration.validation.Validator
-import org.apache.commons.lang.WordUtils
 import grails.plugins.springsecurity.Secured
-import org.bwpl.registration.upload.UploadException
+import org.apache.commons.lang.StringUtils
+import org.bwpl.registration.data.RegistrationData
+import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
+import org.bwpl.registration.upload.UploadException
+import org.bwpl.registration.utils.CsvWriter
+import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.SecurityUtils
+import org.bwpl.registration.validation.*
 
 class RegistrationController {
 
@@ -59,7 +51,7 @@ class RegistrationController {
         Team team = Team.get(params.teamId)
         render(view: "edit", model: [user: securityUtils.currentUser,
                                      navItems: nav.getNavItems(),
-                                     title: "Add Registration  for ${team.nameAndGender}",
+                                     title: "Add Registration for ${team.nameAndGender}",
                                      team: team])
     }
 
@@ -67,7 +59,8 @@ class RegistrationController {
     def add = {
 
         Team t = Team.get(params.teamId)
-        String errors = getRegistrationFormErrors(t, params)
+        RegistrationData registrationData = RegistrationData.fromFormParams(t, params)
+        String errors = registrationData.getErrors(t)
 
         if (!errors.isEmpty()) {
             flash.errors = "Error adding registration for $t.name ($t.club.name) - $errors"
@@ -78,10 +71,10 @@ class RegistrationController {
         }
 
         Registration r = new Registration()
-        r.firstName = WordUtils.capitalize(params["firstName"])
-        r.lastName = WordUtils.capitalize(params["lastName"])
-        r.role = WordUtils.capitalize(params["role"])
-        r.asaNumber = Integer.parseInt(params["asaNumber"])
+        r.firstName = registrationData.firstName
+        r.lastName = registrationData.lastName
+        r.role = registrationData.role
+        r.asaNumber = registrationData.asaNumber
         r.updateStatus(securityUtils.currentUser, Action.ADDED, Status.NEW, "")
         t.addToRegistrations(r)
         t.save()
@@ -95,7 +88,8 @@ class RegistrationController {
 
         Team t = Team.get(params.teamId)
         Registration r = Registration.get(params.id)
-        String errors = getRegistrationFormErrors(t, params)
+        RegistrationData registrationData = RegistrationData.fromFormParams(t, params)
+        String errors = registrationData.getErrors(t)
 
         if (!errors.isEmpty()) {
             flash.errors = "Error updating registration $r.name for $r.team.name ($r.team.club.name) - $errors"
@@ -117,10 +111,10 @@ class RegistrationController {
             }
         }
 
-        r.firstName = WordUtils.capitalize(params["firstName"])
-        r.lastName = WordUtils.capitalize(params["lastName"])
-        r.role = WordUtils.capitalize(params["role"])
-        r.asaNumber = Integer.parseInt(params["asaNumber"])
+        r.firstName = registrationData.firstName
+        r.lastName = registrationData.lastName
+        r.role = registrationData.role
+        r.asaNumber = registrationData.asaNumber
 
         if (securityUtils.isCurrentUserRegistrationSecretary()) {
             Status status = Status.fromString(params["status"])
@@ -163,25 +157,9 @@ class RegistrationController {
     }
 
     @Secured(["ROLE_READ_ONLY"])
-    def list = {
-
-        List<Registration> registrations = getRegistrations(params.rfilter)
-        boolean canUpdate = securityUtils.isCurrentUserRegistrationSecretary()
-
-        [user: securityUtils.currentUser,
-         navItems: nav.getNavItems(),
-         subNavItems: nav.getRegistrationsNavItems(),
-         tabItems: nav.getRegistrationsTabs(),
-         registrations: registrations,
-         stats: new RegistrationStats(registrations),
-         canUpdate: canUpdate,
-         doDisplayValidateButton: doDisplayValidateButton(canUpdate, params.rfilter)]
-    }
-
-    @Secured(["ROLE_READ_ONLY"])
     def search = {
 
-        List<Registration> results = getSearchResults(params["firstName"], params["lastName"])
+        List<Registration> results = Registration.search(params["firstName"], params["lastName"])
         [user: securityUtils.currentUser,
          navItems: nav.getNavItems(),
          firstName: StringUtils.trimToEmpty(params["firstName"]),
@@ -197,7 +175,7 @@ class RegistrationController {
         boolean canUpdate = securityUtils.canUserUpdate(r.team.club)
         boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
         [user: securityUtils.currentUser,
-         title: "$r.name",
+         title: r.name,
          navItems: nav.getNavItems(),
          registration: r,
          canUpdate: canUpdate,
@@ -273,83 +251,5 @@ class RegistrationController {
             return registrations.findAll {it.statusAsEnum in [Status.NEW, Status.INVALID]}
         }
         return new HashSet<Registration>()
-    }
-
-    private static List<Registration> getRegistrations(String registrationFilter) {
-
-        if ("invalid" == registrationFilter) {
-            return Registration.findAllByStatus(Status.INVALID.toString()).sort{it.name}
-        }
-        else if ("valid" == registrationFilter) {
-            return Registration.findAllByStatus(Status.VALID.toString()).sort{it.name}
-        }
-        else if ("deleted" == registrationFilter) {
-            return Registration.findAllByStatus(Status.DELETED.toString()).sort{it.name}
-        }
-        else {
-            return Registration.findAllByStatusOrStatus(Status.VALID.toString(), Status.INVALID.toString()).sort{it.name}
-        }
-    }
-
-    private static boolean doDisplayValidateButton(boolean canUserUpdate, String rfilter) {
-        return canUserUpdate && !StringUtils.equals(rfilter, "deleted")
-    }
-
-    private static List<Registration> getSearchResults(String firstName, String lastName) {
-
-        List<Registration> results = null
-        if (!StringUtils.isAlpha(firstName)) return []
-        if (!StringUtils.isAlpha(lastName)) return []
-        if (StringUtils.isNotBlank(firstName)) {
-            firstName = WordUtils.capitalize(firstName.trim())
-            if (StringUtils.isNotBlank(lastName)) {
-                lastName = WordUtils.capitalize(lastName.trim())
-                results = Registration.findAllByFirstNameAndLastName(firstName, lastName)
-            }
-            else {
-                results = Registration.findAllByFirstName(firstName)
-            }
-        }
-        else if (StringUtils.isNotBlank(lastName)) {
-            lastName = WordUtils.capitalize(lastName.trim())
-            results = Registration.findAllByLastName(lastName)
-        }
-        else {
-            results = []
-        }
-        results.sort{it.name}
-        return results
-    }
-
-    private static String getRegistrationFormErrors(Team team, def params) {
-
-        List<String> errors = []
-
-        checkForNullOrEmptyValue("Firstname", params["firstName"], errors)
-        checkValueIsAlpha("Firstname", params["firstName"], errors)
-
-        checkForNullOrEmptyValue("Lastname", params["lastName"], errors)
-        checkValueIsAlpha("Lastname", params["lastName"], errors)
-
-        checkForNullOrEmptyValue("Role", params["role"], errors)
-        checkValueInList("Role", params["role"], ["Player", "Coach"], errors)
-
-        checkForNullOrEmptyValue("ASA Number", params["asaNumber"], errors)
-        checkValueIsNumeric("ASA number", params["asaNumber"], errors)
-
-        if (!errors.isEmpty()) {
-            return errors.join(", ")
-        }
-        else {
-            // check if registration already exists
-            String firstname = WordUtils.capitalize(params["firstName"])
-            String lastname = WordUtils.capitalize(params["lastName"])
-            int asaNumber = Integer.parseInt(params["asaNumber"])
-            Registration registration = Registration.findByTeamAndAsaNumber(team, asaNumber)
-            if (registration) return "registration with ASA number $registration.asaNumber ($registration.name) already exists."
-            registration = Registration.findByTeamAndFirstNameAndLastName(team, firstname, lastname)
-            if (registration) return "registration with name $registration.name already exists."
-        }
-        return ""
     }
 }

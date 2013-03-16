@@ -12,23 +12,13 @@ import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.CsvWriter
 
 import org.bwpl.registration.email.ASAEmail
-import org.bwpl.registration.utils.DataUtils
+import org.bwpl.registration.utils.RegistrationDataUtils
 
 class ClubController {
 
     static defaultAction = "list"
     NavItems nav
     SecurityUtils securityUtils
-
-    @Secured(["ROLE_READ_ONLY"])
-    def asaemail = {
-
-        Club club = Club.get(params.id)
-        ASAEmail asaEmail = new ASAEmail()
-        asaEmail.currentUser = securityUtils.currentUser
-        asaEmail.club = club
-        [navItems: nav.getNavItems(), email: asaEmail]
-    }
 
     def list = {
 
@@ -49,7 +39,7 @@ class ClubController {
         Club club = Club.get(params.id)
         List<Team> teams = new ArrayList<Team>(club.teams)
         teams.sort{it.name}
-        List<Registration> registrations = DataUtils.getRegistrations(club.registrations, params.rfilter, params.sort)
+        List<Registration> registrations = RegistrationDataUtils.getRegistrations(club.registrations, params.rfilter, params.sort)
         boolean hasAnyRegistrations = !club.registrations.isEmpty()
         boolean canUpdate = securityUtils.canUserUpdate(club)
         boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
@@ -91,6 +81,17 @@ class ClubController {
         response.outputStream << CsvWriter.csvFieldNames << "\n"
         response.outputStream << CsvWriter.getRegistrationsAsCsvString(club) << "\n"
         response.flushBuffer()
+    }
+
+    // Secured by SecurityFilters.ClubControllerAccessFilter
+    @Secured(["ROLE_CLUB_SECRETARY"])
+    def asaemail = {
+
+        Club club = Club.get(params.id)
+        ASAEmail asaEmail = new ASAEmail()
+        asaEmail.currentUser = securityUtils.currentUser
+        asaEmail.club = club
+        [navItems: nav.getNavItems(), email: asaEmail]
     }
 
     @Secured(["ROLE_REGISTRATION_SECRETARY"])
