@@ -34,7 +34,7 @@
             <tbody>
 
                 <tr>
-                    <td>Status:</td><td><g:select name="status" from="${["New", "Valid", "Invalid", "Deleted"]}" value=""/></td>
+                    <td>Status:</td><td><g:select name="status" from="${["New", "Valid", "Invalid", "Deleted"]}" value="${r?.statusAsEnum.toString()}"/></td>
                 </tr>
                 <tr>
                     <td>Details:</td><td colspan="3"><g:textArea name="statusNotes" rows="3" cols="70"/></td>
