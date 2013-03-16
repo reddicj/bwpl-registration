@@ -89,7 +89,7 @@ class RegistrationController {
         Team t = Team.get(params.teamId)
         Registration r = Registration.get(params.id)
         RegistrationData registrationData = RegistrationData.fromFormParams(t, params)
-        String errors = registrationData.getErrors(t)
+        String errors = registrationData.getFieldValueErrors()
 
         if (!errors.isEmpty()) {
             flash.errors = "Error updating registration $r.name for $r.team.name ($r.team.club.name) - $errors"
@@ -123,7 +123,7 @@ class RegistrationController {
         r.save()
 
         flash.message = "Registration $r.name for $t.name ($t.club.name) updated."
-        redirect(controller: "team", action: "show", id: t.id)
+        redirect(controller: "registration", action: "show", id: r.id)
     }
 
     @Secured(["ROLE_CLUB_SECRETARY"])
@@ -220,6 +220,13 @@ class RegistrationController {
 
     @Secured(["ROLE_CLUB_SECRETARY"])
     def validate = {
+
+        if (params.id) {
+            Registration r = Registration.get(params.id)
+            validator.validate(r)
+            redirect(uri: params.targetUri)
+            return
+        }
 
         ValidationQueue validationQueue = session["validationQueue"]
 

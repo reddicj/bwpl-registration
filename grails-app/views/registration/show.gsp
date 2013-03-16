@@ -4,8 +4,8 @@
     <meta name="layout" content="main">
 </head>
 <body>
-<g:if test="${!isUserRegistrationSecretary && registration.hasBeenValidated()}">
-    <p>Cannot edit or delete this registration as it is or has been validated.</p>
+<g:if test="${!registration.canUpdate()}">
+    <p style="color: red;">Cannot edit or delete this registration as it is or has been validated.</p>
 </g:if>
 <g:render template="list" model="[registrations: [registration]]"/>
 <h2>Status history</h2>
@@ -22,7 +22,7 @@
         </thead>
         <tbody>
         <g:each in="${registration.statusEntriesAsList}" var="statusEntry">
-            <tr>
+            <tr class="${statusEntry.statusAsEnum.toString().toLowerCase()}">
                 <td>${statusEntry.dateAsString}</td>
                 <td>${statusEntry.user.name}</td>
                 <td>${statusEntry.actionAsEnum.toString()}</td>

@@ -67,7 +67,7 @@ class RegistrationData {
         return getTeamRegistrationExistsError(team)
     }
 
-    private String getFieldValueErrors() {
+    String getFieldValueErrors() {
 
         List<String> errors = []
 
@@ -75,7 +75,7 @@ class RegistrationData {
         checkValueIsAlpha("Firstname", firstName, errors)
 
         checkForNullOrEmptyValue("Lastname", lastName, errors)
-        checkValueIsAlpha("Lastname", lastName, errors)
+        checkValueContainsValidNameCharacters("Lastname", lastName, errors)
 
         checkForNullOrEmptyValue("Role", role, errors)
         checkValueInList("Role", role, ["Player", "Coach"], errors)
