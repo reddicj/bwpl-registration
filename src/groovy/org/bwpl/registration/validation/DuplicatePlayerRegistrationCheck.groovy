@@ -6,16 +6,11 @@ class DuplicatePlayerRegistrationCheck {
 
     String getError(Registration registration) {
 
-        if (registration == null) {
-            throw new IllegalArgumentException("Registration is null")
-        }
-        if (registration.role != "Player") {
-            return ""
-        }
+        if (registration == null) throw new IllegalArgumentException("Registration is null")
+        if (registration.role != "Player") return ""
         List<Registration> existingRegistrations = Registration.findAllByAsaNumberAndRoleAndStatus(registration.asaNumber, "Player", Status.VALID.toString())
-        if (existingRegistrations.isEmpty()) {
-            return ""
-        }
-        return "BWPL registered with ${existingRegistrations[0].team.club.name} (${existingRegistrations[0].team.name})."
+        Registration duplicateRegistration = existingRegistrations.find { it.team.id != registration.team.id }
+        if (duplicateRegistration == null) return ""
+        return "BWPL registered with ${duplicateRegistration.team.club.name} (${duplicateRegistration.team.name})."
     }
 }
