@@ -12,12 +12,9 @@ class ASAEmail {
 
     User currentUser
     Club club
-    String lineBreak = "\n"
 
     String getMailToLink() {
-
-        lineBreak = "\n"
-        return "mailto:${getTo(true)}?subject=${getSubject(true)}&body=${getBody(true, "\n")}"
+        return "mailto:${getTo(true)}?subject=${getSubject(true)}&body=${getBody(true, "\n", " ")}"
     }
 
     String getTo(boolean doEncode) {
@@ -33,22 +30,23 @@ class ASAEmail {
         return subject
     }
 
-    String getBody(boolean doEncode, String lineBreak) {
+    String getBody(boolean doEncode, String lineBreak, String space) {
 
-        this.lineBreak = lineBreak
         SimpleTemplateEngine templateEngine = new SimpleTemplateEngine()
         def binding = [clubName:club.name,
                        regSecName:User.registrationSecretary.name,
                        regSecEmail:User.registrationSecretary.email,
-                       lineBreak:lineBreak]
+                       clubSecName: currentUser.name,
+                       lineBreak:lineBreak,
+                       space: space]
         String body = templateEngine.createTemplate(bodyTemplate).make(binding).toString()
-        body = "$body$lineBreak$lineBreak$registrations"
+        body = "$body$lineBreak$lineBreak${getRegistrations(lineBreak)}"
 
         if (doEncode) return encode(body)
         return body
     }
 
-    private String getRegistrations() {
+    private String getRegistrations(String lineBreak) {
 
         List<Registration> invalidRegistrations = new ArrayList<Registration>(club.registrations)
         invalidRegistrations = invalidRegistrations.findAll {it.statusAsEnum == Status.INVALID}
@@ -64,10 +62,16 @@ class ASAEmail {
     }
 
     private static String bodyTemplate =
-        'Please provide the following membership details by return of email for the people listed below.${lineBreak}${lineBreak}' +
-        '* Date registered with $clubName${lineBreak}' +
-        '* Membership Category${lineBreak}${lineBreak}' +
+        'Please provide the following membership information by return of email for the people listed below.${lineBreak}${lineBreak}' +
+        '${space}${space}${space}1. Confirmation that they are currently registered with $clubName.${lineBreak}' +
+        '${space}${space}${space}2. The date they were registered with $clubName.${lineBreak}' +
+        '${space}${space}${space}3. Their membership category.${lineBreak}${lineBreak}' +
         'Note I have checked the ASA Online Membership Check for these people and their details are either not available or ' +
-        'have not been updated on the ASA system. Please copy $regSecName ($regSecEmail), ' +
-        'the British Water Polo League Registration Secretary.'
+        'have not been updated on the ASA system.${lineBreak}${lineBreak}' +
+        'Please copy $regSecName ($regSecEmail), the British Water Polo League Registration Secretary.${lineBreak}${lineBreak}' +
+        'Regards,${lineBreak}' +
+        '${clubSecName}${lineBreak}' +
+        '$clubName${lineBreak}${lineBreak}' +
+        '======================================================${lineBreak}' +
+        'Members to check:'
 }

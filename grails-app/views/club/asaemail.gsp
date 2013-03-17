@@ -12,6 +12,6 @@
 <h2>${email.getSubject(false)}</h2>
 <b>To: </b>${email.getTo(false)}
 <hr/>
-${email.getBody(false, "<br/>")}
+${email.getBody(false, "<br/>", "&nbsp;")}
 </body>
 </html>
