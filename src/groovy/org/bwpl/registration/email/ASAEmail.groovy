@@ -58,7 +58,7 @@ class ASAEmail {
     }
 
     private static String encode(String str) {
-        return URLEncoder.encode(str, "UTF-8")
+        return URLEncoder.encode(str, "UTF-8").replace("+", "%20")
     }
 
     private static String bodyTemplate =
