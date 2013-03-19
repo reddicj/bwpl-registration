@@ -160,6 +160,19 @@ class NavItem {
         return deleteAllRegistrations
     }
 
+    static NavItem getDeleteAllDeletedRegistrationsPermanent(long clubId) {
+
+        NavItem deleteAllPermanent = new NavItem()
+        deleteAllPermanent.with {
+            displayName = "Delete All Permanently"
+            controllerName = "club"
+            actionName = "deleteDeletedRegistrationsPermanently"
+            params = [id: clubId.toString()]
+            onclick = "return confirm('Are you sure you want to delete all deleted registrations permanently?');"
+        }
+        return deleteAllPermanent
+    }
+
     String displayName
     String controllerName
     String actionName

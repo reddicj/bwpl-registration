@@ -13,6 +13,7 @@ import org.bwpl.registration.utils.CsvWriter
 
 import org.bwpl.registration.email.ASAEmail
 import org.bwpl.registration.utils.RegistrationDataUtils
+import org.bwpl.registration.validation.Status
 
 class ClubController {
 
@@ -153,6 +154,21 @@ class ClubController {
         Club c = Club.get(params.id)
         c.delete()
         redirect(action: "list")
+    }
+
+    def deleteDeletedRegistrationsPermanently = {
+
+        Club club = Club.get(params.id)
+        int countOfDeleted = 0
+        club.registrations.each { r ->
+            if (r.statusAsEnum == Status.DELETED) {
+                r.team.removeFromRegistrations(r)
+                r.delete()
+            }
+            countOfDeleted++
+        }
+        flash.message = "$countOfDeleted registrations for $club.name permanently deleted."
+        redirect(action: "show", id: club.id, params: [rfilter: "deleted"])
     }
 
     private static Club updateData(def params) {

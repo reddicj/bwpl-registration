@@ -23,7 +23,10 @@ class NavItems {
     List<NavItem> getClubNavItems(Club club, String rfilter) {
 
         List<NavItem> navItems = []
-        if (rfilter) return navItems
+        if ("deleted" == rfilter) {
+            navItems << NavItem.getDeleteAllDeletedRegistrationsPermanent(club.id)
+            return navItems
+        }
         if (club.registrations.isEmpty()) return navItems
         navItems << NavItem.getExportClubRegistrations(club.id)
         if (securityUtils.canUserUpdate(club)) navItems << NavItem.getASAEmail(club.id)
