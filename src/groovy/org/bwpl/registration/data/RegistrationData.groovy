@@ -45,15 +45,15 @@ class RegistrationData {
     }
 
     String getFirstName() {
-        return WordUtils.capitalize(StringUtils.trimToEmpty(firstName))
+        return WordUtils.capitalizeFully(StringUtils.trimToEmpty(firstName))
     }
 
     String getLastName() {
-        return WordUtils.capitalize(StringUtils.trimToEmpty(lastName))
+        return WordUtils.capitalizeFully(StringUtils.trimToEmpty(lastName))
     }
 
     String getRole() {
-        return WordUtils.capitalize(StringUtils.trimToEmpty(role))
+        return WordUtils.capitalizeFully(StringUtils.trimToEmpty(role))
     }
 
     int getAsaNumber() {
@@ -78,7 +78,7 @@ class RegistrationData {
         checkValueContainsValidNameCharacters("Lastname", lastName, errors)
 
         checkForNullOrEmptyValue("Role", role, errors)
-        checkValueInList("Role", role, ["Player", "Coach"], errors)
+        checkValueInListIgnoreCase("Role", role, ["Player", "Coach"], errors)
 
         checkForNullOrEmptyValue("ASA Number", asaNumberAsString, errors)
         checkValueIsNumeric("ASA number", asaNumberAsString, errors)

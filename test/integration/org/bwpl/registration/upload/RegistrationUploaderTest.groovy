@@ -104,8 +104,8 @@ class RegistrationUploaderTest {
     }
 
     private static final String goodData =
-        "James,Reddick,666,Player\n" +
-        "Gary,Simons,123,Coach"
+        "James,Reddick,666,player\n" +
+        "Gary,Simons,123,COACH"
 
     private static final String badData =
         "James,Reddick,666 ,  Player\n" +
