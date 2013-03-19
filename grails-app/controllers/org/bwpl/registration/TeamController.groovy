@@ -81,7 +81,7 @@ class TeamController {
         int countOfNotDeleted = 0
         team.registrations.each { r ->
 
-            if (!r.hasBeenValidated()) {
+            if (r.canUpdate()) {
                 r.updateStatus(securityUtils.currentUser, Action.DELETED, Status.DELETED, "")
                 r.save()
                 countOfDeleted++
@@ -91,10 +91,11 @@ class TeamController {
 
         StringBuilder sb = new StringBuilder()
         sb << "$countOfDeleted registrations for $team.name ($team.club.name) deleted. "
-        sb << "$countOfNotDeleted registrations for $team.name ($team.club.name) not deleted. "
-        sb << "You cannot delete registrations that have already been validated."
-        flash.message = sb.toString()
-
+        if (countOfNotDeleted > 0) {
+            sb << "$countOfNotDeleted registrations for $team.name ($team.club.name) not deleted. "
+            sb << "You cannot delete registrations that have already been validated."
+        }
+        flash.message = sb.toString().trim()
         redirect(action: "show", id: team.id)
     }
 }
