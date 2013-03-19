@@ -14,7 +14,7 @@ class UserDataHandler implements CsvHandler {
 
         String errors = getErrors(values)
         if (!errors.isEmpty()) {
-            throw new UploadException("Error reading user data --> Line $lineNumber: $errors")
+            throw new UploadException("Line $lineNumber: $errors")
         }
 
         String firstname = values[0]

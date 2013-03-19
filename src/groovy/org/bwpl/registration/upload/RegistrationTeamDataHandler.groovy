@@ -19,12 +19,12 @@ class RegistrationTeamDataHandler implements CsvHandler {
 
             String expected = "Expected fields: ${fieldNames.join(", ")}"
             String actual = "Actual fields: ${values.join(", ")}"
-            throw new UploadException("Error reading registration data - line $lineNumber: $expected, $actual")
+            throw new UploadException("Line $lineNumber: $expected, $actual")
         }
 
         RegistrationData registrationData = RegistrationData.fromArray(values)
         String errors = registrationData.getErrors(team)
-        if (!errors.isEmpty()) throw new UploadException("Error reading registration data - line $lineNumber: $errors")
+        if (!errors.isEmpty()) throw new UploadException("Line $lineNumber: $errors")
 
         Registration registration = Registration.findByTeamAndAsaNumber(team, registrationData.asaNumber)
         if (registration) return

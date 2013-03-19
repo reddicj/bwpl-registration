@@ -18,7 +18,7 @@ class RegistrationDataHandler implements CsvHandler {
 
             String expected = "Expected fields: ${fieldNames.join(", ")}"
             String actual = "Actual fields: ${values.join(", ")}"
-            throw new UploadException("Error reading registration data - Line $lineNumber: $expected, $actual")
+            throw new UploadException("Line $lineNumber: $expected, $actual")
         }
 
         String clubName = values[0]
@@ -31,7 +31,7 @@ class RegistrationDataHandler implements CsvHandler {
         List<String> registrationValues = values[2 .. (values.length - 1)]
         RegistrationData registrationData = RegistrationData.fromCsvList(registrationValues)
         String errors = registrationData.getErrors(team)
-        if (!errors.isEmpty()) throw new UploadException("Error reading registration data - line $lineNumber: $errors")
+        if (!errors.isEmpty()) throw new UploadException("Line $lineNumber: $errors")
 
         Registration registration = Registration.findByTeamAndAsaNumber(team, registrationData.asaNumber)
         if (!registration) {

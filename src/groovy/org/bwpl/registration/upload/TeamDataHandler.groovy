@@ -13,7 +13,7 @@ class TeamDataHandler implements CsvHandler {
 
         String errors = getErrors(values)
         if (!errors.isEmpty()) {
-            throw new UploadException("Error reading team data --> Line $lineNumber: $errors")
+            throw new UploadException("Line $lineNumber: $errors")
         }
 
         String clubName = values[0]

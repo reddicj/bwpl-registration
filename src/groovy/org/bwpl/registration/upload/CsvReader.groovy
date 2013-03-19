@@ -28,13 +28,30 @@ class CsvReader {
     private void readData(String data) {
 
         int lineNumber = 0
+        int countOfSuccess = 0
+        StringBuilder errors = new StringBuilder()
+
         data.eachLine {
+
             lineNumber++
             if (StringUtils.isNotBlank(it)) {
+
                 String line = it.trim()
                 String[] values = getCsvTokens(line)
-                contentHandler.processTokens(lineNumber, values)
+
+                try {
+                    contentHandler.processTokens(lineNumber, values)
+                    countOfSuccess++
+                }
+                catch (UploadException e) {
+                    if (errors.size() > 0) errors << " / "
+                    errors << e.message
+                }
             }
+        }
+
+        if (errors.size() > 0) {
+            throw new UploadException("Uploaded $countOfSuccess registrations successfully, but csv file errors: ${errors.toString()}")
         }
     }
 
