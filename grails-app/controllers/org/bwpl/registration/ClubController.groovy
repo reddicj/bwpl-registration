@@ -164,8 +164,8 @@ class ClubController {
             if (r.statusAsEnum == Status.DELETED) {
                 r.team.removeFromRegistrations(r)
                 r.delete()
+                countOfDeleted++
             }
-            countOfDeleted++
         }
         flash.message = "$countOfDeleted registrations for $club.name permanently deleted."
         redirect(action: "show", id: club.id, params: [rfilter: "deleted"])
