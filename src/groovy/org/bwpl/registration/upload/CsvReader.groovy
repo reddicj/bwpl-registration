@@ -51,7 +51,7 @@ class CsvReader {
         }
 
         if (errors.size() > 0) {
-            throw new UploadException("Uploaded $countOfSuccess registrations successfully, but csv file errors: ${errors.toString()}")
+            throw new UploadException("Uploaded $countOfSuccess registrations successfully, csv file errors: ${errors.toString()}")
         }
     }
 

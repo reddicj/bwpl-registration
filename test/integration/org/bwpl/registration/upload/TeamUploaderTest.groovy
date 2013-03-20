@@ -50,7 +50,7 @@ class TeamUploaderTest {
         }
         catch (UploadException e) {
             String msg = e.message
-            assertThat(e.message).startsWith("Error reading team data")
+            assertThat(e.message).contains("csv file errors")
         }
     }
 

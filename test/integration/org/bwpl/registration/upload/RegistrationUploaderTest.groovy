@@ -77,7 +77,7 @@ class RegistrationUploaderTest {
             Assert.fail()
         }
         catch (UploadException e) {
-            assertThat(e.message).startsWith("Error reading registration data")
+            assertThat(e.message).contains("csv file errors")
         }
     }
 
