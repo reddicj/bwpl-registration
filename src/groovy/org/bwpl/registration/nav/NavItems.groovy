@@ -3,6 +3,8 @@ package org.bwpl.registration.nav
 import org.bwpl.registration.Club
 import org.bwpl.registration.Team
 import org.bwpl.registration.utils.SecurityUtils
+import org.bwpl.registration.Registration
+import org.bwpl.registration.validation.Status
 
 class NavItems {
 
@@ -13,7 +15,6 @@ class NavItems {
         List<NavItem> navItems = []
         addUserClubNavItem(navItems)
         navItems << NavItem.clubList
-        // navItems << NavItem.registrationsList
         navItems << NavItem.searchRegistrations
         navItems << NavItem.admin
         if (securityUtils.isCurrentUserRegistrationSecretary()) navItems << NavItem.securityManagementConsole
@@ -24,7 +25,8 @@ class NavItems {
 
         List<NavItem> navItems = []
         if ("deleted" == rfilter) {
-            navItems << NavItem.getDeleteAllDeletedRegistrationsPermanent(club.id)
+            Registration r = club.registrations.find { it.statusAsEnum == Status.DELETED }
+            if (r != null) navItems << NavItem.getDeleteAllDeletedRegistrations(club.id)
             return navItems
         }
         if (club.registrations.isEmpty()) return navItems
@@ -40,31 +42,12 @@ class NavItems {
         if (securityUtils.canUserUpdate(team.club)) {
             navItems << NavItem.getUploadRegistrations(team.id)
             navItems << NavItem.getAddRegistration(team.id)
-            navItems << NavItem.getDeleteAllRegistrations(team.id)
+            if (!team.registrations.isEmpty()) navItems << NavItem.getDeleteAllRegistrations(team.id)
         }
         if ((!team.registrations.isEmpty()) && (team.club.teams.size() == 1)) {
             navItems << NavItem.getExportClubRegistrations(team.club.id)
             navItems << NavItem.getASAEmail(team.club.id)
         }
-        return navItems
-    }
-
-    List<NavItem> getRegistrationsNavItems() {
-
-        List<NavItem> navItems = []
-        if (securityUtils.isCurrentUserRegistrationSecretary()) {
-            navItems << NavItem.uploadAllRegistrations
-            navItems << NavItem.exportAllRegistrations
-        }
-        return navItems
-    }
-
-    List<NavItem> getRegistrationsTabs() {
-
-        List<NavItem> navItems = []
-        navItems << NavItem.registrationsTabAll
-        navItems << NavItem.registrationsTabInvalid
-        navItems << NavItem.registrationsTabDeleted
         return navItems
     }
 

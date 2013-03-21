@@ -8,7 +8,7 @@ class SecurityFilters {
 
     def filters = {
 
-        ClubControllerAccessFilter(controller: "club", action: "asaemail") {
+        ClubControllerAccessFilter(controller: "club", action: "(asaemail|deleteDeletedRegistrations)") {
 
             before = {
 

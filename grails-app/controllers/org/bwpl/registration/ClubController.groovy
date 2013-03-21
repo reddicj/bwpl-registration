@@ -156,7 +156,9 @@ class ClubController {
         redirect(action: "list")
     }
 
-    def deleteDeletedRegistrationsPermanently = {
+    // Secured by SecurityFilters.ClubControllerAccessFilter
+    @Secured(["ROLE_CLUB_SECRETARY"])
+    def deleteDeletedRegistrations = {
 
         Club club = Club.get(params.id)
         int countOfDeleted = 0
