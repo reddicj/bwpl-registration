@@ -25,7 +25,7 @@ class RegistrationStatus {
     String notes
 
     String getDateAsString() {
-        return DateTimeUtils.printDate(date)
+        return DateTimeUtils.printDateTime(date)
     }
 
     Status getStatusAsEnum() {

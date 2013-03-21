@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormat
 class DateTimeUtils {
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd-MM-yyyy")
+    private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm")
     private static final DateTimeFormatter fileNameDateTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss")
     private final DateTime d
 
@@ -35,6 +36,13 @@ class DateTimeUtils {
         if (d == null) return ""
         DateTime dt = new DateTime(d)
         return dateFormatter.print(dt)
+    }
+
+    static String printDateTime(Date d) {
+
+        if (d == null) return ""
+        DateTime dt = new DateTime(d)
+        return dateTimeFormatter.print(dt)
     }
 
     static String printFileNameDateTime(Date d) {
