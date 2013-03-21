@@ -142,6 +142,18 @@ class RegistrationController {
     }
 
     @Secured(["ROLE_CLUB_SECRETARY"])
+    def deleteDeleted = {
+
+        Registration r = Registration.get(params.id)
+        long id = r.team.club.id
+        String msg = "Registration for $r.name for $r.team.name ($r.team.club.name) permanently deleted."
+        r.team.removeFromRegistrations(r)
+        r.delete()
+        flash.message = msg
+        redirect(controller: "club", action: "show", id: id, params: [rfilter: "deleted"])
+    }
+
+    @Secured(["ROLE_CLUB_SECRETARY"])
     def undelete = {
 
         Registration r = Registration.get(params.id)
