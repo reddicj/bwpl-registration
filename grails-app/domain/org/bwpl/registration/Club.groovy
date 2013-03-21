@@ -1,6 +1,7 @@
 package org.bwpl.registration
 
 import org.apache.commons.lang.StringUtils
+import org.bwpl.registration.validation.Status
 
 class Club {
 
@@ -48,6 +49,12 @@ class Club {
             registrations.addAll(it.registrations)
         }
         return registrations
+    }
+
+    Set<Registration> getRegistrations(Status status) {
+
+        Set<Registration> registrations = registrations
+        return registrations.findAll {it.statusAsEnum == status}
     }
 
     @Override

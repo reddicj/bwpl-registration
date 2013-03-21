@@ -25,13 +25,12 @@ class NavItems {
 
         List<NavItem> navItems = []
         if ("deleted" == rfilter) {
-            Registration r = club.registrations.find { it.statusAsEnum == Status.DELETED }
-            if (r != null) navItems << NavItem.getDeleteAllDeletedRegistrations(club.id)
+            if (doDisplayDeleteAllDeleted(club)) navItems << NavItem.getDeleteAllDeletedRegistrations(club.id)
             return navItems
         }
         if (club.registrations.isEmpty()) return navItems
         navItems << NavItem.getExportClubRegistrations(club.id)
-        if (securityUtils.canUserUpdate(club)) navItems << NavItem.getASAEmail(club.id)
+        if (doDisplayASAEmail(club)) navItems << NavItem.getASAEmail(club.id)
         return navItems
     }
 
@@ -46,9 +45,21 @@ class NavItems {
         }
         if ((!team.registrations.isEmpty()) && (team.club.teams.size() == 1)) {
             navItems << NavItem.getExportClubRegistrations(team.club.id)
-            navItems << NavItem.getASAEmail(team.club.id)
+            if (doDisplayASAEmail(team.club)) navItems << NavItem.getASAEmail(team.club.id)
         }
         return navItems
+    }
+
+    private boolean doDisplayASAEmail(Club club) {
+
+        if (!securityUtils.canUserUpdate(club)) return false
+        return !club.getRegistrations(Status.INVALID).isEmpty()
+    }
+
+    private boolean doDisplayDeleteAllDeleted(Club club) {
+
+        if (!securityUtils.canUserUpdate(club)) return false
+        return !club.getRegistrations(Status.DELETED).isEmpty()
     }
 
     private void addUserClubNavItem(List<NavItem> navItems) {
