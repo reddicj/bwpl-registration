@@ -6,7 +6,7 @@
 </head>
 <body>
 <div class="bwpl-nav">
-    <ul><li><a href="${email.mailToLink}">Create Email</a></li></ul>
+    <ul><li><a href="${email.mailToLink}" target="_blank">Create Email</a></li></ul>
 </div>
 <hr/>
 <h2>${email.getSubject(false)}</h2>

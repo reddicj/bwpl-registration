@@ -40,7 +40,9 @@ class ASAEmail {
                        lineBreak:lineBreak,
                        space: space]
         String body = templateEngine.createTemplate(bodyTemplate).make(binding).toString()
-        body = "$body$lineBreak$lineBreak${getRegistrations(lineBreak)}"
+        if (!doEncode) {
+            body = "$body$lineBreak$lineBreak${getRegistrations(lineBreak)}"
+        }
 
         if (doEncode) return encode(body)
         return body
