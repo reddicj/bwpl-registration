@@ -14,6 +14,7 @@ import org.bwpl.registration.utils.CsvWriter
 import org.bwpl.registration.email.ASAEmail
 import org.bwpl.registration.utils.RegistrationDataUtils
 import org.bwpl.registration.validation.Status
+import org.apache.commons.lang.RandomStringUtils
 
 class ClubController {
 
@@ -211,7 +212,7 @@ class ClubController {
                 firstname = params["secretary-firstname-new"]
                 lastname = params["secretary-lastname-new"]
                 username = params["secretary-email-new"]
-                password = "password" //TODO RandomStringUtils.random(10, true, true)
+                password = RandomStringUtils.random(10, true, true)
                 accountLocked = false
                 passwordExpired = false
                 enabled = true

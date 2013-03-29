@@ -5,6 +5,7 @@ import org.bwpl.registration.User
 import org.bwpl.registration.Role
 import org.bwpl.registration.UserRole
 import org.bwpl.registration.Club
+import org.apache.commons.lang.RandomStringUtils
 
 class UserDataHandler implements CsvHandler {
 
@@ -30,7 +31,7 @@ class UserDataHandler implements CsvHandler {
         user.lastname = lastname
         user.username = email
         user.enabled = true
-        user.password = "password"
+        user.password = RandomStringUtils.random(10, true, true)
         user.save()
 
         if ("CLUB_SECRETARY".equals(role)) {
