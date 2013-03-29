@@ -169,7 +169,7 @@ class ClubController {
                 countOfDeleted++
             }
         }
-        flash.message = "$countOfDeleted registrations for $club.name permanently deleted."
+        flash.message = "$countOfDeleted registrations for $club.name removed permanently."
         redirect(action: "show", id: club.id, params: [rfilter: "deleted"])
     }
 
