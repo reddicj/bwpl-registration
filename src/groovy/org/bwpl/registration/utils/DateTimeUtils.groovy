@@ -4,31 +4,30 @@ import org.joda.time.DateTime
 import org.joda.time.DateTimeComparator
 import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormat
+import org.codehaus.groovy.grails.commons.GrailsApplication
 
 class DateTimeUtils {
 
     private static final DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd-MM-yyyy")
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm")
     private static final DateTimeFormatter fileNameDateTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss")
-    private final DateTime d
 
-    static DateTime getRegistrationDeadline() {
-        DateTime dt = new DateTime()
-        return dt.withYear(2013).withMonthOfYear(7).withDayOfMonth(31)
+    GrailsApplication grailsApplication
+
+    DateTime getPreSeasonDeadline() {
+
+        String s = grailsApplication.config.bwpl.registration.pre.season.date
+        return parse(s)
     }
 
-    static DateTime getSeasonStartDate() {
-        DateTime dt = new DateTime()
-        return dt.withYear(2013).withMonthOfYear(9).withDayOfMonth(1)
+    DateTime getSeasonStartDate() {
+
+        String s = grailsApplication.config.bwpl.registration.season.start.date
+        return parse(s)
     }
 
-    static boolean isBeforeSeasonStart() {
-        DateTimeUtils currentDate = new DateTimeUtils(new DateTime())
-        return currentDate.isBefore(DateTimeUtils.seasonStartDate)
-    }
-
-    static String printDateTime(DateTime d) {
-        return dateFormatter.print(d)
+    boolean isBeforeSeasonStart() {
+        return isBefore(new DateTime(), seasonStartDate)
     }
 
     static String printDate(Date d) {
@@ -62,27 +61,15 @@ class DateTimeUtils {
         return dateFormatter.parseDateTime(str)
     }
 
-    static DateTimeUtils createFromDate(Date d) {
-        return new DateTimeUtils(new DateTime(d))
-    }
-
-    DateTimeUtils(DateTime d) {
-        this.d = d
-    }
-
-    boolean isBefore(DateTime d) {
+    static boolean isBefore(DateTime date, DateTime compareToDate) {
 
         DateTimeComparator comparator = DateTimeComparator.dateOnlyInstance
-        return comparator.compare(d, this.d) > 0
+        return comparator.compare(compareToDate, date) > 0
     }
 
-    boolean isAfter(DateTime d) {
+    static boolean isAfter(DateTime date, DateTime compareToDate) {
 
         DateTimeComparator comparator = DateTimeComparator.dateOnlyInstance
-        return comparator.compare(this.d, d) > 0
-    }
-
-    String print() {
-        print(d)
+        return comparator.compare(date, compareToDate) > 0
     }
 }

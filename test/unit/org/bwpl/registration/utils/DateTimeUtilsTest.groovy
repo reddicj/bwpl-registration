@@ -12,11 +12,11 @@ class DateTimeUtilsTest {
         DateTime d1 = new DateTime().withYear(2012).withMonthOfYear(5).withDayOfMonth(12)
         DateTime d2 = new DateTime().withYear(2011).withMonthOfYear(5).withDayOfMonth(12)
         DateTime d3 = new DateTime().withYear(2012).withMonthOfYear(5).withDayOfMonth(12)
-        DateTimeUtils date1 = new DateTimeUtils(d1)
-        assertThat(date1.isBefore(d2)).isFalse()
-        assertThat(date1.isAfter(d2)).isTrue()
-        assertThat(date1.isBefore(d3)).isFalse()
-        assertThat(date1.isAfter(d3)).isFalse()
+
+        assertThat(DateTimeUtils.isBefore(d1, d2)).isFalse()
+        assertThat(DateTimeUtils.isAfter(d1, d2)).isTrue()
+        assertThat(DateTimeUtils.isBefore(d1, d3)).isFalse()
+        assertThat(DateTimeUtils.isAfter(d1, d3)).isFalse()
     }
 
     @Test

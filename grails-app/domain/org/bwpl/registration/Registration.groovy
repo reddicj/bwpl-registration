@@ -54,6 +54,8 @@ class Registration {
         return results
     }
 
+    def dateTimeUtils
+
     Integer asaNumber
     String firstName
     String lastName
@@ -147,7 +149,7 @@ class Registration {
 
     boolean canUpdate() {
 
-        if (DateTimeUtils.isBeforeSeasonStart()) return true
+        if (dateTimeUtils.isBeforeSeasonStart()) return true
         if (statusAsEnum == Status.NEW) return true
         return !hasBeenValidated()
     }
