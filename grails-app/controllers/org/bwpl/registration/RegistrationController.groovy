@@ -146,7 +146,7 @@ class RegistrationController {
 
         Registration r = Registration.get(params.id)
         long id = r.team.club.id
-        String msg = "Registration for $r.name for $r.team.name ($r.team.club.name) permanently deleted."
+        String msg = "Registration for $r.name for $r.team.name ($r.team.club.name) removed permanently."
         r.team.removeFromRegistrations(r)
         r.delete()
         flash.message = msg
