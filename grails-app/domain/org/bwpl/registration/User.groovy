@@ -76,6 +76,9 @@ class User {
 	}
 
 	protected void encodePassword() {
+
+        // dirty hack to prevent the RegisterController in the Spring Security UI plugin double encoding passwords
+        if (password && password.length() > 16) return
 		password = springSecurityService.encodePassword(password)
 	}
 
