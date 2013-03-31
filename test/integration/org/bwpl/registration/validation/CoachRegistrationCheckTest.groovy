@@ -31,7 +31,6 @@ class CoachRegistrationCheckTest {
             role = "Coach"
             status = Status.INVALID
             statusNote = ""
-            registrationDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
         }
         t1.addToRegistrations(r1)
@@ -49,7 +48,6 @@ class CoachRegistrationCheckTest {
             role = "Player"
             status = Status.INVALID
             statusNote = ""
-            registrationDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
         }
         t2.addToRegistrations(r2)
@@ -67,7 +65,6 @@ class CoachRegistrationCheckTest {
             role = "Coach"
             status = Status.INVALID
             statusNote = ""
-            registrationDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.INVALID, "")
         }
         t3.addToRegistrations(r3)
@@ -85,7 +82,6 @@ class CoachRegistrationCheckTest {
             role = "Player"
             status = Status.INVALID
             statusNote = ""
-            registrationDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.INVALID, "")
         }
         t4.addToRegistrations(r4)
@@ -96,12 +92,10 @@ class CoachRegistrationCheckTest {
     void test() {
 
         CoachRegistrationCheck coachRegistrationCheck = new CoachRegistrationCheck()
-        List<String> errors = coachRegistrationCheck.getErrors(r4)
-        assertThat(errors.size()).isEqualTo(1)
-        assertThat(errors[0]).contains("Registered as a coach for Poly (Poly Men)")
+        String error = coachRegistrationCheck.getError(r4)
+        assertThat(error).isEqualTo("Registered as a coach for Poly (Poly Men)")
 
-        errors = coachRegistrationCheck.getErrors(r3)
-        assertThat(errors.size()).isEqualTo(1)
-        assertThat(errors[0]).contains("Registered as a player for Penguin (Penguin Men)")
+        error = coachRegistrationCheck.getError(r3)
+        assertThat(error).isEqualTo("Registered as a player for Penguin (Penguin Men)")
     }
 }

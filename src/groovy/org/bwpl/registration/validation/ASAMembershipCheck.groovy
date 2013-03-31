@@ -10,6 +10,7 @@ import org.bwpl.registration.Club
 class ASAMembershipCheck {
 
     private final ASAMemberDataRetrieval asaMemberDataRetrieval = new ASAMemberDataRetrieval()
+    static final String NOT_FOUND_MSG = "Not found in ASA membership check."
 
     List<String> getErrors(Registration registration) {
 
@@ -38,7 +39,7 @@ class ASAMembershipCheck {
             return errors
         }
         catch (ASAMemberDataRetrievalException e) {
-            errors << "Not found in ASA membership check."
+            errors << NOT_FOUND_MSG
             return errors
         }
     }

@@ -22,17 +22,17 @@ class RegistrationStatusTest {
         r.firstName = "James"
         r.lastName = "Reddick"
         r.role = "Player"
-        r.updateStatus(TestUtils.getUser(), Action.ADDED, Status.INVALID, "")
+        r.updateStatus(TestUtils.getUser(), Action.ADDED, Status.NEW, "")
 
         t.addToRegistrations(r)
         t.save()
 
         r = Registration.findByAsaNumber(123)
         List<RegistrationStatus> statusEntriesList = r.statusEntriesAsList
-        assertThat(r.statusAsEnum).isEqualTo(Status.INVALID)
+        assertThat(r.statusAsEnum).isEqualTo(Status.NEW)
         assertThat(r.statusEntries.size()).isEqualTo(1)
         assertThat(r.currentStatus.actionAsEnum).isEqualTo(Action.ADDED)
-        assertThat(r.currentStatus.statusAsEnum).isEqualTo(Status.INVALID)
+        assertThat(r.currentStatus.statusAsEnum).isEqualTo(Status.NEW)
         assertThat(r.currentStatus.dateAsString).startsWith(DateTimeUtils.printDate(new Date()))
         assertThat(r.hasBeenValidated()).isFalse()
 

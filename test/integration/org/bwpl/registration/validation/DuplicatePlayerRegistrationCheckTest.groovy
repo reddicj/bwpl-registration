@@ -30,7 +30,6 @@ class DuplicatePlayerRegistrationCheckTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
-        r1.registrationDate = new Date()
 
         Registration r2 = new Registration()
         r2.asaNumber = 123
@@ -39,7 +38,6 @@ class DuplicatePlayerRegistrationCheckTest {
         r2.role = "Player"
         r2.status = Status.INVALID
         r2.statusNote = ""
-        r2.registrationDate = new Date()
 
         t1.addToRegistrations(r1)
         t1.save(failOnError: true)
@@ -72,7 +70,6 @@ class DuplicatePlayerRegistrationCheckTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
-        r1.registrationDate = new Date()
 
         Registration r2 = new Registration()
         r2.asaNumber = 123
@@ -81,7 +78,6 @@ class DuplicatePlayerRegistrationCheckTest {
         r2.role = "Player"
         r2.status = Status.INVALID
         r2.statusNote = ""
-        r2.registrationDate = new Date()
         r2.updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
 
         t1.addToRegistrations(r1)
@@ -115,7 +111,6 @@ class DuplicatePlayerRegistrationCheckTest {
         r1.role = "Coach"
         r1.status = Status.INVALID
         r1.statusNote = ""
-        r1.registrationDate = new Date()
 
         Registration r2 = new Registration()
         r2.asaNumber = 123
@@ -124,7 +119,6 @@ class DuplicatePlayerRegistrationCheckTest {
         r2.role = "Player"
         r2.status = Status.INVALID
         r2.statusNote = ""
-        r2.registrationDate = new Date()
         r2.updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
 
         t1.addToRegistrations(r1)
@@ -158,7 +152,6 @@ class DuplicatePlayerRegistrationCheckTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
-        r1.registrationDate = new Date()
 
         Registration r2 = new Registration()
         r2.asaNumber = 123
@@ -167,7 +160,6 @@ class DuplicatePlayerRegistrationCheckTest {
         r2.role = "Coach"
         r2.status = Status.INVALID
         r2.statusNote = ""
-        r2.registrationDate = new Date()
         r2.updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
 
         t1.addToRegistrations(r1)

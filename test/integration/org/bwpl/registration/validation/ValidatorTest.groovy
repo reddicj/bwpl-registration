@@ -4,12 +4,42 @@ import org.bwpl.registration.Club
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.bwpl.registration.TestUtils
-import org.bwpl.registration.utils.DateTimeUtils
+
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
 
 class ValidatorTest {
+
+    @Test
+    void testIsInASAMembershipCheckUpdated() {
+
+        Club c1 = new Club(name: "Poly", asaName: "Poly")
+        Team t1 = new Team(name: "Poly Men", isMale: true)
+        c1.addToTeams(t1)
+        c1.save(failOnError: true)
+
+        Registration r1 = new Registration()
+        r1.asaNumber = 283261
+        r1.firstName = "James"
+        r1.lastName = "Reddick"
+        r1.role = "Player"
+        r1.status = Status.VALID
+        r1.statusNote = ""
+        r1.isInASAMemberCheck = false
+
+        t1.addToRegistrations(r1)
+        t1.save(failOnError: true)
+
+        Validator validator = new Validator()
+        validator.securityUtils = TestUtils.mockSecurityUtils
+        validator.validate(r1)
+
+        r1 = Registration.findById(r1.id)
+        assertThat(r1.statusAsEnum).isEqualTo(Status.VALID)
+        assertThat(r1.isInASAMemberCheck).isTrue()
+    }
+
 
     @Test
     void testNotASARegistered() {
@@ -26,7 +56,6 @@ class ValidatorTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
-        r1.registrationDate = new Date()
 
         t1.addToRegistrations(r1)
         t1.save(failOnError: true)
@@ -38,6 +67,7 @@ class ValidatorTest {
         r1 = Registration.findById(r1.id)
         assertThat(r1.statusAsEnum).isEqualTo(Status.INVALID)
         assertThat(r1.statusNote).isEqualTo("Not found in ASA membership check.")
+        assertThat(r1.isInASAMemberCheck).isFalse()
     }
 
     @Test
@@ -60,7 +90,6 @@ class ValidatorTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
-        r1.registrationDate = new Date()
 
         Registration r2 = new Registration()
         r2.asaNumber = 283261
@@ -69,7 +98,6 @@ class ValidatorTest {
         r2.role = "Player"
         r2.status = Status.INVALID
         r2.statusNote = ""
-        r2.registrationDate = new Date()
 
         t1.addToRegistrations(r1)
         t1.save(failOnError: true)
@@ -107,7 +135,6 @@ class ValidatorTest {
             role = "Coach"
             status = Status.INVALID
             statusNote = ""
-            registrationDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
         }
         t1.addToRegistrations(r1)
@@ -125,7 +152,6 @@ class ValidatorTest {
             role = "Player"
             status = Status.INVALID
             statusNote = ""
-            registrationDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
         }
         t2.addToRegistrations(r2)
@@ -143,7 +169,6 @@ class ValidatorTest {
             role = "Coach"
             status = Status.INVALID
             statusNote = ""
-            registrationDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.INVALID, "")
         }
         t3.addToRegistrations(r3)
@@ -161,7 +186,6 @@ class ValidatorTest {
             role = "Player"
             status = Status.INVALID
             statusNote = ""
-            registrationDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.INVALID, "")
         }
         t4.addToRegistrations(r4)
@@ -195,7 +219,6 @@ class ValidatorTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
-        r1.registrationDate = new Date()
 
         t1.addToRegistrations(r1)
         t1.save(failOnError: true)
@@ -206,6 +229,7 @@ class ValidatorTest {
 
         r1 = Registration.findById(r1.id)
         assertThat(r1.statusAsEnum).isEqualTo(Status.VALID)
-        assertThat(r1.statusNote).isEqualTo("")
+        assertThat(r1.statusNote).isEqualTo("Automatically validated.")
+        assertThat(r1.isInASAMemberCheck).isTrue()
     }
 }

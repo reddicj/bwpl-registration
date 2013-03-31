@@ -4,9 +4,8 @@ import org.bwpl.registration.Registration
 
 class CoachRegistrationCheck {
 
-    List<String> getErrors(Registration registration) {
+    String getError(Registration registration) {
 
-        List<String> errors = []
         if (registration == null) {
             throw new IllegalArgumentException("Registration is null")
         }
@@ -18,14 +17,14 @@ class CoachRegistrationCheck {
             existingRegistrations = Registration.findAllByAsaNumberAndRoleAndStatus(registration.asaNumber, "Player", Status.VALID.toString())
         }
         if (existingRegistrations.isEmpty()) {
-            return errors
+            return ""
         }
         for (Registration existingRegistration : existingRegistrations) {
             if (registration.team.division == existingRegistration.team.division) {
-                errors << "Registered as a ${getInverseRole(registration.role)} for ${existingRegistration.team.club.name} (${existingRegistration.team.name})"
+                return "Registered as a ${getInverseRole(registration.role)} for ${existingRegistration.team.club.name} (${existingRegistration.team.name})"
             }
         }
-        return errors
+        return ""
     }
 
     private static String getInverseRole(String role) {

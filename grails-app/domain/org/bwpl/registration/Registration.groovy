@@ -9,7 +9,7 @@ import org.bwpl.registration.validation.Status
 class Registration {
 
     static final String csvFieldNames =
-        "\"Firstname\",\"Lastname\",\"ASA number\",\"Role\",\"Registration date\",\"Status\",\"Notes\""
+        "\"Firstname\",\"Lastname\",\"ASA number\",\"Role\",\"Status\",\"Notes\""
 
     static mapping = {
         cache true
@@ -60,9 +60,9 @@ class Registration {
     String firstName
     String lastName
     String role
-    Date registrationDate
     String status
     String statusNote
+    boolean isInASAMemberCheck = false
 
     String getName() {
         return "$firstName $lastName"
@@ -70,10 +70,6 @@ class Registration {
 
     String getLastnameFirstname() {
         return "$lastName $firstName "
-    }
-
-    String getRegistrationDateAsString() {
-        return DateTimeUtils.printDate(registrationDate)
     }
 
     Status getStatusAsEnum() {
@@ -96,7 +92,6 @@ class Registration {
         sb << "\"$lastName\","
         sb << "\"$asaNumber\","
         sb << "\"$role\","
-        sb << "\"$registrationDateAsString\","
         sb << "\"${statusAsEnum.toString()}\","
         sb << "\"$statusNote\""
         return sb.toString()
@@ -126,7 +121,6 @@ class Registration {
         if (doAddNewStatus) {
 
             Date dateStamp = new Date()
-            if (action == Action.ADDED) registrationDate = dateStamp
             RegistrationStatus newEntry = new RegistrationStatus()
             newEntry.date = dateStamp
             newEntry.user = user
@@ -161,14 +155,13 @@ class Registration {
         return registrationStatus != null
     }
 
+    boolean isManuallyValid() {
+        return (statusAsEnum == Status.VALID) && (!isInASAMemberCheck)
+    }
+
     private static boolean doAddNewStatus(RegistrationStatus currentStatus, Action newAction, Status newStatus) {
 
         if (currentStatus == null) return true
-        if (currentStatus.actionAsEnum == Action.ADDED) {
-            if (newAction != Action.ADDED) {
-                return true
-            }
-        }
         return currentStatus.statusAsEnum != newStatus
     }
 }

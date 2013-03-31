@@ -34,8 +34,8 @@ class ASAEmail {
 
         SimpleTemplateEngine templateEngine = new SimpleTemplateEngine()
         def binding = [clubName:club.name,
-                       regSecName:User.registrationSecretary.name,
-                       regSecEmail:User.registrationSecretary.email,
+                       regSecName:"James Reddick",
+                       regSecEmail:"reddicj@gmail.com",
                        clubSecName: currentUser.name,
                        lineBreak:lineBreak,
                        space: space]

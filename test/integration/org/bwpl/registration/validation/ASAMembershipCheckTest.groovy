@@ -1,12 +1,11 @@
 package org.bwpl.registration.validation
 
-import static org.fest.assertions.Assertions.assertThat
-
-import org.junit.Test
 import org.bwpl.registration.Club
-import org.bwpl.registration.Team
 import org.bwpl.registration.Registration
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.Team
+import org.junit.Test
+
+import static org.fest.assertions.Assertions.assertThat
 
 class ASAMembershipCheckTest {
 
@@ -25,7 +24,6 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
-        r.registrationDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -51,7 +49,6 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
-        r.registrationDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -77,7 +74,6 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
-        r.registrationDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -103,7 +99,6 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
-        r.registrationDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -129,7 +124,6 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
-        r.registrationDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -155,7 +149,6 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
-        r.registrationDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)

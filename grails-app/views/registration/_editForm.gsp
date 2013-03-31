@@ -22,9 +22,6 @@
                 <td>ASA Number:</td><td><input type="text" disabled="true" name="asaNumber" value="${r?.asaNumber}"/></td>
             </g:else>
         </tr>
-        <tr>
-            <td>Reg date:</td><td><input type="text" disabled="true" name="registrationDate" value="${r?.registrationDateAsString}"/></td>
-        </tr>
         </tbody>
     </table>
     <sec:ifAllGranted roles="ROLE_REGISTRATION_SECRETARY">

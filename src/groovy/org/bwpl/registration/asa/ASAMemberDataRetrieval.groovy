@@ -5,6 +5,7 @@ import groovyx.net.http.HTTPBuilder
 
 import org.apache.http.conn.HttpHostConnectException
 import org.apache.commons.lang.StringUtils
+import groovyx.net.http.HttpResponseException
 
 class ASAMemberDataRetrieval {
 
@@ -61,6 +62,9 @@ class ASAMemberDataRetrieval {
         }
 
         catch (HttpHostConnectException e) {
+            throw new ASAMemberDataRetrievalException(e)
+        }
+        catch (HttpResponseException e) {
             throw new ASAMemberDataRetrievalException(e)
         }
         return asaMemberData

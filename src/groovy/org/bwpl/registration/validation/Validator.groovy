@@ -1,7 +1,6 @@
 package org.bwpl.registration.validation
 
 import org.bwpl.registration.Registration
-import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.utils.SecurityUtils
 
 class Validator {
@@ -13,22 +12,31 @@ class Validator {
 
     void validate(Registration registration) {
 
-        String errorMessage = getErrorMessage(registration)
-        if (StringUtils.isBlank(errorMessage)) {
-            registration.updateStatus(securityUtils.currentUser, Action.VALIDATED, Status.VALID, "")
+        List<String> errorMessages = getErrorMessages(registration)
+
+        if (errorMessages.isEmpty()) {
+            registration.updateStatus(securityUtils.currentUser, Action.VALIDATED, Status.VALID, "Automatically validated.")
+            registration.isInASAMemberCheck = true
+        }
+        else if ((errorMessages.size() == 1) && (ASAMembershipCheck.NOT_FOUND_MSG == errorMessages[0]) && registration.isManuallyValid()) {
+            registration.updateStatus(securityUtils.currentUser, Action.VALIDATED, Status.VALID, registration.statusNote)
+            registration.isInASAMemberCheck = false
         }
         else {
-            registration.updateStatus(securityUtils.currentUser, Action.VALIDATED, Status.INVALID, errorMessage)
+            registration.updateStatus(securityUtils.currentUser, Action.VALIDATED, Status.INVALID, errorMessages.join(" "))
+            registration.isInASAMemberCheck = !errorMessages.contains(ASAMembershipCheck.NOT_FOUND_MSG)
         }
         registration.save()
     }
 
-    String getErrorMessage(Registration registration) {
+    private List<String> getErrorMessages(Registration registration) {
 
         List<String> errors = []
+        String duplicateRegistrationCheckError = duplicateRegistrationCheck.getError(registration)
+        if (!duplicateRegistrationCheckError.isEmpty()) errors.add(duplicateRegistrationCheckError)
+        String coachRegistrationCheckError = coachRegistrationCheck.getError(registration)
+        if (!coachRegistrationCheckError.isEmpty()) errors.add(coachRegistrationCheckError)
         errors.addAll(asaMembershipCheck.getErrors(registration))
-        errors.add(duplicateRegistrationCheck.getError(registration))
-        errors.addAll(coachRegistrationCheck.getErrors(registration))
-        return errors.join(" ").trim()
+        return errors
     }
 }
