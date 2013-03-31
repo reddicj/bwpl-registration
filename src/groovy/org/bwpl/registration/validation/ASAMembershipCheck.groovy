@@ -29,7 +29,7 @@ class ASAMembershipCheck {
             if ((registration.role == "Player") && (team.isMale != asaMember.isMale)) {
                 errors << "Player incorrect gender for team."
             }
-            if (!asaMember.isMemberOfClub(registrationClub.asaName)) {
+            if (!asaMember.isCorrectlyRegisteredWithClub(registrationClub.asaName, registration.role)) {
                 errors << "Not ASA registered with $registrationClub.name."
                 return errors
             }

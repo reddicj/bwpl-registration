@@ -45,14 +45,15 @@ class ASAMemberData {
         this.membershipCategory = c
     }
 
-    void addClub(String clubName, String fromDate) {
+    void addClub(String clubName, String fromDate, String membership) {
 
         String cn = StringUtils.trimToEmpty(clubName)
         String fd = StringUtils.trimToEmpty(fromDate)
-        if (StringUtils.isEmpty(cn) || StringUtils.isEmpty(fd)) {
-            throw new ASAMemberDataRetrievalException("Club name or from date is empty")
+        String m = StringUtils.trimToEmpty(membership)
+        if (StringUtils.isEmpty(cn) || StringUtils.isEmpty(fd) || StringUtils.isEmpty(m)) {
+            throw new ASAMemberDataRetrievalException("Club name, from date or membership is empty")
         }
-        ASAMemberClub club = new ASAMemberClub(cn, fd)
+        ASAMemberClub club = new ASAMemberClub(cn, fd, m)
         clubs << club
     }
 
@@ -67,11 +68,12 @@ class ASAMemberData {
         return false
     }
 
-    boolean isMemberOfClub(String clubName) {
+    boolean isCorrectlyRegisteredWithClub(String clubName, String role) {
 
         for (ASAMemberClub asaMemberClub : clubs) {
             if (asaMemberClub.name.startsWith(clubName)) {
-                return true
+                if (role != "Player") return true
+                else return asaMemberClub.isMember
             }
         }
         return false

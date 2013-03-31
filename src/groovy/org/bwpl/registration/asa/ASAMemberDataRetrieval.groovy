@@ -45,9 +45,7 @@ class ASAMemberDataRetrieval {
 
             tableElement = divElement.TABLE[1]
             for (int i = 1; i < tableElement.TR.size(); i++) {
-                if (!StringUtils.containsIgnoreCase(tableElement.TR[i].TD[2].text(), "Non Member")) {
-                    asaMemberData.addClub(tableElement.TR[i].TD[1].text(), tableElement.TR[i].TD[3].text())
-                }
+                asaMemberData.addClub(tableElement.TR[i].TD[1].text(), tableElement.TR[i].TD[3].text(), tableElement.TR[i].TD[2].text())
             }
 
             /*
