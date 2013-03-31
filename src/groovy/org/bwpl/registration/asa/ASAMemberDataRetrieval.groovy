@@ -6,7 +6,7 @@ import groovyx.net.http.HTTPBuilder
 import org.apache.http.conn.HttpHostConnectException
 import org.apache.commons.lang.StringUtils
 
-public class ASAMemberDataRetrieval {
+class ASAMemberDataRetrieval {
 
     public static final String ASA_MEMBERSHIP_CHECK_URL = "https://www.swimmingresults.org/membershipcheck/member_details.php"
     public static final String ASA_NUMBER_PARAMETER_NAME = "myiref"
@@ -16,7 +16,7 @@ public class ASAMemberDataRetrieval {
 
     private final String url
 
-    public ASAMemberDataRetrieval() {
+    ASAMemberDataRetrieval() {
         this(ASA_MEMBERSHIP_CHECK_URL)
     }
 
@@ -24,7 +24,7 @@ public class ASAMemberDataRetrieval {
         this.url = url
     }
 
-    public ASAMemberData get(final int asaNumber) {
+    ASAMemberData get(final int asaNumber) {
 
         final ASAMemberData asaMemberData = new ASAMemberData(asaNumber)
         final HTTPBuilder http = new HTTPBuilder(url)
@@ -66,7 +66,7 @@ public class ASAMemberDataRetrieval {
         return asaMemberData
     }
 
-    public String getServiceAvailabilityError() {
+    String getServiceError() {
 
         ASAMemberData asaData = null
         try {
@@ -79,7 +79,9 @@ public class ASAMemberDataRetrieval {
         boolean ok = asaData.name.contains("James") &&
                      asaData.name.contains("Reddick") &&
                      asaData.asaNumber == ASA_NUMBER_JAMES_REDDICK &&
-                     asaData.isMale
+                     asaData.isMale &&
+                   (!asaData.clubs.findAll{it.name.contains("Polytechnic")}.isEmpty()) &&
+                     asaData.membershipCategory == "ASA Cat 2"
 
         if (!ok) return serviceAvailabilityErrorMessage
         return ""
@@ -88,9 +90,11 @@ public class ASAMemberDataRetrieval {
     private static String getServiceAvailabilityMessage() {
 
         StringBuilder msg = new StringBuilder()
-        msg << "Validation error --> cannot communicate with the ASA Membership system. "
-        msg << "It may be temporarily unavailable. Please try again later. "
-        msg << "If the problem persists then email the Registration Secretary."
+        msg << "Validation error - cannot get data from the ASA Membership system. "
+        msg << "It may be unavailable so try again later. "
+        msg << "If it is available then the ASA may have changed the format of their data "
+        msg << "and therefore this validation process cannot read the ASA data. "
+        msg << "If the problem persists then email the BWPL Registration users group."
         return msg.toString()
     }
 }

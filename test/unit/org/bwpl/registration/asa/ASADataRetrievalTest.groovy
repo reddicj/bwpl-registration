@@ -9,21 +9,11 @@ import org.bwpl.registration.utils.DateTimeUtils
 class ASADataRetrievalTest {
 
     @Test
-    void testGetDataForAndyMcAllister() {
+    void testGetServiceAvailabilityError() {
 
-        /*
         ASAMemberDataRetrieval asaDataRetrieval = new ASAMemberDataRetrieval()
-        ASAMemberData asaData = asaDataRetrieval.get(7839)
-        assertThat(asaData.name).startsWith("Andrew").endsWith("McAllister")
-        assertThat(asaData.asaNumber).isEqualTo(7839)
-        assertThat(asaData.isMale).isTrue()
-        assertThat(asaData.membershipCategory).isEqualTo("ASA Cat 2")
-        assertThat(asaData.clubs.size()).isEqualTo(2)
-        assertThat(asaData.clubs[0].name).startsWith("Beckenham")
-        assertThat(asaData.clubs[0].fromDate).isEqualTo(DateTimeUtils.parse("14-07-2012").toDate())
-        assertThat(asaData.clubs[1].name).startsWith("Invicta")
-        assertThat(asaData.clubs[1].fromDate).isEqualTo(DateTimeUtils.parse("01-09-2011").toDate())
-        */
+        String errorMsg = asaDataRetrieval.getServiceError()
+        assertThat(errorMsg).isEmpty()
     }
 
     @Test

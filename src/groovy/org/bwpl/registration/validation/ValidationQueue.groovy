@@ -1,13 +1,15 @@
 package org.bwpl.registration.validation
 
 import org.bwpl.registration.Registration
+import org.bwpl.registration.asa.ASAMemberDataRetrieval
 
 class ValidationQueue {
 
-    private final Validator validator
-    private final List<Registration> registrations
-    private final Queue<Registration> queue
-    private final List<Registration> processed
+    private Validator validator
+    private List<Registration> registrations
+    private Queue<Registration> queue
+    private List<Registration> processed
+    String asaMemberCheckError = ""
 
     ValidationQueue(final Validator validator, final Collection<Registration> registrations) {
 
@@ -36,10 +38,22 @@ class ValidationQueue {
     void process() {
 
         if (queue.isEmpty()) return
+        if (!isASAMemberCheckOk()) {
+            queue = new LinkedList<Registration>()
+            return
+        }
+
         Registration r = queue.remove()
         r = Registration.get(r.id)
         validator.validate(r)
         processed << r
+    }
+
+    private boolean isASAMemberCheckOk() {
+
+        ASAMemberDataRetrieval asaMemberDataRetrieval = new ASAMemberDataRetrieval()
+        asaMemberCheckError = asaMemberDataRetrieval.getServiceError()
+        return asaMemberCheckError.isEmpty()
     }
 
     boolean isEmpty() {
@@ -47,6 +61,13 @@ class ValidationQueue {
     }
 
     String toString() {
-        return "Processed: $processedCount/$totalCount, Valid: $validCount, Invalid: $invalidCount"
+
+        String s = "Processed: $processedCount/$totalCount, Valid: $validCount, Invalid: $invalidCount"
+        if (asaMemberCheckError.isEmpty()) {
+            return s
+        }
+        else {
+            return "$s. $asaMemberCheckError"
+        }
     }
 }

@@ -10,6 +10,7 @@ import org.bwpl.registration.utils.CsvWriter
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.*
+import org.bwpl.registration.asa.ASAMemberDataRetrieval
 
 class RegistrationController {
 
@@ -234,8 +235,16 @@ class RegistrationController {
     def validate = {
 
         if (params.id) {
-            Registration r = Registration.get(params.id)
-            validator.validate(r)
+
+            ASAMemberDataRetrieval asaMemberDataRetrieval = new ASAMemberDataRetrieval()
+            String asaMemberCheckError = asaMemberDataRetrieval.getServiceError()
+            if (asaMemberCheckError.isEmpty()) {
+                Registration r = Registration.get(params.id)
+                validator.validate(r)
+            }
+            else {
+                flash.errors = asaMemberCheckError
+            }
             redirect(uri: params.targetUri)
             return
         }
@@ -251,7 +260,14 @@ class RegistrationController {
 
         if (validationQueue.isEmpty()) {
             session["validationQueue"] = null
-            render("Validation complete --> ${validationQueue.toString()}")
+            String msg = "Validation complete - ${validationQueue.toString()}"
+            if (validationQueue.asaMemberCheckError.isEmpty()) {
+                flash.message = msg
+            }
+            else {
+                flash.errors = msg
+            }
+            render(msg)
         }
         else {
             validationQueue.process()
