@@ -49,4 +49,8 @@ class Team {
         sb << "\"$division\""
         return sb.toString()
     }
+
+    String getNameAsMungedString() {
+        return name.toLowerCase().replaceAll(" ", "-")
+    }
 }

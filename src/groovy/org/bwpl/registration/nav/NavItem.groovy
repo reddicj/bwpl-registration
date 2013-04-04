@@ -111,6 +111,18 @@ class NavItem {
         return exportClubRegistrations
     }
 
+    static NavItem getExportTeamRegistrations(long teamId) {
+
+        NavItem exportTeamRegistrations = new NavItem()
+        exportTeamRegistrations.with {
+            displayName = "Export"
+            controllerName = "team"
+            actionName = "export"
+            params = [id: teamId.toString()]
+        }
+        return exportTeamRegistrations
+    }
+
     static NavItem getUploadRegistrations(long teamId) {
 
         NavItem uploadRegistrations = new NavItem()

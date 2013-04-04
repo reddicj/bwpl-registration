@@ -198,16 +198,12 @@ class RegistrationController {
     @Secured(["ROLE_READ_ONLY"])
     def export = {
 
-        List<Club> clubs = Club.list()
-        clubs.sort{it.name}
         String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
         String fileName = "bwpl-registrations-${dateTimeStamp}.csv"
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "text/csv"
         response.outputStream << CsvWriter.csvFieldNames << "\n"
-        clubs.each {
-            response.outputStream << CsvWriter.getRegistrationsAsCsvString(it) << "\n"
-        }
+        response.outputStream << CsvWriter.getAllRegistrationsAsCsvString() << "\n"
         response.flushBuffer()
     }
 

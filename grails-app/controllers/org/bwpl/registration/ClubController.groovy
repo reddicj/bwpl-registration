@@ -81,7 +81,7 @@ class ClubController {
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "text/csv"
         response.outputStream << CsvWriter.csvFieldNames << "\n"
-        response.outputStream << CsvWriter.getRegistrationsAsCsvString(club) << "\n"
+        response.outputStream << CsvWriter.getClubRegistrationsAsCsvString(club) << "\n"
         response.flushBuffer()
     }
 

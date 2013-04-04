@@ -10,6 +10,8 @@ import org.bwpl.registration.validation.Status
 import org.bwpl.registration.validation.Action
 
 import org.bwpl.registration.utils.RegistrationDataUtils
+import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.CsvWriter
 
 class TeamController {
 
@@ -44,6 +46,19 @@ class TeamController {
                      doDisplayValidateButton: doDisplayValidateButton]
 
         render(view: "/club/show", model: model)
+    }
+
+    @Secured(["ROLE_READ_ONLY"])
+    def export = {
+
+        Team team = Team.get(params.id)
+        String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
+        String fileName = "bwpl-registrations-${team.nameAsMungedString}-${dateTimeStamp}.csv"
+        response.setHeader("Content-disposition", "attachment; filename=$fileName")
+        response.contentType = "text/csv"
+        response.outputStream << CsvWriter.csvFieldNames << "\n"
+        response.outputStream << CsvWriter.getTeamRegistrationsAsCsvString(team) << "\n"
+        response.flushBuffer()
     }
 
     // Secured by SecurityFilters.TeamControllerAccessFilter

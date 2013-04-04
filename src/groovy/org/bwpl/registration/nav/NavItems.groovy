@@ -47,6 +47,9 @@ class NavItems {
             navItems << NavItem.getExportClubRegistrations(team.club.id)
             if (doDisplayASAEmail(team.club)) navItems << NavItem.getASAEmail(team.club.id)
         }
+        if ((!team.registrations.isEmpty()) && (team.club.teams.size() > 1)) {
+            navItems << NavItem.getExportTeamRegistrations(team.id)
+        }
         return navItems
     }
 
