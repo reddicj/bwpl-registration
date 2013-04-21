@@ -35,7 +35,7 @@ class RegistrationDataTest {
     @Test
     void testFromCsvList1() {
 
-        List<String> csv = ["James Peter", "  Peter Reddick ", " 123   ", "Player"]
+        List<String> csv = ["james peter", "  Peter Reddick ", " 123   ", " player   "]
         RegistrationData registrationData = RegistrationData.fromCsvList(csv)
         String errors = registrationData.getFieldValueErrors()
         assertThat(errors).isEmpty()
@@ -48,7 +48,7 @@ class RegistrationDataTest {
     @Test
     void testFromCsvList2() {
 
-        List<String> csv = ["James Peter", "  Peter-Reddick ", " 123   ", "Player"]
+        List<String> csv = ["James Peter", "  peter-reddick ", " 123   ", " player "]
         RegistrationData registrationData = RegistrationData.fromCsvList(csv)
         String errors = registrationData.getFieldValueErrors()
         assertThat(errors).isEmpty()

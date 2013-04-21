@@ -64,7 +64,7 @@ class RegistrationData {
         this.lastName = WordUtils.capitalize(StringUtils.trimToEmpty(lastName), [' ', '-'] as char[])
     }
 
-    void setRole() {
+    void setRole(String role) {
         this.role = WordUtils.capitalizeFully(StringUtils.trimToEmpty(role))
     }
 

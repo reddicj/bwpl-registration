@@ -185,6 +185,18 @@ class NavItem {
         return deleteAllPermanent
     }
 
+    static NavItem getUndeleteAllDeletedRegistrations(long clubId) {
+
+        NavItem undeleteAll = new NavItem()
+        undeleteAll.with {
+            displayName = "Undelete All"
+            controllerName = "club"
+            actionName = "undeleteDeletedRegistrations"
+            params = [id: clubId.toString()]
+        }
+        return undeleteAll
+    }
+
     String displayName
     String controllerName
     String actionName

@@ -15,12 +15,14 @@ import org.bwpl.registration.email.ASAEmail
 import org.bwpl.registration.utils.RegistrationDataUtils
 import org.bwpl.registration.validation.Status
 import org.apache.commons.lang.RandomStringUtils
+import org.bwpl.registration.validation.Action
 
 class ClubController {
 
     static defaultAction = "list"
     NavItems nav
     SecurityUtils securityUtils
+    DateTimeUtils dateTimeUtils
 
     def list = {
 
@@ -171,6 +173,34 @@ class ClubController {
             }
         }
         flash.message = "$countOfDeleted registrations for $club.name removed permanently."
+        redirect(action: "show", id: club.id, params: [rfilter: "deleted"])
+    }
+
+    // Secured by SecurityFilters.ClubControllerAccessFilter
+    @Secured(["ROLE_CLUB_SECRETARY"])
+    def undeleteDeletedRegistrations = {
+
+        Club club = Club.get(params.id)
+        int countOfUndeleted = 0
+        int countOfNotUndeleted = 0
+        club.registrations.each { r ->
+            if (r.statusAsEnum == Status.DELETED) {
+                if (r.canUpdate()) {
+                    r.updateStatus(securityUtils.currentUser, Action.UNDELETED, Status.NEW, "")
+                    r.save()
+                    countOfUndeleted++
+                }
+                else countOfNotUndeleted++
+            }
+        }
+
+        StringBuilder sb = new StringBuilder()
+        sb << "$countOfUndeleted registrations for $club.name undeleted. "
+        if (countOfNotUndeleted > 0) {
+            sb << "$countOfNotUndeleted registrations for $club.name not undeleted. "
+            sb << "You cannot undelete registrations that have already been validated."
+        }
+        flash.message = sb.toString().trim()
         redirect(action: "show", id: club.id, params: [rfilter: "deleted"])
     }
 

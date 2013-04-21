@@ -25,7 +25,10 @@ class NavItems {
 
         List<NavItem> navItems = []
         if ("deleted" == rfilter) {
-            if (doDisplayDeleteAllDeleted(club)) navItems << NavItem.getDeleteAllDeletedRegistrations(club.id)
+            if (doDisplayDeleteAllDeleted(club)) {
+                navItems << NavItem.getUndeleteAllDeletedRegistrations(club.id)
+                navItems << NavItem.getDeleteAllDeletedRegistrations(club.id)
+            }
             return navItems
         }
         if (club.registrations.isEmpty()) return navItems
