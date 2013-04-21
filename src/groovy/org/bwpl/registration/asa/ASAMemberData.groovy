@@ -59,13 +59,9 @@ class ASAMemberData {
 
     boolean isNameMatch(String firstName, String lastName) {
 
-        if (!StringUtils.endsWithIgnoreCase(name, lastName)) return false
-        if (StringUtils.startsWithIgnoreCase(name, firstName[0])) return true
-        if (StringUtils.contains(name, '(')) {
-            String bracketName = StringUtils.substringBetween(name, "(", ")")
-            return StringUtils.startsWithIgnoreCase(bracketName, firstName[0])
-        }
-        return false
+        if (!StringUtils.containsIgnoreCase(name, lastName)) return false
+        String nameSubStringBeforeLastNameMatch = StringUtils.substringBefore(name, lastName)
+        return StringUtils.containsIgnoreCase(nameSubStringBeforeLastNameMatch, firstName)
     }
 
     boolean isCorrectlyRegisteredWithClub(String clubName, String role) {

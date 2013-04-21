@@ -181,4 +181,28 @@ class ASAMembershipCheckTest {
         List<String> errors = asaMembershipCheck.getErrors(r)
         assertThat(errors.isEmpty()).isTrue()
     }
+
+    @Test
+    void testFerMasriNameMatchCheck() {
+
+        Club c = new Club(name: "Poly", asaName: "Poly")
+        Team t = new Team(name: "Poly Women", isMale: false)
+        c.addToTeams(t)
+        c.save(failOnError: true)
+
+        Registration r = new Registration()
+        r.asaNumber = 441577
+        r.firstName = "Fernanda"
+        r.lastName = "Masri"
+        r.role = "Player"
+        r.status = Status.INVALID
+        r.statusNote = ""
+
+        t.addToRegistrations(r)
+        t.save(failOnError: true)
+
+        ASAMembershipCheck asaMembershipCheck = new ASAMembershipCheck()
+        List<String> errors = asaMembershipCheck.getErrors(r)
+        assertThat(errors.isEmpty()).isTrue()
+    }
 }
