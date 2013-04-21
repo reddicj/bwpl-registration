@@ -6,6 +6,8 @@ import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 
 import static org.bwpl.registration.utils.ValidationUtils.*
+import org.apache.commons.lang.ArrayUtils
+import org.springframework.util.CollectionUtils
 
 class RegistrationData {
 
@@ -16,11 +18,21 @@ class RegistrationData {
 
     static RegistrationData fromCsvList(List<String> values) {
 
+        if (CollectionUtils.isEmpty(values)) {
+            throw new IllegalArgumentException("Registration data values are null or empty")
+        }
         String[] asArray = values.toArray(new String[values.size()])
         return fromArray(asArray)
     }
 
     static RegistrationData fromArray(String[] values) {
+
+        if (ArrayUtils.isEmpty(values)) {
+            throw new IllegalArgumentException("Registration data values are null or empty")
+        }
+        if (values.length != 4) {
+            throw new IllegalArgumentException("Registration data values: [${values.join(", ")}]. Expecting: [firstname, lastname, asa number, role]")
+        }
 
         RegistrationData registrationData = new RegistrationData()
         registrationData.with {
@@ -44,16 +56,20 @@ class RegistrationData {
         return registrationData
     }
 
-    String getFirstName() {
-        return WordUtils.capitalizeFully(StringUtils.trimToEmpty(firstName))
+    void setFirstName(String firstName) {
+        this.firstName = WordUtils.capitalize(StringUtils.trimToEmpty(firstName), [' ', '-'] as char[])
     }
 
-    String getLastName() {
-        return WordUtils.capitalizeFully(StringUtils.trimToEmpty(lastName))
+    void setLastName(String lastName) {
+        this.lastName = WordUtils.capitalize(StringUtils.trimToEmpty(lastName), [' ', '-'] as char[])
     }
 
-    String getRole() {
-        return WordUtils.capitalizeFully(StringUtils.trimToEmpty(role))
+    void setRole() {
+        this.role = WordUtils.capitalizeFully(StringUtils.trimToEmpty(role))
+    }
+
+    void setAsaNumberAsString(String asaNumberAsString) {
+        this.asaNumberAsString = StringUtils.trimToEmpty(asaNumberAsString)
     }
 
     int getAsaNumber() {
@@ -72,7 +88,7 @@ class RegistrationData {
         List<String> errors = []
 
         checkForNullOrEmptyValue("Firstname", firstName, errors)
-        checkValueIsAlpha("Firstname", firstName, errors)
+        checkValueContainsValidNameCharacters("Firstname", firstName, errors)
 
         checkForNullOrEmptyValue("Lastname", lastName, errors)
         checkValueContainsValidNameCharacters("Lastname", lastName, errors)
