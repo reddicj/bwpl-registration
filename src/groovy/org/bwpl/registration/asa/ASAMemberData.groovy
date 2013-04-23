@@ -29,6 +29,10 @@ class ASAMemberData {
 
     void setDateOfBirth(String dateOfBirth) {
 
+        if (StringUtils.isEmpty(dateOfBirth)) {
+            this.dateOfBirth = null
+            return
+        }
         DateTime dt = DateTimeUtils.parseASADateOfBirth(dateOfBirth)
         this.dateOfBirth = dt.toDate()
     }

@@ -5,6 +5,7 @@ import org.joda.time.DateTimeComparator
 import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormat
 import org.codehaus.groovy.grails.commons.GrailsApplication
+import org.apache.commons.lang.StringUtils
 
 class DateTimeUtils {
 
@@ -64,6 +65,7 @@ class DateTimeUtils {
 
     static DateTime parseASADateOfBirth(String str) {
 
+        if (StringUtils.isEmpty(str)) return null
         def m = str =~ /^([0-9]{1,2})[a-z]{2} ([A-Za-z]+) ([0-9]{4})$/
         String s = "${m[0][1]} ${m[0][2]} ${m[0][3]}"
         return asaDateOfBirthFormat.parseDateTime(s)

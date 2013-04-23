@@ -37,4 +37,12 @@ class DateTimeUtilsTest {
         assertThat(dt.monthOfYear().get()).isEqualTo(10)
         assertThat(dt.year().get()).isEqualTo(1992)
     }
+
+    @Test
+    void testASADateOfBirthParseForEmptyString() {
+
+        String asaDateOfBirth = ""
+        DateTime dt = DateTimeUtils.parseASADateOfBirth(asaDateOfBirth)
+        assertThat(dt).isNull()
+    }
 }
