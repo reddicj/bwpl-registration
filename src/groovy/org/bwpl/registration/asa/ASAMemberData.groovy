@@ -2,11 +2,14 @@ package org.bwpl.registration.asa
 
 import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.utils.ValidationUtils
+import org.bwpl.registration.utils.DateTimeUtils
+import org.joda.time.DateTime
 
 class ASAMemberData {
 
     final int asaNumber
     String name = ""
+    Date dateOfBirth
     Boolean isMale
     String membershipCategory
     List<ASAMemberClub> clubs = []
@@ -22,6 +25,12 @@ class ASAMemberData {
             throw new ASAMemberDataRetrievalException("Name data is empty")
         }
         this.name = n
+    }
+
+    void setDateOfBirth(String dateOfBirth) {
+
+        DateTime dt = DateTimeUtils.parseASADateOfBirth(dateOfBirth)
+        this.dateOfBirth = dt.toDate()
     }
 
     void setGender(String gender) {

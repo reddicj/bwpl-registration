@@ -21,6 +21,8 @@ class ASAMembershipCheck {
 
         try {
             ASAMemberData asaMember = asaMemberDataRetrieval.get(registration.asaNumber)
+            registration.dateOfBirth = asaMember.dateOfBirth
+            registration.save()
             Team team = registration.team
             Club registrationClub = team.club
             if (!asaMember.isNameMatch(registration.firstName, registration.lastName)) {

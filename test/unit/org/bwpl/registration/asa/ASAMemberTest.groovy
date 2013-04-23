@@ -4,6 +4,7 @@ import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
 import static org.junit.Assert.fail
+import org.bwpl.registration.utils.DateTimeUtils
 
 class ASAMemberTest {
 
@@ -13,10 +14,12 @@ class ASAMemberTest {
         ASAMemberData asaMemberData = new ASAMemberData(283261)
         asaMemberData.with {
             name = "James Reddick"
+            dateOfBirth = "5th April 1972"
             gender = "M"
             clubs << "Poly"
         }
 
+        assertThat(asaMemberData.dateOfBirth).isEqualTo(DateTimeUtils.parse("05-04-1972").toDate())
         assertThat(asaMemberData.isMale).isTrue()
         assertThat(asaMemberData.asaNumber).isEqualTo(283261)
         assertThat(asaMemberData.clubs[0]).isEqualTo("Poly")

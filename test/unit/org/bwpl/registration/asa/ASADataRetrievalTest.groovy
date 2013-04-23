@@ -22,6 +22,7 @@ class ASADataRetrievalTest {
         ASAMemberDataRetrieval asaDataRetrieval = new ASAMemberDataRetrieval()
         ASAMemberData asaData = asaDataRetrieval.get(283261)
         assertThat(asaData.name).startsWith("James").endsWith("Reddick")
+        assertThat(asaData.dateOfBirth).isEqualTo(DateTimeUtils.parse("05-04-1972").toDate())
         assertThat(asaData.asaNumber).isEqualTo(283261)
         assertThat(asaData.isMale).isTrue()
         assertThat(asaData.membershipCategory).isEqualTo("ASA Cat 2")

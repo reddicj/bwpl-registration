@@ -12,6 +12,7 @@
                 <th>Firstname</th>
                 <th>Lastname</th>
             </g:else>
+            <th>Dob</th>
             <th>ASA No</th>
             <th>Role</th>
             <g:if test="${controllerName == "registration"}">
@@ -31,6 +32,7 @@
             <tr class="${r.statusAsEnum.toString().toLowerCase()}">
                 <td><g:link controller="registration" action="show" id="${r.id}">${r.firstName}</g:link></td>
                 <td><g:link controller="registration" action="show" id="${r.id}">${r.lastName}</g:link></td>
+                <td>${r.dateOfBirthAsString}</td>
                 <td><a href="${ASAMemberDataRetrieval.ASA_MEMBERSHIP_CHECK_URL}?${ASAMemberDataRetrieval.ASA_NUMBER_PARAMETER_NAME}=${r.asaNumber}" target="_blank">${r.asaNumber}</a></td>
                 <td>${r.role}</td>
                 <g:if test="${controllerName == "registration"}">

@@ -40,6 +40,7 @@ class ASAMemberDataRetrieval {
             GPathResult tableElement = divElement.TABLE[0]
 
             asaMemberData.name = tableElement.TR[0].TD[1].text()
+            asaMemberData.dateOfBirth = tableElement.TR[1].TD[1].text()
             asaMemberData.gender = tableElement.TR[1].TD[3].text()
             asaMemberData.membershipCategory = tableElement.TR[2].TD[3].text()
 

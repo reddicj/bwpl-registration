@@ -27,4 +27,14 @@ class DateTimeUtilsTest {
         String str = DateTimeUtils.printDate(d)
         assertThat(str).isEqualTo("12-05-2012")
     }
+
+    @Test
+    void testASADateOfBirthParse() {
+
+        String asaDateOfBirth = "8st October 1992"
+        DateTime dt = DateTimeUtils.parseASADateOfBirth(asaDateOfBirth)
+        assertThat(dt.dayOfMonth().get()).isEqualTo(8)
+        assertThat(dt.monthOfYear().get()).isEqualTo(10)
+        assertThat(dt.year().get()).isEqualTo(1992)
+    }
 }

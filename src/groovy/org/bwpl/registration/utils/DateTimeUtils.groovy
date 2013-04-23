@@ -11,6 +11,7 @@ class DateTimeUtils {
     private static final DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd-MM-yyyy")
     private static final DateTimeFormatter dateTimeFormatter = DateTimeFormat.forPattern("dd-MM-yyyy HH:mm")
     private static final DateTimeFormatter fileNameDateTimeFormatter = DateTimeFormat.forPattern("yyyyMMddHHmmss")
+    private static final DateTimeFormatter asaDateOfBirthFormat = DateTimeFormat.forPattern("d MMMM yyyy")
 
     GrailsApplication grailsApplication
 
@@ -59,6 +60,13 @@ class DateTimeUtils {
 
         DateTimeFormatter dateFormatter = DateTimeFormat.forPattern(format)
         return dateFormatter.parseDateTime(str)
+    }
+
+    static DateTime parseASADateOfBirth(String str) {
+
+        def m = str =~ /^([0-9]{1,2})[a-z]{2} ([A-Za-z]+) ([0-9]{4})$/
+        String s = "${m[0][1]} ${m[0][2]} ${m[0][3]}"
+        return asaDateOfBirthFormat.parseDateTime(s)
     }
 
     static boolean isBefore(DateTime date, DateTime compareToDate) {

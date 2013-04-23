@@ -21,6 +21,7 @@ class Registration {
         asaNumber(validator: { it > 0 })
         firstName(blank: false)
         lastName(blank: false)
+        dateOfBirth(nullable: true)
         role(inList: ["Player", "Coach"])
         status(blank: false, inList: ["New", "Invalid", "Valid", "Deleted"])
     }
@@ -59,10 +60,16 @@ class Registration {
     Integer asaNumber
     String firstName
     String lastName
+    Date dateOfBirth
     String role
     String status
     String statusNote
     boolean isInASAMemberCheck = false
+
+    String getDateOfBirthAsString() {
+        if (dateOfBirth == null) return ""
+        return DateTimeUtils.printDate(dateOfBirth)
+    }
 
     String getName() {
         return "$firstName $lastName"
