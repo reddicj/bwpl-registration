@@ -88,6 +88,6 @@ class DateTimeUtils {
 
         Period p = new Period(startDate, endDate)
         int years = p.getYears()
-        return years < 25
+        return years < 18
     }
 }
