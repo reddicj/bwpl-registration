@@ -5,6 +5,7 @@ import org.apache.commons.lang.WordUtils
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
+import org.joda.time.DateTime
 
 class Registration {
 
@@ -69,6 +70,14 @@ class Registration {
     String getDateOfBirthAsString() {
         if (dateOfBirth == null) return ""
         return DateTimeUtils.printDate(dateOfBirth)
+    }
+
+    boolean isUnder18() {
+
+        if (dateOfBirth == null) return false
+        DateTime now = new DateTime()
+        DateTime dob = new DateTime(dateOfBirth)
+        return DateTimeUtils.isPeriodLessThan18Years(dob, now)
     }
 
     String getName() {

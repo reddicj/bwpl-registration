@@ -45,4 +45,14 @@ class DateTimeUtilsTest {
         DateTime dt = DateTimeUtils.parseASADateOfBirth(asaDateOfBirth)
         assertThat(dt).isNull()
     }
+
+    @Test
+    void testIsPeriodLessThan18Years() {
+
+        DateTime startDate = new DateTime().withYear(1972).withMonthOfYear(4).withDayOfMonth(5)
+        DateTime endDate = new DateTime().withYear(1990).withMonthOfYear(4).withDayOfMonth(4)
+        assertThat(DateTimeUtils.isPeriodLessThan18Years(startDate, endDate)).isTrue()
+        endDate = new DateTime().withYear(1990).withMonthOfYear(4).withDayOfMonth(5)
+        assertThat(DateTimeUtils.isPeriodLessThan18Years(startDate, endDate)).isFalse()
+    }
 }

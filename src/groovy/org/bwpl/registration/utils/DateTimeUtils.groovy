@@ -6,6 +6,7 @@ import org.joda.time.format.DateTimeFormatter
 import org.joda.time.format.DateTimeFormat
 import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.apache.commons.lang.StringUtils
+import org.joda.time.Period
 
 class DateTimeUtils {
 
@@ -81,5 +82,12 @@ class DateTimeUtils {
 
         DateTimeComparator comparator = DateTimeComparator.dateOnlyInstance
         return comparator.compare(date, compareToDate) > 0
+    }
+
+    static boolean isPeriodLessThan18Years(DateTime startDate, DateTime endDate) {
+
+        Period p = new Period(startDate, endDate)
+        int years = p.getYears()
+        return years < 25
     }
 }
