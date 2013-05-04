@@ -258,14 +258,14 @@ class ClubController {
             else {
                 t.name = params["team-name-$t.id"]
                 t.isMale = "M".equals(params["team-gender-$t.id"])
-                t.division = Integer.parseInt(params["team-division-$t.id"])
+                //TODO t.division = Integer.parseInt(params["team-division-$t.id"])
             }
         }
         if (StringUtils.isNotBlank(params["team-name-new"])) {
             Team newTeam = new Team()
             newTeam.name = params["team-name-new"]
             newTeam.isMale = "M".equals(params["team-gender-new"])
-            newTeam.division = Integer.parseInt(params["team-division-new"])
+            //TODO newTeam.division = Integer.parseInt(params["team-division-new"])
             club.addToTeams(newTeam)
         }
 

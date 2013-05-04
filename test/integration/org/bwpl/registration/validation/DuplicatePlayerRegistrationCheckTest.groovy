@@ -1,6 +1,8 @@
 package org.bwpl.registration.validation
 
 import org.bwpl.registration.Club
+import org.bwpl.registration.Competition
+import org.bwpl.registration.Division
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.bwpl.registration.TestUtils
@@ -13,15 +15,21 @@ class DuplicatePlayerRegistrationCheckTest {
     @Test
     void testNoDuplicate() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
+        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
-        c2.addToTeams(t2)
-        c2.save(failOnError: true)
+        division.addToTeams(t2)
+        c2.addToTeams(t2).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 123
@@ -55,15 +63,21 @@ class DuplicatePlayerRegistrationCheckTest {
     @Test
     void testDuplicate() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
+        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
-        c2.addToTeams(t2)
-        c2.save(failOnError: true)
+        division.addToTeams(t2)
+        c2.addToTeams(t2).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 123
@@ -98,15 +112,21 @@ class DuplicatePlayerRegistrationCheckTest {
     @Test
     void testNoDuplicateWhenCoach1() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
+        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
-        c2.addToTeams(t2)
-        c2.save(failOnError: true)
+        division.addToTeams(t2)
+        c2.addToTeams(t2).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 123
@@ -141,15 +161,21 @@ class DuplicatePlayerRegistrationCheckTest {
     @Test
     void testNoDuplicateWhenCoach2() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
+        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
-        c2.addToTeams(t2)
-        c2.save(failOnError: true)
+        division.addToTeams(t2)
+        c2.addToTeams(t2).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 123

@@ -13,12 +13,11 @@ class Team {
         name(blank: false)
     }
 
-    static belongsTo = [club:Club]
+    static belongsTo = [division:Division, club:Club]
     static hasMany = [registrations:Registration]
 
     String name
     Boolean isMale
-    int division
 
     static String getTeamsAsCsvString() {
 
@@ -59,7 +58,7 @@ class Team {
         StringBuilder sb = new StringBuilder()
         sb << "\"$name\","
         sb << "\"$gender\","
-        sb << "\"$division\""
+        sb << "\"$division.rank\""
         return sb.toString()
     }
 

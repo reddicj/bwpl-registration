@@ -1,6 +1,8 @@
 package org.bwpl.registration.validation
 
 import org.bwpl.registration.Club
+import org.bwpl.registration.Competition
+import org.bwpl.registration.Division
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.junit.Test
@@ -12,11 +14,6 @@ class ASAMembershipCheckTest {
     @Test
     void testCoachRegistrationCheck() {
 
-        Club c = new Club(name: "Poly", asaName: "Poly")
-        Team t = new Team(name: "Poly Women", isMale: false)
-        c.addToTeams(t)
-        c.save(failOnError: true)
-
         Registration r = new Registration()
         r.asaNumber = 7839
         r.firstName = "Andrew"
@@ -26,6 +23,7 @@ class ASAMembershipCheckTest {
         r.statusNote = ""
         r.statusDate = new Date()
 
+        Team t = getTeam("Poly", "Poly Women", false)
         t.addToRegistrations(r)
         t.save(failOnError: true)
 
@@ -37,11 +35,6 @@ class ASAMembershipCheckTest {
     @Test
     void testNotInASAMemberCheck() {
 
-        Club c = new Club(name: "Poly", asaName: "Poly")
-        Team t = new Team(name: "Poly Men", isMale: true)
-        c.addToTeams(t)
-        c.save(failOnError: true)
-
         Registration r = new Registration()
         r.asaNumber = 123
         r.firstName = "James"
@@ -51,6 +44,7 @@ class ASAMembershipCheckTest {
         r.statusNote = ""
         r.statusDate = new Date()
 
+        Team t = getTeam("Poly", "Poly Men", true)
         t.addToRegistrations(r)
         t.save(failOnError: true)
 
@@ -63,11 +57,6 @@ class ASAMembershipCheckTest {
     @Test
     void testNameMismatch() {
 
-        Club c = new Club(name: "Poly", asaName: "Poly")
-        Team t = new Team(name: "Poly Men", isMale: true)
-        c.addToTeams(t)
-        c.save(failOnError: true)
-
         Registration r = new Registration()
         r.asaNumber = 283261
         r.firstName = "Gary"
@@ -77,6 +66,7 @@ class ASAMembershipCheckTest {
         r.statusNote = ""
         r.statusDate = new Date()
 
+        Team t = getTeam("Poly", "Poly Men", true)
         t.addToRegistrations(r)
         t.save(failOnError: true)
 
@@ -89,11 +79,6 @@ class ASAMembershipCheckTest {
     @Test
     void testIncorrectGender() {
 
-        Club c = new Club(name: "Poly", asaName: "Poly")
-        Team t = new Team(name: "Poly Women", isMale: false)
-        c.addToTeams(t)
-        c.save(failOnError: true)
-
         Registration r = new Registration()
         r.asaNumber = 283261
         r.firstName = "James"
@@ -103,6 +88,7 @@ class ASAMembershipCheckTest {
         r.statusNote = ""
         r.statusDate = new Date()
 
+        Team t = getTeam("Poly", "Poly Women", false)
         t.addToRegistrations(r)
         t.save(failOnError: true)
 
@@ -115,11 +101,6 @@ class ASAMembershipCheckTest {
     @Test
     void testNotRegisteredWithClub() {
 
-        Club c = new Club(name: "Penguin", asaName: "Penguin")
-        Team t = new Team(name: "Penguin Men", isMale: true)
-        c.addToTeams(t)
-        c.save(failOnError: true)
-
         Registration r = new Registration()
         r.asaNumber = 283261
         r.firstName = "James"
@@ -129,6 +110,7 @@ class ASAMembershipCheckTest {
         r.statusNote = ""
         r.statusDate = new Date()
 
+        Team t = getTeam("Penguin", "Penguin Men", true)
         t.addToRegistrations(r)
         t.save(failOnError: true)
 
@@ -141,11 +123,6 @@ class ASAMembershipCheckTest {
     @Test
     void testInvalidMembershipCategory() {
 
-        Club c = new Club(name: "Burnley", asaName: "Burnley")
-        Team t = new Team(name: "Burnley Women", isMale: false)
-        c.addToTeams(t)
-        c.save(failOnError: true)
-
         Registration r = new Registration()
         r.asaNumber = 1
         r.firstName = "Margaret"
@@ -155,6 +132,7 @@ class ASAMembershipCheckTest {
         r.statusNote = ""
         r.statusDate = new Date()
 
+        Team t = getTeam("Burnley", "Burnley Women", false)
         t.addToRegistrations(r)
         t.save(failOnError: true)
 
@@ -167,11 +145,6 @@ class ASAMembershipCheckTest {
     @Test
     void testChecked() {
 
-        Club c = new Club(name: "Poly", asaName: "Poly")
-        Team t = new Team(name: "Poly Men", isMale: true)
-        c.addToTeams(t)
-        c.save(failOnError: true)
-
         Registration r = new Registration()
         r.asaNumber = 283261
         r.firstName = "James"
@@ -181,6 +154,7 @@ class ASAMembershipCheckTest {
         r.statusNote = ""
         r.statusDate = new Date()
 
+        Team t = getTeam("Poly", "Poly Men", true)
         t.addToRegistrations(r)
         t.save(failOnError: true)
 
@@ -192,11 +166,6 @@ class ASAMembershipCheckTest {
     @Test
     void testFerMasriNameMatchCheck() {
 
-        Club c = new Club(name: "Poly", asaName: "Poly")
-        Team t = new Team(name: "Poly Women", isMale: false)
-        c.addToTeams(t)
-        c.save(failOnError: true)
-
         Registration r = new Registration()
         r.asaNumber = 441577
         r.firstName = "Fernanda"
@@ -206,11 +175,25 @@ class ASAMembershipCheckTest {
         r.statusNote = ""
         r.statusDate = new Date()
 
+        Team t = getTeam("Poly", "Poly Women", false)
         t.addToRegistrations(r)
         t.save(failOnError: true)
 
         ASAMembershipCheck asaMembershipCheck = new ASAMembershipCheck()
         List<String> errors = asaMembershipCheck.getErrors(r)
         assertThat(errors.isEmpty()).isTrue()
+    }
+
+    private static Team getTeam(String clubName, String teamName, boolean isMale) {
+
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+        Club c = new Club(name: clubName, asaName: clubName)
+        competition.addToClubs(c).save()
+        Team t = new Team(name: teamName, isMale: isMale)
+        division.addToTeams(t)
+        c.addToTeams(t).save()
+        return t
     }
 }
