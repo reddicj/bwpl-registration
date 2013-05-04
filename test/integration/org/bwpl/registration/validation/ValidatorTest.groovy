@@ -1,6 +1,8 @@
 package org.bwpl.registration.validation
 
 import org.bwpl.registration.Club
+import org.bwpl.registration.Competition
+import org.bwpl.registration.Division
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.bwpl.registration.TestUtils
@@ -14,10 +16,15 @@ class ValidatorTest {
     @Test
     void testIsInASAMembershipCheckUpdated() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 283261
@@ -45,10 +52,15 @@ class ValidatorTest {
     @Test
     void testNotASARegistered() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 123
@@ -75,15 +87,21 @@ class ValidatorTest {
     @Test
     void testDuplicateRegistration() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
+        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
-        c2.addToTeams(t2)
-        c2.save(failOnError: true)
+        division.addToTeams(t2)
+        c2.addToTeams(t2).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 283261
@@ -127,10 +145,16 @@ class ValidatorTest {
         Registration r3
         Registration r4
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
-        Team t1 = new Team(name: "Poly Men", isMale: true, division: 1)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        competition.addToClubs(c1).save()
+        Team t1 = new Team(name: "Poly Men", isMale: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
+
         r1 = new Registration()
         r1.with {
             asaNumber = 123
@@ -146,9 +170,11 @@ class ValidatorTest {
         t1.save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
-        Team t2 = new Team(name: "Penguin Men", isMale: true, division: 1)
-        c2.addToTeams(t2)
-        c2.save(failOnError: true)
+        competition.addToClubs(c2).save()
+        Team t2 = new Team(name: "Penguin Men", isMale: true)
+        division.addToTeams(t2)
+        c2.addToTeams(t2).save()
+
         r2 = new Registration()
         r2.with {
             asaNumber = 123
@@ -164,9 +190,11 @@ class ValidatorTest {
         t2.save()
 
         Club c3 = new Club(name: "Otter", asaName: "Otter")
-        Team t3 = new Team(name: "Otter Men", isMale: true, division: 1)
-        c3.addToTeams(t3)
-        c3.save(failOnError: true)
+        competition.addToClubs(c3).save()
+        Team t3 = new Team(name: "Otter Men", isMale: true)
+        division.addToTeams(t3)
+        c3.addToTeams(t3).save()
+
         r3 = new Registration()
         r3.with {
             asaNumber = 123
@@ -182,9 +210,11 @@ class ValidatorTest {
         t3.save()
 
         Club c4 = new Club(name: "Bristol", asaName: "Bristol")
-        Team t4 = new Team(name: "Bristol Men", isMale: true, division: 1)
-        c4.addToTeams(t4)
-        c4.save(failOnError: true)
+        competition.addToClubs(c4).save()
+        Team t4 = new Team(name: "Bristol Men", isMale: true)
+        division.addToTeams(t4)
+        c4.addToTeams(t4).save()
+
         r4 = new Registration()
         r4.with {
             asaNumber = 123
@@ -215,10 +245,15 @@ class ValidatorTest {
     @Test
     void testValidated() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 283261
