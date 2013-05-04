@@ -26,7 +26,7 @@ class ASADataRetrievalTest {
         assertThat(asaData.asaNumber).isEqualTo(283261)
         assertThat(asaData.isMale).isTrue()
         assertThat(asaData.membershipCategory).isEqualTo("ASA Cat 2")
-        assertThat(asaData.clubs.size()).isEqualTo(2)
+        assertThat(asaData.clubs.size()).isEqualTo(3)
         assertThat(asaData.clubs[1].name).startsWith("Polytechnic")
         assertThat(asaData.clubs[1].fromDate).isEqualTo(DateTimeUtils.parse("03-04-2005").toDate())
     }
