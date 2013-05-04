@@ -1,6 +1,8 @@
 package org.bwpl.registration.upload
 
 import org.bwpl.registration.Club
+import org.bwpl.registration.Competition
+import org.bwpl.registration.Division
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.bwpl.registration.TestUtils
@@ -19,27 +21,25 @@ class RegistrationUploaderTest {
     @Before
     void setUp() {
 
-        Club c1 = Club.findByName("Poly")
-        Club c2 = Club.findByName("Bedford")
-        if (c1) c1.delete()
-        if (c2) c2.delete()
-        c1 = new Club(name: "Poly", asaName: "Poly")
-        c2 = new Club(name: "Bedford", asaName: "Bedford")
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
+        Club c1 = new Club(name: "Poly", asaName: "Poly")
+        Club c2 = new Club(name: "Bedford", asaName: "Bedford")
+        competition.addToClubs(c1).addToClubs(c2).save()
+
         Team t1 = new Team(name: "Poly1", isMale: true)
         Team t2 = new Team(name: "Bedford Men", isMale: true)
-        c1.addToTeams(t1)
-        c2.addToTeams(t2)
-        c1.save(failOnError: true, flush: true)
-        c2.save(failOnError: true, flush: true)
+        division.addToTeams(t1).addToTeams(t2)
+
+        c1.addToTeams(t1).save()
+        c2.addToTeams(t2).save()
     }
 
     @After
     void tearDown() {
 
-        Club c = Club.findByName("Poly")
-        if (c) c.delete()
-        c = Club.findByName("Bedford")
-        if (c) c.delete()
     }
 
     @Test

@@ -11,10 +11,15 @@ class RegistrationTest {
     @Test
     void testAddTwoIdenticalRegistrations() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c).save()
         Team t = new Team(name: "Poly1", isMale: true)
-        c.addToTeams(t)
-        c.save(failOnError: true)
+        division.addToTeams(t)
+        c.addToTeams(t).save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 123

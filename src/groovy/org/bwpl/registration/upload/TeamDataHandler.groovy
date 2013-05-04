@@ -1,6 +1,8 @@
 package org.bwpl.registration.upload
 
 import org.bwpl.registration.Club
+import org.bwpl.registration.Competition
+import org.bwpl.registration.Division
 import org.bwpl.registration.Team
 
 import static org.bwpl.registration.utils.ValidationUtils.*
@@ -8,6 +10,7 @@ import static org.bwpl.registration.utils.ValidationUtils.*
 class TeamDataHandler implements CsvHandler {
 
     private static final List<String> fieldNames = ["Club name", "ASA Club name", "Team name", "Gender (M/F)", "Division"]
+    Competition competition
 
     void processTokens(int lineNumber, String[] values) {
 
@@ -20,24 +23,35 @@ class TeamDataHandler implements CsvHandler {
         String asaClubName = values[1]
         String teamName = values[2]
         boolean isMale = "M".equalsIgnoreCase(values[3])
-        int division = Integer.parseInt(values[4])
+        int rank = Integer.parseInt(values[4])
 
         Club club = Club.findByName(clubName)
         if (club && club.hasTeam(teamName)) {
             return
         }
+
+        Division division = Division.findByCompetitionAndRankAndIsMale(competition, rank, isMale)
+        if (!division) {
+            division = new Division()
+            division.rank = rank
+            division.isMale = isMale
+            division.name = Division.getDefaultName(rank, isMale)
+            competition.addToDivisions(division).save(flush: true)
+        }
+
         if (!club) {
             club = new Club()
             club.name = clubName
             club.asaName = asaClubName
-            club.save()
+            competition.addToClubs(club).save(flush: true)
         }
+
         Team team = new Team()
         team.name = teamName
         team.isMale = isMale
-        team.division = division
+        division.addToTeams(team)
         club.addToTeams(team)
-        club.save()
+        competition.save()
     }
 
     private String getErrors(String[] values) {

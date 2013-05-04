@@ -1,7 +1,8 @@
 package org.bwpl.registration.upload
 
 import org.bwpl.registration.Club
-
+import org.bwpl.registration.Competition
+import org.bwpl.registration.Division
 import org.junit.Test
 import org.springframework.web.multipart.MultipartFile
 
@@ -21,8 +22,9 @@ class TeamUploaderTest {
         when(f.originalFilename).thenReturn("fileName")
         when(f.bytes).thenReturn(goodData.getBytes("UTF-8"))
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl").save()
         TeamUploader teamUploader = new TeamUploader()
-        teamUploader.upload(f)
+        teamUploader.upload(competition, f)
 
         assertThat(Club.count).isEqualTo(3)
         Club club = Club.findByAsaName("Poly")
@@ -30,7 +32,10 @@ class TeamUploaderTest {
         assertThat(club.asaName).isEqualTo("Poly")
         assertThat(club.teams.asList()[0].name).isEqualTo("Poly Men")
         assertThat(club.teams.asList()[0].isMale).isTrue()
-        assertThat(club.teams.asList()[0].division).isEqualTo(1)
+        assertThat(club.teams.asList()[0].division.rank).isEqualTo(1)
+        assertThat(competition.divisions.size()).isEqualTo(2)
+        assertThat(Division.findByIsMale(true).teams.size()).isEqualTo(2)
+        assertThat(Division.findByIsMale(false).teams.size()).isEqualTo(1)
     }
 
     @Test
@@ -42,10 +47,10 @@ class TeamUploaderTest {
         when(f.originalFilename).thenReturn("fileName")
         when(f.bytes).thenReturn(badData.getBytes("UTF-8"))
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
         TeamUploader teamUploader = new TeamUploader()
-
         try {
-            teamUploader.upload(f)
+            teamUploader.upload(competition, f)
             Assert.fail()
         }
         catch (UploadException e) {
