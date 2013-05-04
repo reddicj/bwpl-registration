@@ -1,18 +1,26 @@
 package org.bwpl.registration.upload
 
+import org.bwpl.registration.Competition
 import org.springframework.web.multipart.MultipartFile
 
 class TeamUploader {
 
-    void upload(MultipartFile file) {
+    void upload(Competition competition, MultipartFile file) {
 
-        CsvReader reader = new CsvReader(contentHandler: new TeamDataHandler())
+        CsvReader reader = getCompetitionTeamCsvReader(competition)
         reader.readFromMultipartFile(file)
     }
 
-    void uploadFile(File file) {
+    void uploadFile(Competition competition, File file) {
 
-        CsvReader reader = new CsvReader(contentHandler: new TeamDataHandler())
+        CsvReader reader = getCompetitionTeamCsvReader(competition)
         reader.readFromFile(file)
+    }
+
+    private static CsvReader getCompetitionTeamCsvReader(Competition competition) {
+
+        TeamDataHandler teamDataHandler = new TeamDataHandler()
+        teamDataHandler.competition = competition
+        return new CsvReader(contentHandler: teamDataHandler)
     }
 }
