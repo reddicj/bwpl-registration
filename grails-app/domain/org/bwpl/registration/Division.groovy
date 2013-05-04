@@ -24,15 +24,6 @@ class Division {
         else return "Womens Div $rank"
     }
 
-    String getGender() {
-        if (isMale) return "M"
-        return "F"
-    }
-
-    boolean hasTeams() {
-        return !teams.isEmpty()
-    }
-
     boolean equals(o) {
 
         if (this.is(o)) return true
