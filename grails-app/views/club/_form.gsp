@@ -8,8 +8,8 @@
         </thead>
         <tbody>
         <tr>
-            <td><g:textField name="club-name" required="true" value="${clubInstance?.name}"/></td>
-            <td><g:textField name="club-asaName" required="true" value="${clubInstance?.asaName}"/></td>
+            <td><g:textField name="club-name" required="true" value="${club?.name}"/></td>
+            <td><g:textField name="club-asaName" required="true" value="${club?.asaName}"/></td>
         </tr>
         </tbody>
     </table>
@@ -17,39 +17,28 @@
 <hr/>
 <div class="fieldcontain">
     <h1>Secretary</h1>
-    <g:each in="${clubInstance?.secretaries}" var="secretary">
-        <table class="bwpl-form-table">
-            <thead>
-            <tr>
-                <th>Firstname</th><th>Lastname</th><th>Email</th><th>Delete?</th>
-            </tr>
-            </thead>
-            <tbody>
+    <table class="bwpl-form-table">
+        <thead>
+        <tr>
+            <th>Firstname</th><th>Lastname</th><th>Email</th><th>Delete?</th>
+        </tr>
+        </thead>
+        <tbody>
+        <g:each in="${club?.secretaries}" var="secretary">
             <tr>
                 <td><g:textField name="secretary-firstname-$secretary.id" value="${secretary.firstname}"/></td>
                 <td><g:textField name="secretary-lastname-$secretary.id" value="${secretary.lastname}"/></td>
                 <td><g:textField name="secretary-email-$secretary.id" value="${secretary.username}"/></td>
                 <td><g:checkBox name="secretary-delete-$secretary.id"/></td>
             </tr>
-            </tbody>
-        </table>
-    </g:each>
-    <tr>
-        <table class="bwpl-form-table">
-            <thead>
-            <tr>
-                <th>Firstname</th><th>Lastname</th><th>Email</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr>
-                <td><g:textField name="secretary-firstname-new" value=""/></td>
-                <td><g:textField name="secretary-lastname-new" value=""/></td>
-                <td><g:textField name="secretary-email-new" value=""/></td>
-            </tr>
-            </tbody>
-        </table>
-    </tr>
+        </g:each>
+        <tr>
+            <td><g:textField name="secretary-firstname-new" value=""/></td>
+            <td><g:textField name="secretary-lastname-new" value=""/></td>
+            <td><g:textField name="secretary-email-new" value=""/></td>
+        </tr>
+        </tbody>
+    </table>
 </div>
 <hr/>
 <div class="fieldcontain">
@@ -61,7 +50,7 @@
         </tr>
         </thead>
         <tbody>
-        <g:each in="${clubInstance?.teams}" var="team">
+        <g:each in="${club?.teams}" var="team">
             <tr>
                 <td><g:textField name="team-name-$team.id" required="true" value="${team.name}"/></td>
                 <td><g:select name="team-gender-$team.id" from="${["M", "F"]}" value="${team.gender}"/></td>

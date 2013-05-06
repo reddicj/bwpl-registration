@@ -129,7 +129,7 @@ class ClubController {
         [user: securityUtils.currentUser,
          title: "Edit Club",
          navItems: nav.getNavItems(),
-         clubInstance: club]
+         club: club]
     }
 
     @Secured(["ROLE_REGISTRATION_SECRETARY"])

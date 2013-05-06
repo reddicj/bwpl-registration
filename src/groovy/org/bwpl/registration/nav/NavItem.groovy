@@ -19,8 +19,8 @@ class NavItem {
 
         admin.with {
             displayName = "Admin"
-            controllerName = "registration"
-            actionName = "admin"
+            controllerName = "admin"
+            actionName = "show"
         }
 
         securityManagementConsole.with {
