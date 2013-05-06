@@ -1,4 +1,4 @@
-<%@ page import="org.bwpl.registration.Club" %>
+<%@ page import="org.bwpl.registration.Competition" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,16 +7,16 @@
 </head>
 <body>
 <div>
-    <g:hasErrors bean="${club}">
+    <g:hasErrors bean="${competition}">
         <ul class="errors" role="alert">
-            <g:eachError bean="${club}" var="error">
-                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>><g:message
-                        error="${error}"/></li>
+            <g:eachError bean="${competition}" var="error">
+                <li <g:if test="${error in org.springframework.validation.FieldError}">data-field-id="${error.field}"</g:if>>
+                    <g:message error="${error}"/></li>
             </g:eachError>
         </ul>
     </g:hasErrors>
     <g:form method="post">
-        <g:hiddenField name="id" value="${club?.id}"/>
+        <g:hiddenField name="id" value="${competition?.id}"/>
         <fieldset class="form">
             <g:render template="form"/>
         </fieldset>
