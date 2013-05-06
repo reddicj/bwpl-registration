@@ -18,19 +18,6 @@ class RegistrationController {
     RegistrationUploader registrationUploader
     Validator validator
 
-    @Secured(["ROLE_READ_ONLY"])
-    def admin = {
-
-        if (securityUtils.isCurrentUserRegistrationSecretary()) {
-            [user: securityUtils.currentUser,
-             navItems: nav.getNavItems(),
-             stats: new RegistrationStats(Registration.list())]
-        }
-        else {
-            [user: securityUtils.currentUser, navItems: nav.getNavItems()]
-        }
-    }
-
     @Secured(["ROLE_CLUB_SECRETARY"])
     def edit = {
 
