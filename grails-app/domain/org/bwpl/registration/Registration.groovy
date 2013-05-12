@@ -65,6 +65,7 @@ class Registration {
     String role
     String status
     String statusNote
+    Date statusDate
     boolean isInASAMemberCheck = false
 
     String getDateOfBirthAsString() {
@@ -89,10 +90,22 @@ class Registration {
     }
 
     Status getStatusAsEnum() {
+
+        Status s = Status.fromString(status)
+        if (Status.VALID != s) return s
+        if (!isInASAMemberCheck) return s
+        DateTime validationDate = new DateTime(this.statusDate)
+        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return Status.INVALID
         return Status.fromString(status)
     }
 
     String getStatusNote() {
+
+        Status s = Status.fromString(status)
+        if (Status.VALID != s) return statusNote
+        if (!isInASAMemberCheck) return statusNote
+        DateTime validationDate = new DateTime(this.statusDate)
+        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return DateTimeUtils.duringValidationCutOffMessage
         return statusNote
     }
 
@@ -133,27 +146,30 @@ class Registration {
     void updateStatus(User user, Action action, Status status, String notes) {
 
         RegistrationStatus currentEntry = currentStatus
-        boolean doAddNewStatus = doAddNewStatus(currentStatus, action, status)
+        boolean doAddNewStatus = doAddNewStatus(currentStatus, status)
         if (doAddNewStatus) {
 
             Date dateStamp = new Date()
             RegistrationStatus newEntry = new RegistrationStatus()
             newEntry.date = dateStamp
             newEntry.user = user
-            newEntry.actionAsEnum = action
-            newEntry.statusAsEnum = status
+            newEntry.action = action.toString()
+            newEntry.status = status.toString()
             newEntry.notes = notes
             addToStatusEntries(newEntry)
             this.status = status.toString()
             this.statusNote = notes
+            this.statusDate = dateStamp
         }
         else {
 
-            currentEntry.date = new Date()
+            Date dateStamp = new Date()
+            currentEntry.date = dateStamp
             currentEntry.user = user
-            currentEntry.actionAsEnum = action
+            currentEntry.action = action.toString()
             currentEntry.notes = notes
             this.statusNote = notes
+            this.statusDate = dateStamp
         }
     }
 
@@ -175,7 +191,7 @@ class Registration {
         return (statusAsEnum == Status.VALID) && (!isInASAMemberCheck)
     }
 
-    private static boolean doAddNewStatus(RegistrationStatus currentStatus, Action newAction, Status newStatus) {
+    private static boolean doAddNewStatus(RegistrationStatus currentStatus, Status newStatus) {
 
         if (currentStatus == null) return true
         return currentStatus.statusAsEnum != newStatus

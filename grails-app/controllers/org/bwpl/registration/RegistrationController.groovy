@@ -237,6 +237,7 @@ class RegistrationController {
             if (asaMemberCheckError.isEmpty()) {
                 Registration r = Registration.get(params.id)
                 validator.validate(r)
+                int i = 0
             }
             else {
                 flash.errors = asaMemberCheckError

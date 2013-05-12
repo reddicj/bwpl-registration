@@ -27,7 +27,7 @@
                 <td>${statusEntry.user.name}</td>
                 <td>${statusEntry.actionAsEnum.toString()}</td>
                 <td>${statusEntry.statusAsEnum.toString()}</td>
-                <td>${statusEntry.notes}</td>
+                <td>${statusEntry.statusNotes}</td>
             </tr>
         </g:each>
         </tbody>

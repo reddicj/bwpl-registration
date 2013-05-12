@@ -1,5 +1,6 @@
 package org.bwpl.registration.utils
 
+import static org.joda.time.DateTimeConstants.*
 import org.joda.time.DateTime
 import org.joda.time.DateTimeComparator
 import org.joda.time.format.DateTimeFormatter
@@ -32,6 +33,35 @@ class DateTimeUtils {
     boolean isBeforeSeasonStart() {
         return isBefore(new DateTime(), seasonStartDate)
     }
+
+    boolean isAfterSeasonStart() {
+        return isAfter(new DateTime(), seasonStartDate)
+    }
+
+    static DateTime getWedMidnight() {
+
+        DateTime now = new DateTime()
+        return now.withDayOfWeek(WEDNESDAY).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+    }
+
+    static boolean isBeforeWedMidnight(DateTime date) {
+        return isBefore(date, wedMidnight)
+    }
+
+    static boolean isAfterWedMidnight(DateTime date) {
+        return isAfter(date, wedMidnight)
+    }
+
+    static boolean isSunEve(DateTime date) {
+        return (date.dayOfWeek == SUNDAY) && (date.hourOfDay >= 20)
+    }
+
+    boolean isDuringValidationCutOff(DateTime date) {
+        return isAfterSeasonStart() && isAfterWedMidnight(date) && (!isSunEve(date))
+    }
+
+    static final String duringValidationCutOffMessage =
+        "Invalid until Sunday 8pm. The Registration was validated after the Wednesday midnight deadline."
 
     static String printDate(Date d) {
 

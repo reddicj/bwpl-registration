@@ -1,6 +1,7 @@
 package org.bwpl.registration.utils
 
 import static org.fest.assertions.Assertions.assertThat
+import static org.joda.time.DateTimeConstants.*
 import org.joda.time.DateTime
 import org.junit.Test
 
@@ -54,5 +55,24 @@ class DateTimeUtilsTest {
         assertThat(DateTimeUtils.isPeriodLessThan18Years(startDate, endDate)).isTrue()
         endDate = new DateTime().withYear(1990).withMonthOfYear(4).withDayOfMonth(5)
         assertThat(DateTimeUtils.isPeriodLessThan18Years(startDate, endDate)).isFalse()
+    }
+
+    @Test
+    void testGetPrevWedMidnight() {
+
+        DateTime prevWed = DateTimeUtils.wedMidnight
+        assertThat(prevWed.dayOfWeek).isEqualTo(WEDNESDAY)
+        assertThat(prevWed.hourOfDay).isEqualTo(23)
+        assertThat(prevWed.minuteOfHour).isEqualTo(59)
+        assertThat(prevWed.secondOfMinute).isEqualTo(59)
+    }
+
+    @Test
+    void testIsBeforeWedMidnight() {
+
+        DateTime mon = new DateTime().withDayOfWeek(MONDAY).withHourOfDay(0).withMinuteOfHour(1)
+        DateTime sun = new DateTime().withDayOfWeek(SUNDAY).withHourOfDay(23).withMinuteOfHour(59)
+        assertThat(DateTimeUtils.isBeforeWedMidnight(mon)).isTrue()
+        assertThat(DateTimeUtils.isBeforeWedMidnight(sun)).isFalse()
     }
 }

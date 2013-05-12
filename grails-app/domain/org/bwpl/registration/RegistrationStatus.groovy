@@ -3,6 +3,7 @@ package org.bwpl.registration
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.validation.Status
+import org.joda.time.DateTime
 
 class RegistrationStatus {
 
@@ -18,6 +19,8 @@ class RegistrationStatus {
 
     static belongsTo = [registration: Registration]
 
+    def dateTimeUtils
+
     Date date
     User user
     String action
@@ -29,18 +32,26 @@ class RegistrationStatus {
     }
 
     Status getStatusAsEnum() {
-        return Status.fromString(this.status)
+
+        Status s = Status.fromString(status)
+        if (Status.VALID != s) return s
+        if (!registration.isInASAMemberCheck) return s
+        DateTime validationDate = new DateTime(date)
+        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return Status.INVALID
+        return s
     }
 
-    void setStatusAsEnum(Status status) {
-        this.status = status.toString()
+    String getStatusNotes() {
+
+        Status s = Status.fromString(status)
+        if (Status.VALID != s) return notes
+        if (!registration.isInASAMemberCheck) return notes
+        DateTime validationDate = new DateTime(date)
+        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return DateTimeUtils.duringValidationCutOffMessage
+        return notes
     }
 
     Action getActionAsEnum() {
         return Action.fromString(this.action)
-    }
-
-    void setActionAsEnum(Action action) {
-        this.action = action.toString()
     }
 }
