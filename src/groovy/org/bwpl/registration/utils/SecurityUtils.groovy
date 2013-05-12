@@ -8,7 +8,10 @@ class SecurityUtils {
     def springSecurityService
 
     User getCurrentUser() {
-        return springSecurityService.currentUser
+
+        User user = springSecurityService.currentUser
+        if (user == null) return User.sys
+        return user
     }
 
     boolean isCurrentUserRegistrationSecretary() {

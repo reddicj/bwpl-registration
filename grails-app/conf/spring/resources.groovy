@@ -1,4 +1,5 @@
 import org.bwpl.registration.nav.NavItems
+import org.bwpl.registration.utils.EmailUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.validation.Validator
@@ -25,5 +26,9 @@ beans = {
 
     validator(Validator) {
         securityUtils = ref("securityUtils")
+    }
+
+    emailUtils(EmailUtils) {
+        mailService = ref("mailService")
     }
 }

@@ -241,4 +241,44 @@ class ValidatorTest {
         assertThat(r1.statusNote).isEqualTo("Automatically validated.")
         assertThat(r1.isInASAMemberCheck).isTrue()
     }
+
+    @Test
+    void testValidateAll() {
+
+        Club c1 = new Club(name: "Poly", asaName: "Poly")
+        Team t1 = new Team(name: "Poly Men", isMale: true)
+        c1.addToTeams(t1)
+        c1.save(failOnError: true)
+
+        Registration r1 = new Registration()
+        r1.asaNumber = 283261
+        r1.firstName = "James"
+        r1.lastName = "Reddick"
+        r1.role = "Player"
+        r1.status = Status.NEW
+        r1.statusNote = ""
+        r1.statusDate = new Date()
+
+        Registration r2 = new Registration()
+        r2.asaNumber = 914
+        r2.firstName = "Gary"
+        r2.lastName = "Simons"
+        r2.role = "Player"
+        r2.status = Status.NEW
+        r2.statusNote = ""
+        r2.statusDate = new Date()
+
+        t1.addToRegistrations(r1)
+        t1.addToRegistrations(r2)
+        t1.save(failOnError: true)
+
+        Validator validator = new Validator()
+        validator.securityUtils = TestUtils.mockSecurityUtils
+        validator.validateAll()
+
+        r1 = Registration.findById(r1.id)
+        assertThat(r1.statusAsEnum).isEqualTo(Status.VALID)
+        r2 = Registration.findById(r2.id)
+        assertThat(r2.statusAsEnum).isEqualTo(Status.VALID)
+    }
 }

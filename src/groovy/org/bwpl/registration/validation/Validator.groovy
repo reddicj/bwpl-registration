@@ -26,7 +26,15 @@ class Validator {
             registration.updateStatus(securityUtils.currentUser, Action.VALIDATED, Status.INVALID, errorMessages.join(" "))
             registration.isInASAMemberCheck = !errorMessages.contains(ASAMembershipCheck.NOT_FOUND_MSG)
         }
-        registration.save()
+        registration.save(flush: true)
+    }
+
+    void validateAll() {
+
+        Set<Registration> registrations = Registration.findAll {status != Status.DELETED.toString()}
+        registrations.each { r ->
+            validate(r)
+        }
     }
 
     private List<String> getErrorMessages(Registration registration) {
