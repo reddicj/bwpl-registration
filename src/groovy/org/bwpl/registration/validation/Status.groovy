@@ -18,6 +18,6 @@ public enum Status {
     }
 
     String toString() {
-        return StringUtils.capitalise(super.toString().toLowerCase())
+        return StringUtils.capitalize(super.toString().toLowerCase())
     }
 }
