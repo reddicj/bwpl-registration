@@ -24,6 +24,7 @@ class ASAMembershipCheckTest {
         r.role = "Coach"
         r.status = Status.INVALID
         r.statusNote = ""
+        r.statusDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -48,6 +49,7 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
+        r.statusDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -73,6 +75,7 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
+        r.statusDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -98,6 +101,7 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
+        r.statusDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -123,6 +127,7 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
+        r.statusDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -148,6 +153,7 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
+        r.statusDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -173,6 +179,7 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
+        r.statusDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)
@@ -197,6 +204,7 @@ class ASAMembershipCheckTest {
         r.role = "Player"
         r.status = Status.INVALID
         r.statusNote = ""
+        r.statusDate = new Date()
 
         t.addToRegistrations(r)
         t.save(failOnError: true)

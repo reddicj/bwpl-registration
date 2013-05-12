@@ -23,6 +23,7 @@ class RegistrationTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
+        r1.statusDate = new Date()
 
         Registration r2 = new Registration()
         r2.asaNumber = 123
@@ -31,6 +32,7 @@ class RegistrationTest {
         r2.role = "Player"
         r2.status = Status.INVALID
         r2.statusNote = ""
+        r2.statusDate = new Date()
 
         t.addToRegistrations(r1)
         t.addToRegistrations(r2)

@@ -26,6 +26,7 @@ class ValidatorTest {
         r1.role = "Player"
         r1.status = Status.VALID
         r1.statusNote = ""
+        r1.statusDate = new Date()
         r1.isInASAMemberCheck = false
 
         t1.addToRegistrations(r1)
@@ -56,6 +57,7 @@ class ValidatorTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
+        r1.statusDate = new Date()
 
         t1.addToRegistrations(r1)
         t1.save(failOnError: true)
@@ -90,6 +92,7 @@ class ValidatorTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
+        r1.statusDate = new Date()
 
         Registration r2 = new Registration()
         r2.asaNumber = 283261
@@ -98,6 +101,7 @@ class ValidatorTest {
         r2.role = "Player"
         r2.status = Status.INVALID
         r2.statusNote = ""
+        r2.statusDate = new Date()
 
         t1.addToRegistrations(r1)
         t1.save(failOnError: true)
@@ -135,6 +139,7 @@ class ValidatorTest {
             role = "Coach"
             status = Status.INVALID
             statusNote = ""
+            statusDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
         }
         t1.addToRegistrations(r1)
@@ -152,6 +157,7 @@ class ValidatorTest {
             role = "Player"
             status = Status.INVALID
             statusNote = ""
+            statusDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
         }
         t2.addToRegistrations(r2)
@@ -169,6 +175,7 @@ class ValidatorTest {
             role = "Coach"
             status = Status.INVALID
             statusNote = ""
+            statusDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.INVALID, "")
         }
         t3.addToRegistrations(r3)
@@ -186,6 +193,7 @@ class ValidatorTest {
             role = "Player"
             status = Status.INVALID
             statusNote = ""
+            statusDate = new Date()
             updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.INVALID, "")
         }
         t4.addToRegistrations(r4)
@@ -219,6 +227,7 @@ class ValidatorTest {
         r1.role = "Player"
         r1.status = Status.INVALID
         r1.statusNote = ""
+        r1.statusDate = new Date()
 
         t1.addToRegistrations(r1)
         t1.save(failOnError: true)
