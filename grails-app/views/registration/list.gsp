@@ -4,7 +4,9 @@
     <meta name="layout" content="main">
     <title>Registrations</title>
     <sec:access expression="hasRole('ROLE_REGISTRATION_SECRETARY')">
-        <g:javascript src="registration-validation.js"/>
+        <g:javascript>
+            <g:render template="/registration/validationJavascript"/>
+        </g:javascript>
         <g:javascript>
             $("button").click(function() {
                 validateRegistrations();

@@ -4,7 +4,9 @@
     <meta name="layout" content="main">
     <title>${club.name}</title>
     <g:if test="${canUpdate}">
-        <g:javascript src="registration-validation.js"/>
+        <g:javascript>
+            <g:render template="/registration/validationJavascript"/>
+        </g:javascript>
         <g:if test="${controllerName == "club"}">
             <g:javascript>
                 $("#validate-button").click(function() {

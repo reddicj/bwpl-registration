@@ -25,6 +25,7 @@ class Registration {
         dateOfBirth(nullable: true)
         role(inList: ["Player", "Coach"])
         status(blank: false, inList: ["New", "Invalid", "Valid", "Deleted"])
+        prevStatus(nullable: true)
     }
 
     static belongsTo = [team: Team]
@@ -64,6 +65,7 @@ class Registration {
     Date dateOfBirth
     String role
     String status
+    String prevStatus
     String statusNote
     Date statusDate
     boolean isInASAMemberCheck = false
@@ -157,6 +159,8 @@ class Registration {
             newEntry.status = status.toString()
             newEntry.notes = notes
             addToStatusEntries(newEntry)
+
+            this.prevStatus = this.status
             this.status = status.toString()
             this.statusNote = notes
             this.statusDate = dateStamp
