@@ -66,7 +66,7 @@ class EmailUtils {
         List<Registration> sortedList = new ArrayList<Registration>(registrations)
         sortedList.sort{it.name}
         sortedList.each { r ->
-            sb << "$r.name ($r.asaNumber)\n"
+            sb << "$r.name, $r.asaNumber, $r.team.name ($r.team.gender)\n"
         }
         return sb.toString()
     }
