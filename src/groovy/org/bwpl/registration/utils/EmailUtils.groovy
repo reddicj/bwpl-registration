@@ -1,6 +1,7 @@
 package org.bwpl.registration.utils
 
 import grails.plugin.mail.MailService
+import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.Club
 import org.bwpl.registration.Registration
 import org.bwpl.registration.validation.Status
@@ -66,7 +67,11 @@ class EmailUtils {
         List<Registration> sortedList = new ArrayList<Registration>(registrations)
         sortedList.sort{it.name}
         sortedList.each { r ->
-            sb << "$r.name, $r.asaNumber, $r.team.name ($r.team.gender)\n"
+            sb << "$r.name, $r.asaNumber, $r.team.name ($r.team.gender)"
+            if (r.statusAsEnum == Status.INVALID) {
+                sb << " - $r.statusNote"
+            }
+            sb << "\n"
         }
         return sb.toString()
     }
