@@ -172,6 +172,8 @@ class Registration {
             currentEntry.user = user
             currentEntry.action = action.toString()
             currentEntry.notes = notes
+
+            this.prevStatus = this.status
             this.statusNote = notes
             this.statusDate = dateStamp
         }
