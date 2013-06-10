@@ -69,4 +69,10 @@ class Club {
     String getNameAsMungedString() {
         return name.toLowerCase().replaceAll(" ", "-")
     }
+
+    String getNameAndASAName() {
+
+        if (name == asaName) return name
+        else return "$name ($asaName)"
+    }
 }

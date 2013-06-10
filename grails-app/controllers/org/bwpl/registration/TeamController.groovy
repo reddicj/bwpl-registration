@@ -32,7 +32,7 @@ class TeamController {
         boolean doDisplayValidateButton = canUpdate && !registrations.isEmpty() && !params.rfilter
 
         def model = [user: securityUtils.currentUser,
-                     title: team.club.name,
+                     title: team.club.nameAndASAName,
                      navItems: nav.getNavItems(),
                      subNavItems: nav.getTeamNavItems(team),
                      club: team.club,

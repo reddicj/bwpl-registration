@@ -50,7 +50,7 @@ class ClubController {
         boolean doDisplayValidateButton = canUpdate && !registrations.isEmpty() && !params.rfilter
 
         def model = [user: securityUtils.currentUser,
-                     title: club.name,
+                     title: club.nameAndASAName,
                      navItems: nav.getNavItems(),
                      subNavItems: nav.getClubNavItems(club, params.rfilter),
                      club: club,
