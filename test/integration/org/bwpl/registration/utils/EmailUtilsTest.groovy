@@ -1,34 +1,31 @@
 package org.bwpl.registration.utils
 
-import org.bwpl.registration.*
+import org.bwpl.registration.Competition
+import org.bwpl.registration.Division
+
+import static org.fest.assertions.Assertions.assertThat
+
+import org.bwpl.registration.Club
+import org.bwpl.registration.Registration
+import org.bwpl.registration.Team
+import org.bwpl.registration.TestUtils
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
 import org.junit.Test
 
-import static org.fest.assertions.Assertions.assertThat
-
 class EmailUtilsTest {
-
-    @Test
-    void testGetRegistrationSecretariesEmails() {
-
-        Role regSecRole = new Role(authority: "ROLE_REGISTRATION_SECRETARY").save()
-        User sec1 = new User(username: "reddicj@gmail.com", password: "password1", enabled: true).save()
-        User sec2 = new User(username: "chris@bt.com", password: "password1", enabled: true).save()
-        UserRole.create(sec1, regSecRole, true)
-        UserRole.create(sec2, regSecRole, true)
-
-        Set<String> emails = EmailUtils.registrationSecretariesEmails
-        assertThat(emails).contains("reddicj@gmail.com")
-        assertThat(emails).contains("chris@bt.com")
-    }
 
     @Test
     void testQueryRegistrations() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
         c1.addToTeams(t1)
+        division.addToTeams(t1)
         c1.save()
 
         Registration r1 = new Registration()
