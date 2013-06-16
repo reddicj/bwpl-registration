@@ -279,10 +279,16 @@ class ValidatorTest {
     @Test
     void testValidateAll() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
+        division.addToTeams(t1)
         c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        c1.save()
 
         Registration r1 = new Registration()
         r1.asaNumber = 283261
