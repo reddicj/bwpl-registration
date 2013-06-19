@@ -10,7 +10,7 @@ class ValidationUtilsTest {
 
         List<String> errors = []
         ValidationUtils.checkValueInListIgnoreCase("Role", "player", ["Player", "Coach"], errors)
-        assertThat(errors.isEmpty()).isTrue()
+        assertThat(errors).isEmpty()
     }
 
     @Test
@@ -18,6 +18,20 @@ class ValidationUtilsTest {
 
         List<String> errors = []
         ValidationUtils.checkValueInListIgnoreCase("Role", "play", ["Player", "Coach"], errors)
-        assertThat(errors.isEmpty()).isFalse()
+        assertThat(errors).isNotEmpty()
+    }
+
+    @Test
+    void testcheckValueContainsValidLastNameCharacters() {
+
+        List<String> errors = []
+        ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "O'Sullivan", errors)
+        assertThat(errors).isEmpty()
+        ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "Reddick", errors)
+        assertThat(errors).isEmpty()
+        ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "Gardner Bond", errors)
+        assertThat(errors).isEmpty()
+        ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "Gardner-Bond", errors)
+        assertThat(errors).isEmpty()
     }
 }

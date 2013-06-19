@@ -58,9 +58,25 @@ class ValidationUtils {
 
     static void checkValueContainsValidNameCharacters(String name, String value, List<String> errors) {
 
-        String v = StringUtils.remove(value, '-')
-        if (!StringUtils.isAlphanumericSpace(v)) {
-            errors << "$name contains non valid name characters: $value"
+        boolean isValid = StringUtils.isAlphaSpace(value)
+        if (!isValid) {
+            errors << "$name contains invalid name characters: $value"
+        }
+    }
+
+    static void checkValueContainsValidFirstNameCharacters(String name, String value, List<String> errors) {
+
+        boolean isValid = StringUtils.isAlphaSpace(value)
+        if (!isValid) {
+            errors << "$name contains invalid firstname characters: $value"
+        }
+    }
+
+    static void checkValueContainsValidLastNameCharacters(String name, String value, List<String> errors) {
+
+        boolean isValid = value =~ "^[A-Za-z]+[ \\-']*[A-Za-z]+\$"
+        if (!isValid) {
+            errors << "$name contains invalid lastname characters: $value"
         }
     }
 

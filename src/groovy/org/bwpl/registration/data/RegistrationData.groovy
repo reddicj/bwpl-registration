@@ -61,7 +61,7 @@ class RegistrationData {
     }
 
     void setLastName(String lastName) {
-        this.lastName = WordUtils.capitalize(StringUtils.trimToEmpty(lastName), [' ', '-'] as char[])
+        this.lastName = WordUtils.capitalize(StringUtils.trimToEmpty(lastName), [' ', '-', '\''] as char[])
     }
 
     void setRole(String role) {
@@ -88,10 +88,10 @@ class RegistrationData {
         List<String> errors = []
 
         checkForNullOrEmptyValue("Firstname", firstName, errors)
-        checkValueContainsValidNameCharacters("Firstname", firstName, errors)
+        checkValueContainsValidFirstNameCharacters("Firstname", firstName, errors)
 
         checkForNullOrEmptyValue("Lastname", lastName, errors)
-        checkValueContainsValidNameCharacters("Lastname", lastName, errors)
+        checkValueContainsValidLastNameCharacters("Lastname", lastName, errors)
 
         checkForNullOrEmptyValue("Role", role, errors)
         checkValueInListIgnoreCase("Role", role, ["Player", "Coach"], errors)
