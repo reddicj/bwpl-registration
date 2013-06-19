@@ -7,6 +7,9 @@ import org.joda.time.DateTime
 
 class RegistrationStatus {
 
+    static final String csvFieldNames =
+        "\"Date\",\"User\",\"Action\",\"Status\",\"Notes\""
+
     static mapping = {
         cache true
     }
@@ -53,5 +56,16 @@ class RegistrationStatus {
 
     Action getActionAsEnum() {
         return Action.fromString(this.action)
+    }
+
+    String toCsvString() {
+
+        StringBuilder sb = new StringBuilder()
+        sb << "\"${DateTimeUtils.printDate(date)}\","
+        sb << "\"${user.username}\","
+        sb << "\"$action\","
+        sb << "\"$status\","
+        sb << "\"$notes\""
+        return sb.toString()
     }
 }
