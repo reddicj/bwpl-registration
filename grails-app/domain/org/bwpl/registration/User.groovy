@@ -4,6 +4,9 @@ import org.apache.commons.lang.StringUtils
 
 class User {
 
+    static final String csvFieldNames =
+        "\"Firstname\",\"Lastname\",\"Username\",\"Roles\""
+
 	transient springSecurityService
 
     String firstname
@@ -98,5 +101,22 @@ class User {
 
     String toString() {
         return name
+    }
+
+    String toCsvString() {
+
+        StringBuilder sb = new StringBuilder()
+        sb << "\"$firstname\","
+        sb << "\"$lastname\","
+        sb << "\"$username\","
+        sb << "\"$rolesAsDelimitedString\""
+        return sb.toString()
+    }
+
+    private String getRolesAsDelimitedString() {
+
+        List<Role> roles = UserRole.getUserRoles(this)
+        List<String> authorities = roles.collect{it.authority}
+        return authorities.join("|")
     }
 }

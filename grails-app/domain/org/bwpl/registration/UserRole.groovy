@@ -55,4 +55,10 @@ class UserRole implements Serializable {
 		id composite: ['role', 'user']
 		version false
 	}
+
+    static List<Role> getUserRoles(User user) {
+
+        Set<UserRole> userRoles = findAllByUser(user)
+        return userRoles.collect{it.role}
+    }
 }
