@@ -4,16 +4,6 @@
 <head>
     <meta name="layout" content="main">
     <title>Admin</title>
-    <sec:access expression="hasRole('ROLE_REGISTRATION_SECRETARY')">
-        <g:javascript>
-            <g:render template="/registration/validationJavascript"/>
-        </g:javascript>
-        <g:javascript>
-            $("button").click(function() {
-                validateRegistrations();
-            })
-        </g:javascript>
-    </sec:access>
 </head>
 <body>
 <sec:ifAllGranted roles="ROLE_REGISTRATION_SECRETARY">
@@ -26,20 +16,13 @@
     </ul>
     <div>&nbsp;</div>
     <hr/>
-    <h2>Validate All Registrations</h2>
-    <table>
-        <tr>
-            <td id="validationStatus">${stats.count} Registrations (${stats.countOfValid} valid, ${stats.countOfInvalid} invalid)</td>
-            <td>&nbsp;</td>
-            <td><button id="validate-button" class="buttons">Validate</button></td>
-        </tr>
-    </table>
-    <div>&nbsp;</div>
-    <hr/>
 </sec:ifAllGranted>
 <h2>Export Data</h2>
 <ul class="bwpl-club-list">
     <li><g:link action="export">Export All Registrations</g:link></li>
+    <sec:ifAllGranted roles="ROLE_REGISTRATION_SECRETARY">
+        <li><g:link controller="admin" action="export">Export BWPL Data</g:link></li>
+    </sec:ifAllGranted>
 </ul>
 <hr/>
 <p>Version: <g:meta name="app.version"/> / Built: <g:meta name="app.build.date"/></p>

@@ -10,6 +10,20 @@ class EmailUtils {
 
     MailService mailService
 
+    void emailDataBackup(List<String> emailAddresses) {
+
+        String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
+        mailService.sendMail {
+
+            multipart true
+            from "reddicj@gmail.com"
+            to emailAddresses.join(", ")
+            subject "BWPL Registration System - Data Export"
+            text "BWPL Registration System export - see attached zip file."
+            attach "bwpl-data-${dateTimeStamp}.zip", "application/zip", ZipUtils.exportDataZipFileAsByteArray()
+        }
+    }
+
     void emailInvalidatedRegistrations() {
 
         Club.list().each { club ->

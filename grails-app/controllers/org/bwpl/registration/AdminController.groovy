@@ -7,14 +7,17 @@ import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
 import org.apache.commons.io.IOUtils
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.EmailUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.UserUploader
+import org.bwpl.registration.utils.ZipUtils
 
 class AdminController {
 
     SecurityUtils securityUtils
     NavItems nav
+    EmailUtils emailUtils
 
     @Secured(["ROLE_REGISTRATION_SECRETARY"])
     def upload = {
@@ -45,25 +48,14 @@ class AdminController {
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "application/zip"
 
-        ArchiveOutputStream os = new ArchiveStreamFactory().createArchiveOutputStream("zip", response.outputStream)
-
-        os.putArchiveEntry(new ZipArchiveEntry("users.csv"))
-        IOUtils.write(User.getUsersAsCsvString(), os)
-        os.closeArchiveEntry()
-
-        os.putArchiveEntry(new ZipArchiveEntry("teams.csv"))
-        IOUtils.write(Team.getTeamsAsCsvString(), os)
-        os.closeArchiveEntry()
-
-        os.putArchiveEntry(new ZipArchiveEntry("registrations.csv"))
-        IOUtils.write(Registration.getRegistrationsAsCsvString(), os)
-        os.closeArchiveEntry()
-
-        os.putArchiveEntry(new ZipArchiveEntry("registration-status-entries.csv"))
-        IOUtils.write(Registration.getRegistrationStatusEntriesAsCsvString(), os)
-        os.closeArchiveEntry()
-
-        os.close()
+        ZipUtils zipUtils = new ZipUtils(response.outputStream)
+        zipUtils.with {
+            addArchiveEntry("users.csv", User.getUsersAsCsvString())
+            addArchiveEntry("teams.csv", Team.getTeamsAsCsvString())
+            addArchiveEntry("registrations.csv", Registration.getRegistrationsAsCsvString())
+            addArchiveEntry("registration-status-entries.csv", Registration.getRegistrationStatusEntriesAsCsvString())
+            close()
+        }
         response.flushBuffer()
     }
 }
