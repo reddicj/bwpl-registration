@@ -1,6 +1,10 @@
 package org.bwpl.registration
 
 import grails.plugins.springsecurity.Secured
+import org.apache.commons.compress.archivers.ArchiveOutputStream
+import org.apache.commons.compress.archivers.ArchiveStreamFactory
+import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
+import org.apache.commons.io.IOUtils
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.SecurityUtils
@@ -37,19 +41,29 @@ class AdminController {
     def export = {
 
         String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
-        String fileName = "bwpl-data-${dateTimeStamp}.csv"
+        String fileName = "bwpl-data-${dateTimeStamp}.zip"
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
-        response.contentType = "text/csv"
-        response.with {
-            outputStream << "[Users]\n"
-            outputStream << User.getUsersAsCsvString() << "\n\n"
-            outputStream << "[Teams]\n"
-            outputStream << Team.getTeamsAsCsvString() << "\n\n"
-            outputStream << "[Registrations]\n"
-            outputStream << Registration.getRegistrationsAsCsvString() << "\n\n"
-            outputStream << "[Registration Status Histories]\n"
-            outputStream << Registration.getRegistrationStatusEntriesAsCsvString()
-        }
+        response.contentType = "application/zip"
+
+        ArchiveOutputStream os = new ArchiveStreamFactory().createArchiveOutputStream("zip", response.outputStream)
+
+        os.putArchiveEntry(new ZipArchiveEntry("users.csv"))
+        IOUtils.write(User.getUsersAsCsvString(), os)
+        os.closeArchiveEntry()
+
+        os.putArchiveEntry(new ZipArchiveEntry("teams.csv"))
+        IOUtils.write(Team.getTeamsAsCsvString(), os)
+        os.closeArchiveEntry()
+
+        os.putArchiveEntry(new ZipArchiveEntry("registrations.csv"))
+        IOUtils.write(Registration.getRegistrationsAsCsvString(), os)
+        os.closeArchiveEntry()
+
+        os.putArchiveEntry(new ZipArchiveEntry("registration-status-entries.csv"))
+        IOUtils.write(Registration.getRegistrationStatusEntriesAsCsvString(), os)
+        os.closeArchiveEntry()
+
+        os.close()
         response.flushBuffer()
     }
 }

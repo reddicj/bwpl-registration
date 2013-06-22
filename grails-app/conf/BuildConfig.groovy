@@ -40,6 +40,7 @@ grails.project.dependency.resolution = {
             excludes "groovy"
         }
         compile "joda-time:joda-time:2.1"
+        compile "org.apache.commons:commons-compress:1.5"
         test "org.easytesting:fest-assert:1.4"
         test "org.mockito:mockito-all:1.9.0"
     }
