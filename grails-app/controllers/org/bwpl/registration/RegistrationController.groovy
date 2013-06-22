@@ -6,7 +6,6 @@ import org.bwpl.registration.data.RegistrationData
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.upload.UploadException
-import org.bwpl.registration.utils.CsvWriter
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.*
