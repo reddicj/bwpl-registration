@@ -75,4 +75,21 @@ class Club {
         if (name == asaName) return name
         else return "$name ($asaName)"
     }
+
+    String getRegistrationsAsCsvString(boolean doWriteHeader = false) {
+
+        List<Team> teams = new ArrayList<Team>(teams)
+        teams.sort{it.name}
+        StringBuilder sb = new StringBuilder()
+        if (doWriteHeader) {
+            sb << "$Club.csvFieldNames,$Team.csvFieldNames,$Registration.csvFieldNames\n"
+        }
+        teams.each { team ->
+            String teamRegistrationsAsCsvString = team.getRegistrationsAsCsvString()
+            if (StringUtils.isNotBlank(teamRegistrationsAsCsvString)) {
+                sb << teamRegistrationsAsCsvString << "\n"
+            }
+        }
+        return sb.toString().trim()
+    }
 }

@@ -47,7 +47,7 @@ class UserTest {
 
         user = User.findByUsername("user@test.com")
         String csvString = user.toCsvString()
-        String expected = "\"James\",\"Reddick\",\"user@test.com\",\"${authorities.join("|")}\""
+        String expected = "\"James\",\"Reddick\",\"user@test.com\",\"${authorities.join("|")}\",\"\""
         assertThat(csvString).isEqualTo(expected)
     }
 }

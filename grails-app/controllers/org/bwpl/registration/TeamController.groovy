@@ -11,7 +11,6 @@ import org.bwpl.registration.validation.Action
 
 import org.bwpl.registration.utils.RegistrationDataUtils
 import org.bwpl.registration.utils.DateTimeUtils
-import org.bwpl.registration.utils.CsvWriter
 
 class TeamController {
 
@@ -56,8 +55,7 @@ class TeamController {
         String fileName = "bwpl-registrations-${team.nameAsMungedString}-${dateTimeStamp}.csv"
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "text/csv"
-        response.outputStream << CsvWriter.csvFieldNames << "\n"
-        response.outputStream << CsvWriter.getTeamRegistrationsAsCsvString(team) << "\n"
+        response.outputStream << team.getRegistrationsAsCsvString(true) << "\n"
         response.flushBuffer()
     }
 

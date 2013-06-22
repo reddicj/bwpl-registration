@@ -31,32 +31,6 @@ class Registration {
     static belongsTo = [team: Team]
     static hasMany = [statusEntries: RegistrationStatus]
 
-    static List<Registration> search(String firstName, String lastName) {
-
-        List<Registration> results = null
-        if (!StringUtils.isAlpha(firstName)) return []
-        if (!StringUtils.isAlpha(lastName)) return []
-        if (StringUtils.isNotBlank(firstName)) {
-            firstName = WordUtils.capitalize(firstName.trim())
-            if (StringUtils.isNotBlank(lastName)) {
-                lastName = WordUtils.capitalize(lastName.trim())
-                results = Registration.findAllByFirstNameAndLastName(firstName, lastName)
-            }
-            else {
-                results = Registration.findAllByFirstName(firstName)
-            }
-        }
-        else if (StringUtils.isNotBlank(lastName)) {
-            lastName = WordUtils.capitalize(lastName.trim())
-            results = Registration.findAllByLastName(lastName)
-        }
-        else {
-            results = []
-        }
-        results.sort{it.name}
-        return results
-    }
-
     def dateTimeUtils
 
     Integer asaNumber
@@ -69,6 +43,62 @@ class Registration {
     String statusNote
     Date statusDate
     boolean isInASAMemberCheck = false
+
+    static String getRegistrationsAsCsvString() {
+
+        List<Team> teams = Team.list()
+        teams.sort{it.name}
+        StringBuilder sb = new StringBuilder()
+        sb << "$Club.csvFieldNames,$Team.csvFieldNames,$csvFieldNames\n"
+        teams.each { team ->
+            String teamRegistrationsAsCsvString = team.getRegistrationsAsCsvString()
+            if (StringUtils.isNotBlank(teamRegistrationsAsCsvString)) {
+                sb << teamRegistrationsAsCsvString << "\n"
+            }
+        }
+        return sb.toString().trim()
+    }
+
+    static String getRegistrationStatusEntriesAsCsvString() {
+
+        List<Team> teams = Team.list()
+        teams.sort{it.name}
+        StringBuilder sb = new StringBuilder()
+        sb << "$Club.csvFieldNames,$Team.csvFieldNames,Firstname,Lastname,ASA number,Role,$RegistrationStatus.csvFieldNames\n"
+        teams.each { team ->
+            String teamRegistrationsAsCsvString = team.getRegistrationsAsCsvString()
+            if (StringUtils.isNotBlank(teamRegistrationsAsCsvString)) {
+                sb << teamRegistrationsAsCsvString << "\n"
+            }
+        }
+        return sb.toString().trim()
+    }
+
+    static List<Registration> search(String firstName, String lastName) {
+
+        List<Registration> results = null
+        if (!StringUtils.isAlpha(firstName)) return []
+        if (!StringUtils.isAlpha(lastName)) return []
+        if (StringUtils.isNotBlank(firstName)) {
+            firstName = WordUtils.capitalize(firstName.trim())
+            if (StringUtils.isNotBlank(lastName)) {
+                lastName = WordUtils.capitalize(lastName.trim())
+                results = findAllByFirstNameAndLastName(firstName, lastName)
+            }
+            else {
+                results = findAllByFirstName(firstName)
+            }
+        }
+        else if (StringUtils.isNotBlank(lastName)) {
+            lastName = WordUtils.capitalize(lastName.trim())
+            results = findAllByLastName(lastName)
+        }
+        else {
+            results = []
+        }
+        results.sort{it.name}
+        return results
+    }
 
     String getDateOfBirthAsString() {
         if (dateOfBirth == null) return ""

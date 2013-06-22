@@ -202,8 +202,7 @@ class RegistrationController {
         String fileName = "bwpl-registrations-${dateTimeStamp}.csv"
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "text/csv"
-        response.outputStream << CsvWriter.csvFieldNames << "\n"
-        response.outputStream << CsvWriter.getAllRegistrationsAsCsvString() << "\n"
+        response.outputStream << Registration.getRegistrationsAsCsvString() << "\n"
         response.flushBuffer()
     }
 

@@ -5,7 +5,7 @@ import org.apache.commons.lang.StringUtils
 class User {
 
     static final String csvFieldNames =
-        "\"Firstname\",\"Lastname\",\"Username\",\"Roles\""
+        "\"Firstname\",\"Lastname\",\"Username\",\"Roles\",\"Club\""
 
 	transient springSecurityService
 
@@ -35,6 +35,18 @@ class User {
         cache true
 		password column: '`password`'
 	}
+
+    static String getUsersAsCsvString() {
+
+        List<User> users = list()
+        users.sort{it.name}
+        StringBuilder sb = new StringBuilder()
+        sb << csvFieldNames << "\n"
+        users.each { user ->
+            sb << user.toCsvString() << "\n"
+        }
+        return sb.toString().trim()
+    }
 
     String getEmail() {
         return username
@@ -106,10 +118,16 @@ class User {
     String toCsvString() {
 
         StringBuilder sb = new StringBuilder()
-        sb << "\"$firstname\","
-        sb << "\"$lastname\","
+        sb << "\"${StringUtils.defaultString(firstname)}\","
+        sb << "\"${StringUtils.defaultString(lastname)}\","
         sb << "\"$username\","
-        sb << "\"$rolesAsDelimitedString\""
+        sb << "\"$rolesAsDelimitedString\","
+        if (club != null) {
+            sb << "\"$club.name\""
+        }
+        else {
+            sb << "\"\""
+        }
         return sb.toString()
     }
 

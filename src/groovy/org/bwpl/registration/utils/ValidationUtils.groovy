@@ -58,7 +58,7 @@ class ValidationUtils {
 
     static void checkValueContainsValidNameCharacters(String name, String value, List<String> errors) {
 
-        boolean isValid = StringUtils.isAlphaSpace(value)
+        boolean isValid = value =~ "^[A-Za-z0-9\\- ]+\$"
         if (!isValid) {
             errors << "$name contains invalid name characters: $value"
         }

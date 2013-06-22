@@ -82,8 +82,7 @@ class ClubController {
         String fileName = "bwpl-registrations-${club.nameAsMungedString}-${dateTimeStamp}.csv"
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "text/csv"
-        response.outputStream << CsvWriter.csvFieldNames << "\n"
-        response.outputStream << CsvWriter.getClubRegistrationsAsCsvString(club) << "\n"
+        response.outputStream << club.getRegistrationsAsCsvString(true) << "\n"
         response.flushBuffer()
     }
 

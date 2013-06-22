@@ -53,7 +53,7 @@ class TeamDataHandler implements CsvHandler {
             List<String> errors = []
 
             checkForNullOrEmptyValue("Club name", values[0], errors)
-            checkValueIsAlphaNumericSpace("Club name", values[0], errors)
+            checkValueContainsValidNameCharacters("Club name", values[0], errors)
 
             checkForNullOrEmptyValue("ASA club name", values[1], errors)
             checkValueContainsValidNameCharacters("ASA club name", values[1], errors)
