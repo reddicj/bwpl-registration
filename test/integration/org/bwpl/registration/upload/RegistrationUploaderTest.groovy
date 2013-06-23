@@ -27,7 +27,6 @@ class RegistrationUploaderTest {
 
         Club c1 = new Club(name: "Poly", asaName: "Poly")
         Club c2 = new Club(name: "Bedford", asaName: "Bedford")
-        competition.addToClubs(c1).addToClubs(c2).save()
 
         Team t1 = new Team(name: "Poly1", isMale: true)
         Team t2 = new Team(name: "Bedford Men", isMale: true)

@@ -8,16 +8,6 @@ import static org.fest.assertions.Assertions.assertThat
 
 class ClubTest {
 
-    @Before
-    void setUp() {
-        // Setup logic here
-    }
-
-    @After
-    void tearDown() {
-        // Tear down logic here
-    }
-
     @Test
     void test() {
 
@@ -26,8 +16,6 @@ class ClubTest {
         competition.addToDivisions(division).save(flush: true)
 
         Club club = new Club(name: "Poly", asaName: "Poly")
-        competition.addToClubs(club).save(flush: true)
-
         Team mensTeam = new Team(name: "Poly Men", isMale: true)
         Team womensTeam = new Team(name: "Poly Women", isMale: false)
         club.addToTeams(mensTeam)

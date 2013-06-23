@@ -4,7 +4,6 @@ class Competition {
 
     static mapping = {
         cache true
-
     }
 
     static constraints = {
@@ -12,7 +11,7 @@ class Competition {
         urlName(blank: false, unique: true)
     }
 
-    static hasMany = [divisions:Division, clubs:Club]
+    static hasMany = [divisions:Division]
 
     String name
     String urlName

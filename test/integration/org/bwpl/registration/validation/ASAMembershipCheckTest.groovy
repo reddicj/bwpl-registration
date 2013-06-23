@@ -190,7 +190,6 @@ class ASAMembershipCheckTest {
         Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
         competition.addToDivisions(division).save()
         Club c = new Club(name: clubName, asaName: clubName)
-        competition.addToClubs(c).save()
         Team t = new Team(name: teamName, isMale: isMale)
         division.addToTeams(t)
         c.addToTeams(t).save()

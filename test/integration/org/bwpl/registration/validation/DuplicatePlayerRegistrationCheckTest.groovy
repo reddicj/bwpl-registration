@@ -20,13 +20,11 @@ class DuplicatePlayerRegistrationCheckTest {
         competition.addToDivisions(division).save()
 
         Club c1 = new Club(name: "Poly", asaName: "Poly")
-        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
         division.addToTeams(t1)
         c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
-        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
         division.addToTeams(t2)
         c2.addToTeams(t2).save()
@@ -68,13 +66,11 @@ class DuplicatePlayerRegistrationCheckTest {
         competition.addToDivisions(division).save()
 
         Club c1 = new Club(name: "Poly", asaName: "Poly")
-        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
         division.addToTeams(t1)
         c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
-        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
         division.addToTeams(t2)
         c2.addToTeams(t2).save()
@@ -117,13 +113,11 @@ class DuplicatePlayerRegistrationCheckTest {
         competition.addToDivisions(division).save()
 
         Club c1 = new Club(name: "Poly", asaName: "Poly")
-        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
         division.addToTeams(t1)
         c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
-        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
         division.addToTeams(t2)
         c2.addToTeams(t2).save()
@@ -166,13 +160,11 @@ class DuplicatePlayerRegistrationCheckTest {
         competition.addToDivisions(division).save()
 
         Club c1 = new Club(name: "Poly", asaName: "Poly")
-        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
         division.addToTeams(t1)
         c1.addToTeams(t1).save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
-        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
         division.addToTeams(t2)
         c2.addToTeams(t2).save()

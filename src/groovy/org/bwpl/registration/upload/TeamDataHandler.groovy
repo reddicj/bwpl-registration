@@ -43,7 +43,7 @@ class TeamDataHandler implements CsvHandler {
             club = new Club()
             club.name = clubName
             club.asaName = asaClubName
-            competition.addToClubs(club).save(flush: true)
+            club.save()
         }
 
         Team team = new Team()
