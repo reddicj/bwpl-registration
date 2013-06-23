@@ -17,7 +17,6 @@ class Club {
         asaName(blank: false)
     }
 
-    static belongsTo = [competition:Competition]
     static hasMany = [teams:Team, secretaries:User]
 
     String name

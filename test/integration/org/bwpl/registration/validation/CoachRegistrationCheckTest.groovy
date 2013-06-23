@@ -26,7 +26,6 @@ class CoachRegistrationCheckTest {
         competition.addToDivisions(division).save()
 
         Club c1 = new Club(name: "Poly", asaName: "Poly")
-        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
         division.addToTeams(t1)
         c1.addToTeams(t1).save()
@@ -45,7 +44,6 @@ class CoachRegistrationCheckTest {
         t1.save()
 
         Club c2 = new Club(name: "Penguin", asaName: "Penguin")
-        competition.addToClubs(c2).save()
         Team t2 = new Team(name: "Penguin Men", isMale: true)
         division.addToTeams(t2)
         c2.addToTeams(t2).save()
@@ -64,7 +62,6 @@ class CoachRegistrationCheckTest {
         t2.save()
 
         Club c3 = new Club(name: "Otter", asaName: "Otter")
-        competition.addToClubs(c3).save()
         Team t3 = new Team(name: "Otter Men", isMale: true)
         division.addToTeams(t3)
         c3.addToTeams(t3).save()
@@ -83,7 +80,6 @@ class CoachRegistrationCheckTest {
         t3.save()
 
         Club c4 = new Club(name: "Bristol", asaName: "Bristol")
-        competition.addToClubs(c4).save()
         Team t4 = new Team(name: "Bristol Men", isMale: true)
         division.addToTeams(t4)
         c4.addToTeams(t4).save()
