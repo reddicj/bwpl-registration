@@ -11,6 +11,6 @@ class DataExportJob {
     EmailUtils emailUtils
 
     def execute() {
-        emailUtils.emailDataBackup(["reddicj@gmail.com"])
+        emailUtils.emailDataExport()
     }
 }

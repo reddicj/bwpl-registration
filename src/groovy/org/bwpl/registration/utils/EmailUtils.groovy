@@ -4,20 +4,31 @@ import grails.plugin.mail.MailService
 import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.Club
 import org.bwpl.registration.Registration
+import org.bwpl.registration.Role
+import org.bwpl.registration.UserRole
 import org.bwpl.registration.validation.Status
 
 class EmailUtils {
 
     MailService mailService
 
-    void emailDataBackup(List<String> emailAddresses) {
+    static Set<String> getRegistrationSecretariesEmails() {
+
+        Role regSecRole = Role.findByAuthority("ROLE_REGISTRATION_SECRETARY")
+        List<UserRole> registrationSecretaries = UserRole.findAllByRole(regSecRole)
+        Set<String> emailAddresses = new HashSet<String>()
+        registrationSecretaries.each { emailAddresses.add(it.user.email) }
+        return emailAddresses
+    }
+
+    void emailDataExport() {
 
         String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
         mailService.sendMail {
 
             multipart true
             from "reddicj@gmail.com"
-            to emailAddresses.join(", ")
+            to registrationSecretariesEmails.join(", ")
             subject "BWPL Registration System - Data Export"
             text "BWPL Registration System export - see attached zip file."
             attach "bwpl-data-${dateTimeStamp}.zip", "application/zip", ZipUtils.exportDataZipFileAsByteArray()

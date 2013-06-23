@@ -1,5 +1,9 @@
 package org.bwpl.registration.utils
 
+import org.bwpl.registration.Role
+import org.bwpl.registration.User
+import org.bwpl.registration.UserRole
+
 import static org.fest.assertions.Assertions.assertThat
 
 import org.bwpl.registration.Club
@@ -11,6 +15,20 @@ import org.bwpl.registration.validation.Status
 import org.junit.Test
 
 class EmailUtilsTest {
+
+    @Test
+    void testGetRegistrationSecretariesEmails() {
+
+        Role regSecRole = new Role(authority: "ROLE_REGISTRATION_SECRETARY").save()
+        User sec1 = new User(username: "reddicj@gmail.com", password: "password1", enabled: true).save()
+        User sec2 = new User(username: "chris@bt.com", password: "password1", enabled: true).save()
+        UserRole.create(sec1, regSecRole, true)
+        UserRole.create(sec2, regSecRole, true)
+
+        Set<String> emails = EmailUtils.registrationSecretariesEmails
+        assertThat(emails).contains("reddicj@gmail.com")
+        assertThat(emails).contains("chris@bt.com")
+    }
 
     @Test
     void testQueryRegistrations() {
