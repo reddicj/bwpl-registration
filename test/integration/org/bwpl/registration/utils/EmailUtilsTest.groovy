@@ -22,6 +22,7 @@ class EmailUtilsTest {
         Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
         competition.addToDivisions(division).save()
         Club c1 = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c1).save()
         Team t1 = new Team(name: "Poly Men", isMale: true)
         c1.addToTeams(t1)
         division.addToTeams(t1)

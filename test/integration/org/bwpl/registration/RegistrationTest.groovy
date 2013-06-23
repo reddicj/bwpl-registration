@@ -15,6 +15,7 @@ class RegistrationTest {
         competition.addToDivisions(division).save()
 
         Club c = new Club(name: "Poly", asaName: "Poly")
+        competition.addToClubs(c).save()
         Team t = new Team(name: "Poly1", isMale: true)
         division.addToTeams(t)
         c.addToTeams(t).save()
