@@ -1,7 +1,7 @@
 package org.bwpl.registration
 
-import org.bwpl.registration.validation.Action
 import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
 import org.joda.time.DateTime
 

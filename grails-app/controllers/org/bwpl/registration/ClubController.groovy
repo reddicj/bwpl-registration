@@ -1,20 +1,18 @@
 package org.bwpl.registration
 
-import org.bwpl.registration.upload.TeamUploader
-
-import org.apache.commons.lang.StringUtils
 import grails.plugins.springsecurity.Secured
+import org.apache.commons.lang.RandomStringUtils
+import org.apache.commons.lang.StringUtils
+import org.bwpl.registration.email.ASAEmail
 import org.bwpl.registration.nav.NavItems
-import org.bwpl.registration.utils.SecurityUtils
-import org.bwpl.registration.validation.RegistrationStats
+import org.bwpl.registration.upload.TeamUploader
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.DateTimeUtils
-
-import org.bwpl.registration.email.ASAEmail
 import org.bwpl.registration.utils.RegistrationDataUtils
-import org.bwpl.registration.validation.Status
-import org.apache.commons.lang.RandomStringUtils
+import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.Action
+import org.bwpl.registration.validation.RegistrationStats
+import org.bwpl.registration.validation.Status
 
 class ClubController {
 

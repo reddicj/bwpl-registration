@@ -1,7 +1,6 @@
 package org.bwpl.registration.utils
 
 import grails.plugin.mail.MailService
-import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.Club
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Role

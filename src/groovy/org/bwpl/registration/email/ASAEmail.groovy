@@ -1,9 +1,9 @@
 package org.bwpl.registration.email
 
-import org.bwpl.registration.Club
-import org.bwpl.registration.User
-import org.bwpl.registration.Registration
 import groovy.text.SimpleTemplateEngine
+import org.bwpl.registration.Club
+import org.bwpl.registration.Registration
+import org.bwpl.registration.User
 import org.bwpl.registration.validation.Status
 
 class ASAEmail {

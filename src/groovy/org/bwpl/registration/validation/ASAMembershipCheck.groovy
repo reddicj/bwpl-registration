@@ -1,11 +1,11 @@
 package org.bwpl.registration.validation
 
-import org.bwpl.registration.asa.ASAMemberDataRetrieval
-import org.bwpl.registration.asa.ASAMemberData
-import org.bwpl.registration.asa.ASAMemberDataRetrievalException
+import org.bwpl.registration.Club
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
-import org.bwpl.registration.Club
+import org.bwpl.registration.asa.ASAMemberData
+import org.bwpl.registration.asa.ASAMemberDataRetrieval
+import org.bwpl.registration.asa.ASAMemberDataRetrievalException
 
 class ASAMembershipCheck {
 

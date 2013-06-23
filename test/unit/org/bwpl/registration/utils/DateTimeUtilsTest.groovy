@@ -1,9 +1,10 @@
 package org.bwpl.registration.utils
 
-import static org.fest.assertions.Assertions.assertThat
-import static org.joda.time.DateTimeConstants.*
 import org.joda.time.DateTime
 import org.junit.Test
+
+import static org.fest.assertions.Assertions.assertThat
+import static org.joda.time.DateTimeConstants.*
 
 class DateTimeUtilsTest {
 

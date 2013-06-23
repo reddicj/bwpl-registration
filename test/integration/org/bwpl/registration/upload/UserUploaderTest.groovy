@@ -1,13 +1,14 @@
 package org.bwpl.registration.upload
 
-import static org.fest.assertions.Assertions.assertThat
+import org.bwpl.registration.Role
+import org.bwpl.registration.User
+import org.junit.Before
 import org.junit.Test
 import org.springframework.web.multipart.MultipartFile
 
-import static org.mockito.Mockito.*
-import org.bwpl.registration.User
-import org.junit.Before
-import org.bwpl.registration.Role
+import static org.fest.assertions.Assertions.assertThat
+import static org.mockito.Mockito.mock
+import static org.mockito.Mockito.when
 
 class UserUploaderTest {
 

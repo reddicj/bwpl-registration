@@ -1,13 +1,15 @@
 package org.bwpl.registration.utils
 
-import static org.joda.time.DateTimeConstants.*
+import org.apache.commons.lang.StringUtils
+import org.codehaus.groovy.grails.commons.GrailsApplication
 import org.joda.time.DateTime
 import org.joda.time.DateTimeComparator
-import org.joda.time.format.DateTimeFormatter
-import org.joda.time.format.DateTimeFormat
-import org.codehaus.groovy.grails.commons.GrailsApplication
-import org.apache.commons.lang.StringUtils
 import org.joda.time.Period
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
+
+import static org.joda.time.DateTimeConstants.SUNDAY
+import static org.joda.time.DateTimeConstants.WEDNESDAY
 
 class DateTimeUtils {
 

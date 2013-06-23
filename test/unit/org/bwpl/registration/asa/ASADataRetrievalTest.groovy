@@ -1,10 +1,10 @@
 package org.bwpl.registration.asa
 
+import org.bwpl.registration.utils.DateTimeUtils
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
 import static org.junit.Assert.fail
-import org.bwpl.registration.utils.DateTimeUtils
 
 class ASADataRetrievalTest {
 

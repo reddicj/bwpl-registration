@@ -1,8 +1,9 @@
 package org.bwpl.registration.data
 
-import static org.fest.assertions.Assertions.assertThat
-import org.junit.Test
 import junit.framework.Assert
+import org.junit.Test
+
+import static org.fest.assertions.Assertions.assertThat
 
 class RegistrationDataTest {
 

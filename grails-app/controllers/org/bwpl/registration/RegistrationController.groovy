@@ -2,6 +2,7 @@ package org.bwpl.registration
 
 import grails.plugins.springsecurity.Secured
 import org.apache.commons.lang.StringUtils
+import org.bwpl.registration.asa.ASAMemberDataRetrieval
 import org.bwpl.registration.data.RegistrationData
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
@@ -9,7 +10,6 @@ import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.*
-import org.bwpl.registration.asa.ASAMemberDataRetrieval
 
 class RegistrationController {
 

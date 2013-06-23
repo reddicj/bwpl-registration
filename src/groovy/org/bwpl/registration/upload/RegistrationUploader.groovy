@@ -1,13 +1,8 @@
 package org.bwpl.registration.upload
 
-import org.springframework.web.multipart.MultipartFile
-
 import org.bwpl.registration.Team
-import org.bwpl.registration.Registration
-import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.utils.SecurityUtils
-import org.bwpl.registration.validation.Action
-import org.bwpl.registration.validation.Status
+import org.springframework.web.multipart.MultipartFile
 
 class RegistrationUploader {
 

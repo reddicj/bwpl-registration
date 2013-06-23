@@ -1,8 +1,10 @@
 package org.bwpl.registration
 
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+
 import static org.fest.assertions.Assertions.assertThat
-import static org.junit.Assert.*
-import org.junit.*
 
 class ClubTest {
 

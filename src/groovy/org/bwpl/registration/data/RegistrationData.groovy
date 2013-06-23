@@ -1,13 +1,13 @@
 package org.bwpl.registration.data
 
+import org.apache.commons.lang.ArrayUtils
 import org.apache.commons.lang.StringUtils
 import org.apache.commons.lang.WordUtils
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
+import org.springframework.util.CollectionUtils
 
 import static org.bwpl.registration.utils.ValidationUtils.*
-import org.apache.commons.lang.ArrayUtils
-import org.springframework.util.CollectionUtils
 
 class RegistrationData {
 

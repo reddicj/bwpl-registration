@@ -3,7 +3,6 @@ package org.bwpl.registration.nav
 import org.bwpl.registration.Club
 import org.bwpl.registration.Team
 import org.bwpl.registration.utils.SecurityUtils
-import org.bwpl.registration.Registration
 import org.bwpl.registration.validation.Status
 
 class NavItems {

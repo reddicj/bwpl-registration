@@ -1,18 +1,11 @@
 package org.bwpl.registration.utils
 
-import org.bwpl.registration.Role
-import org.bwpl.registration.User
-import org.bwpl.registration.UserRole
-
-import static org.fest.assertions.Assertions.assertThat
-
-import org.bwpl.registration.Club
-import org.bwpl.registration.Registration
-import org.bwpl.registration.Team
-import org.bwpl.registration.TestUtils
+import org.bwpl.registration.*
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
 import org.junit.Test
+
+import static org.fest.assertions.Assertions.assertThat
 
 class EmailUtilsTest {
 

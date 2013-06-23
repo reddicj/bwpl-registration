@@ -1,16 +1,12 @@
 package org.bwpl.registration
 
 import grails.plugins.springsecurity.Secured
-import org.apache.commons.compress.archivers.ArchiveOutputStream
-import org.apache.commons.compress.archivers.ArchiveStreamFactory
-import org.apache.commons.compress.archivers.zip.ZipArchiveEntry
-import org.apache.commons.io.IOUtils
+import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.UploadException
+import org.bwpl.registration.upload.UserUploader
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.EmailUtils
 import org.bwpl.registration.utils.SecurityUtils
-import org.bwpl.registration.nav.NavItems
-import org.bwpl.registration.upload.UserUploader
 import org.bwpl.registration.utils.ZipUtils
 
 class AdminController {

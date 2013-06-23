@@ -2,10 +2,8 @@ package org.bwpl.registration.asa
 
 import groovy.util.slurpersupport.GPathResult
 import groovyx.net.http.HTTPBuilder
-
-import org.apache.http.conn.HttpHostConnectException
-import org.apache.commons.lang.StringUtils
 import groovyx.net.http.HttpResponseException
+import org.apache.http.conn.HttpHostConnectException
 
 class ASAMemberDataRetrieval {
 

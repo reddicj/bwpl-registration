@@ -1,13 +1,13 @@
 package org.bwpl.registration.validation
 
-import static org.fest.assertions.Assertions.assertThat
-import org.junit.Test
 import org.bwpl.registration.Club
-import org.bwpl.registration.Team
 import org.bwpl.registration.Registration
-import org.junit.Before
-import org.bwpl.registration.User
+import org.bwpl.registration.Team
 import org.bwpl.registration.TestUtils
+import org.junit.Before
+import org.junit.Test
+
+import static org.fest.assertions.Assertions.assertThat
 
 class CoachRegistrationCheckTest {
 

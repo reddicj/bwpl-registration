@@ -1,11 +1,12 @@
 package org.bwpl.registration.upload
 
-import static org.bwpl.registration.utils.ValidationUtils.*
-import org.bwpl.registration.User
-import org.bwpl.registration.Role
-import org.bwpl.registration.UserRole
-import org.bwpl.registration.Club
 import org.apache.commons.lang.RandomStringUtils
+import org.bwpl.registration.Club
+import org.bwpl.registration.Role
+import org.bwpl.registration.User
+import org.bwpl.registration.UserRole
+
+import static org.bwpl.registration.utils.ValidationUtils.*
 
 class UserDataHandler implements CsvHandler {
 

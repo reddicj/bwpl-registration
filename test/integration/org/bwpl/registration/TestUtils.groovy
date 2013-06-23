@@ -1,10 +1,10 @@
 package org.bwpl.registration
 
+import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.utils.SecurityUtils
 
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
-import org.bwpl.registration.upload.RegistrationUploader
 
 class TestUtils {
 

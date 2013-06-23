@@ -4,7 +4,6 @@ import org.bwpl.registration.Club
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.bwpl.registration.TestUtils
-
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat

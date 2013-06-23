@@ -4,13 +4,12 @@ import grails.plugins.springsecurity.Secured
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.upload.UploadException
+import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.RegistrationDataUtils
 import org.bwpl.registration.utils.SecurityUtils
+import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.RegistrationStats
 import org.bwpl.registration.validation.Status
-import org.bwpl.registration.validation.Action
-
-import org.bwpl.registration.utils.RegistrationDataUtils
-import org.bwpl.registration.utils.DateTimeUtils
 
 class TeamController {
 

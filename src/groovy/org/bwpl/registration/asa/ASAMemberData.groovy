@@ -1,8 +1,8 @@
 package org.bwpl.registration.asa
 
 import org.apache.commons.lang.StringUtils
-import org.bwpl.registration.utils.ValidationUtils
 import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.ValidationUtils
 import org.joda.time.DateTime
 
 class ASAMemberData {

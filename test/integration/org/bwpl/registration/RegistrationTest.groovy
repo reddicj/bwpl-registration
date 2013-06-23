@@ -1,10 +1,9 @@
 package org.bwpl.registration
 
-import static org.fest.assertions.Assertions.assertThat
-
-import org.junit.*
-import org.joda.time.DateTime
 import org.bwpl.registration.validation.Status
+import org.junit.Test
+
+import static org.fest.assertions.Assertions.assertThat
 
 class RegistrationTest {
 

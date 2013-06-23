@@ -1,14 +1,13 @@
 package org.bwpl.registration.upload
 
 import org.bwpl.registration.Club
-
+import org.junit.Assert
 import org.junit.Test
 import org.springframework.web.multipart.MultipartFile
 
 import static org.fest.assertions.Assertions.assertThat
 import static org.mockito.Mockito.mock
 import static org.mockito.Mockito.when
-import org.junit.Assert
 
 class TeamUploaderTest {
 

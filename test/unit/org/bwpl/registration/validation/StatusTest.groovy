@@ -1,8 +1,8 @@
 package org.bwpl.registration.validation
 
-import static org.fest.assertions.Assertions.assertThat
 import org.junit.Test
-import org.junit.Assert
+
+import static org.fest.assertions.Assertions.assertThat
 
 class StatusTest {
 
