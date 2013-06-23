@@ -24,7 +24,6 @@ class ZipUtils {
             addArchiveEntry("users.csv", User.getUsersAsCsvString())
             addArchiveEntry("teams.csv", Team.getTeamsAsCsvString())
             addArchiveEntry("registrations.csv", Registration.getRegistrationsAsCsvString())
-            addArchiveEntry("registration-status-entries.csv", Registration.getRegistrationStatusEntriesAsCsvString())
             close()
         }
         return byteArrayOutputStream.toByteArray()

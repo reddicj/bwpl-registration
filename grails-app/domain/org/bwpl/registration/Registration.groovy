@@ -59,21 +59,6 @@ class Registration {
         return sb.toString().trim()
     }
 
-    static String getRegistrationStatusEntriesAsCsvString() {
-
-        List<Team> teams = Team.list()
-        teams.sort{it.name}
-        StringBuilder sb = new StringBuilder()
-        sb << "$Club.csvFieldNames,$Team.csvFieldNames,Firstname,Lastname,ASA number,Role,$RegistrationStatus.csvFieldNames\n"
-        teams.each { team ->
-            String teamRegistrationsAsCsvString = team.getRegistrationsAsCsvString()
-            if (StringUtils.isNotBlank(teamRegistrationsAsCsvString)) {
-                sb << teamRegistrationsAsCsvString << "\n"
-            }
-        }
-        return sb.toString().trim()
-    }
-
     static List<Registration> search(String firstName, String lastName) {
 
         List<Registration> results = null

@@ -82,23 +82,4 @@ class Team {
         }
         return sb.toString().trim()
     }
-
-    String getRegistrationStatusEntriesAsCsvString() {
-
-        StringBuilder sb = new StringBuilder()
-        List<Registration> registrations = new ArrayList<Registration>(registrations)
-        registrations.sort{it.name}
-        registrations.each { registration ->
-
-            List<RegistrationStatus> statusEntries = new ArrayList<>(registration.statusEntries)
-            statusEntries.sort{it.date}
-            statusEntries.each { statusEntry ->
-                sb << club.toCsvString() << ","
-                sb << toCsvString() << ","
-                sb << "\"$registration.firstName\",\"$registration.lastName\",\"$registration.asaNumber\",\"$registration.role\","
-                sb << statusEntry.toCsvString() << "\n"
-            }
-        }
-        return sb.toString().trim()
-    }
 }
