@@ -11,15 +11,6 @@ class EmailUtils {
 
     MailService mailService
 
-    static Set<String> getRegistrationSecretariesEmails() {
-
-        Role regSecRole = Role.findByAuthority("ROLE_REGISTRATION_SECRETARY")
-        List<UserRole> registrationSecretaries = UserRole.findAllByRole(regSecRole)
-        Set<String> emailAddresses = new HashSet<String>()
-        registrationSecretaries.each { emailAddresses.add(it.user.email) }
-        return emailAddresses
-    }
-
     void emailDataExport() {
 
         String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
@@ -27,7 +18,7 @@ class EmailUtils {
 
             multipart true
             from "reddicj@gmail.com"
-            to registrationSecretariesEmails.join(", ")
+            to "reddicj@gmail.com"
             subject "BWPL Registration System - Data Export"
             text "BWPL Registration System export - see attached zip file."
             attach "bwpl-data-${dateTimeStamp}.zip", "application/zip", ZipUtils.exportDataZipFileAsByteArray()

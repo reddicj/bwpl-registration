@@ -10,20 +10,6 @@ import static org.fest.assertions.Assertions.assertThat
 class EmailUtilsTest {
 
     @Test
-    void testGetRegistrationSecretariesEmails() {
-
-        Role regSecRole = new Role(authority: "ROLE_REGISTRATION_SECRETARY").save()
-        User sec1 = new User(username: "reddicj@gmail.com", password: "password1", enabled: true).save()
-        User sec2 = new User(username: "chris@bt.com", password: "password1", enabled: true).save()
-        UserRole.create(sec1, regSecRole, true)
-        UserRole.create(sec2, regSecRole, true)
-
-        Set<String> emails = EmailUtils.registrationSecretariesEmails
-        assertThat(emails).contains("reddicj@gmail.com")
-        assertThat(emails).contains("chris@bt.com")
-    }
-
-    @Test
     void testQueryRegistrations() {
 
         Club c1 = new Club(name: "Poly", asaName: "Poly")
