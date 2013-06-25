@@ -23,7 +23,7 @@ class ValidationUtilsTest {
     }
 
     @Test
-    void testcheckValueContainsValidLastNameCharacters() {
+    void testCheckValueContainsValidLastNameCharacters() {
 
         List<String> errors = []
         ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "O'Sullivan", errors)
@@ -34,5 +34,12 @@ class ValidationUtilsTest {
         assertThat(errors).isEmpty()
         ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "Gardner-Bond", errors)
         assertThat(errors).isEmpty()
+    }
+
+    @Test
+    void testIsValidAsaDateOfBirth() {
+
+        assertThat(ValidationUtils.isValidAsaDateOfBirth("5th April 1972")).isTrue()
+        assertThat(ValidationUtils.isValidAsaDateOfBirth("5 April 72")).isFalse()
     }
 }

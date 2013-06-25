@@ -39,7 +39,7 @@ class ASADataRetrievalTest {
             asaDataRetrieval.get(123456789)
             fail()
         }
-        catch (ASAMemberDataRetrievalException e) {
+        catch (ASAMemberDataNotFoundException e) {
             assertThat(e.message).startsWith("Error getting data for ASA number: 123456789")
         }
     }
@@ -52,7 +52,7 @@ class ASADataRetrievalTest {
             asaDataRetrieval.get(7839)
             fail()
         }
-        catch (ASAMemberDataRetrievalException e) {
+        catch (ASAMemberDataNotFoundException e) {
             assertThat(e.message).contains("Error reading html")
         }
     }

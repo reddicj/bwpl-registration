@@ -3,6 +3,8 @@ package org.bwpl.registration
 import grails.plugins.springsecurity.Secured
 import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.asa.ASAMemberDataRetrieval
+import org.bwpl.registration.asa.ASAMemberDataRetrievalException
+import org.bwpl.registration.asa.ASAMemberDataValidationException
 import org.bwpl.registration.data.RegistrationData
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
@@ -232,13 +234,20 @@ class RegistrationController {
 
             ASAMemberDataRetrieval asaMemberDataRetrieval = new ASAMemberDataRetrieval()
             String asaMemberCheckError = asaMemberDataRetrieval.getServiceError()
-            if (asaMemberCheckError.isEmpty()) {
-                Registration r = Registration.get(params.id)
-                validator.validate(r)
-                int i = 0
-            }
-            else {
+            if (!asaMemberCheckError.isEmpty()) {
                 flash.errors = asaMemberCheckError
+                redirect(uri: params.targetUri)
+                return
+            }
+            Registration r = Registration.get(params.id)
+            try {
+                validator.validate(r)
+            }
+            catch (ASAMemberDataRetrievalException e) {
+                flash.errors = "ASA Membership Check system is unavailable."
+            }
+            catch (ASAMemberDataValidationException e) {
+                flash.errors = "Error reading data from the ASA Membership system - $e.message"
             }
             redirect(uri: params.targetUri)
             return
@@ -247,7 +256,6 @@ class RegistrationController {
         ValidationQueue validationQueue = session["validationQueue"]
 
         if (validationQueue == null) {
-
             Set<Registration> registrations = getRegistrationsToValidate()
             validationQueue = new ValidationQueue(validator, registrations)
             session["validationQueue"] = validationQueue
@@ -271,6 +279,10 @@ class RegistrationController {
     }
 
     private Set<Registration> getRegistrationsToValidate() {
+
+        ASAMemberDataRetrieval asaMemberDataRetrieval = new ASAMemberDataRetrieval()
+        String asaMemberCheckError = asaMemberDataRetrieval.getServiceError()
+        if (!asaMemberCheckError.isEmpty()) return new HashSet<Registration>()
 
         if (StringUtils.isNotEmpty(params.teamId)) {
             Set<Registration> registrations = Team.get(params.teamId).registrations

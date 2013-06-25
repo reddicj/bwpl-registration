@@ -32,7 +32,7 @@ class ASAMemberDataRetrieval {
             final GPathResult html = http.get(query: ["$ASA_NUMBER_PARAMETER_NAME": Integer.toString(asaNumber)])
             GPathResult element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
             if (element == null) {
-                throw new ASAMemberDataRetrievalException("Error getting data for ASA number: $asaNumber. Error reading html data.")
+                throw new ASAMemberDataNotFoundException("Error getting data for ASA number: $asaNumber. Error reading html data.")
             }
             GPathResult divElement = element.parent().parent().parent()
             GPathResult tableElement = divElement.TABLE[0]
@@ -75,6 +75,9 @@ class ASAMemberDataRetrieval {
         }
         catch (ASAMemberDataRetrievalException e) {
             return serviceAvailabilityErrorMessage
+        }
+        catch (ASAMemberDataValidationException e) {
+            return "Error reading data from the ASA Membership system - $e.message"
         }
 
         boolean ok = asaData.name.contains("James") &&

@@ -4,8 +4,10 @@ import org.bwpl.registration.Club
 import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.bwpl.registration.asa.ASAMemberData
+import org.bwpl.registration.asa.ASAMemberDataNotFoundException
 import org.bwpl.registration.asa.ASAMemberDataRetrieval
 import org.bwpl.registration.asa.ASAMemberDataRetrievalException
+import org.bwpl.registration.asa.ASAMemberDataValidationException
 
 class ASAMembershipCheck {
 
@@ -40,7 +42,7 @@ class ASAMembershipCheck {
             }
             return errors
         }
-        catch (ASAMemberDataRetrievalException e) {
+        catch (ASAMemberDataNotFoundException e) {
             errors << NOT_FOUND_MSG
             return errors
         }

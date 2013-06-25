@@ -22,18 +22,22 @@ class ASAMemberData {
 
         String n = StringUtils.trimToEmpty(name)
         if (StringUtils.isEmpty(n)) {
-            throw new ASAMemberDataRetrievalException("Name data is empty")
+            throw new ASAMemberDataValidationException("Name data is empty")
         }
         this.name = n
     }
 
     void setDateOfBirth(String dateOfBirth) {
 
-        if (StringUtils.isEmpty(dateOfBirth)) {
+        String dob = StringUtils.trimToEmpty(dateOfBirth)
+        if (StringUtils.isEmpty(dob)) {
             this.dateOfBirth = null
             return
         }
-        DateTime dt = DateTimeUtils.parseASADateOfBirth(dateOfBirth)
+        if (!ValidationUtils.isValidAsaDateOfBirth(dob)) {
+            throw new ASAMemberDataValidationException("Invalid date format: [$dob]")
+        }
+        DateTime dt = DateTimeUtils.parseASADateOfBirth(dob)
         this.dateOfBirth = dt.toDate()
     }
 
@@ -41,10 +45,10 @@ class ASAMemberData {
 
         String g = StringUtils.trimToEmpty(gender)
         if (StringUtils.isEmpty(g)) {
-            throw new ASAMemberDataRetrievalException("Gender data is empty")
+            throw new ASAMemberDataValidationException("Gender data is empty")
         }
         if (!ValidationUtils.isValidGenderData(g)) {
-            throw new ASAMemberDataRetrievalException("Invalid gender data: [$g]")
+            throw new ASAMemberDataValidationException("Invalid gender data: [$g]")
         }
         isMale = StringUtils.startsWithIgnoreCase(g, "M")
     }
@@ -53,7 +57,7 @@ class ASAMemberData {
 
         String c = StringUtils.trimToEmpty(category)
         if (StringUtils.isEmpty(category)) {
-            throw new ASAMemberDataRetrievalException("Membership category data is empty")
+            throw new ASAMemberDataValidationException("Membership category data is empty")
         }
         this.membershipCategory = c
     }
@@ -64,7 +68,7 @@ class ASAMemberData {
         String fd = StringUtils.trimToEmpty(fromDate)
         String m = StringUtils.trimToEmpty(membership)
         if (StringUtils.isEmpty(cn) || StringUtils.isEmpty(fd) || StringUtils.isEmpty(m)) {
-            throw new ASAMemberDataRetrievalException("Club name, from date or membership is empty")
+            throw new ASAMemberDataValidationException("Club name, from date or membership is empty")
         }
         ASAMemberClub club = new ASAMemberClub(cn, fd, m)
         clubs << club

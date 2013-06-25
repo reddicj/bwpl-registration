@@ -99,4 +99,8 @@ class ValidationUtils {
         return StringUtils.startsWithIgnoreCase(gender, "M") ||
                StringUtils.startsWithIgnoreCase(gender, "F")
     }
+
+    static boolean isValidAsaDateOfBirth(String dob) {
+        return dob =~ /^([0-9]{1,2})[a-z]{2} ([A-Za-z]+) ([0-9]{4})$/
+    }
 }

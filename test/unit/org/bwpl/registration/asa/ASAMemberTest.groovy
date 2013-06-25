@@ -37,7 +37,7 @@ class ASAMemberTest {
             }
             fail()
         }
-        catch (ASAMemberDataRetrievalException e) {
+        catch (ASAMemberDataValidationException e) {
             // pass
         }
     }
