@@ -1,5 +1,7 @@
 package org.bwpl.registration.upload
 
+import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang.WordUtils
 import org.bwpl.registration.Club
 import org.bwpl.registration.Team
 
@@ -16,11 +18,11 @@ class TeamDataHandler implements CsvHandler {
             throw new UploadException("Line $lineNumber: $errors")
         }
 
-        String clubName = values[0]
-        String asaClubName = values[1]
-        String teamName = values[2]
-        boolean isMale = "M".equalsIgnoreCase(values[3])
-        int division = Integer.parseInt(values[4])
+        String clubName = WordUtils.capitalizeFully(StringUtils.trimToEmpty(values[0]))
+        String asaClubName = WordUtils.capitalizeFully(StringUtils.trimToEmpty(values[1]))
+        String teamName = WordUtils.capitalizeFully(StringUtils.trimToEmpty(values[2]))
+        boolean isMale = "M".equalsIgnoreCase(StringUtils.trimToEmpty(values[3]))
+        int division = Integer.parseInt(StringUtils.trimToEmpty(values[4]))
 
         Club club = Club.findByName(clubName)
         if (club && club.hasTeam(teamName)) {
