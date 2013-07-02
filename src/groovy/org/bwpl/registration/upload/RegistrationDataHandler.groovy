@@ -21,7 +21,6 @@ class RegistrationDataHandler implements CsvHandler {
             throw new UploadException("Line $lineNumber: $expected, $actual")
         }
 
-        String clubName = values[0]
         String teamName = values[1]
         Team team = Team.findByName(teamName)
         if (team == null) {

@@ -36,10 +36,10 @@ class RegistrationData {
 
         RegistrationData registrationData = new RegistrationData()
         registrationData.with {
-            firstName = values[0]
-            lastName = values[1]
-            asaNumberAsString = values[2]
-            role = values[3]
+            setFirstName(values[0])
+            setLastName(values[1])
+            setAsaNumberAsString(values[2])
+            setRole(values[3])
         }
         return registrationData
     }
@@ -48,27 +48,27 @@ class RegistrationData {
 
         RegistrationData registrationData = new RegistrationData()
         registrationData.with {
-            firstName = params["firstName"]
-            lastName = params["lastName"]
-            asaNumberAsString = params["asaNumber"]
-            role = params["role"]
+            setFirstName(params["firstName"])
+            setLastName(params["lastName"])
+            setAsaNumberAsString(params["asaNumber"])
+            setRole(params["role"])
         }
         return registrationData
     }
 
-    void setFirstName(String firstName) {
+    private void setFirstName(String firstName) {
         this.firstName = WordUtils.capitalize(StringUtils.trimToEmpty(firstName), [' ', '-'] as char[])
     }
 
-    void setLastName(String lastName) {
+    private void setLastName(String lastName) {
         this.lastName = WordUtils.capitalize(StringUtils.trimToEmpty(lastName), [' ', '-', '\''] as char[])
     }
 
-    void setRole(String role) {
+    private void setRole(String role) {
         this.role = WordUtils.capitalizeFully(StringUtils.trimToEmpty(role))
     }
 
-    void setAsaNumberAsString(String asaNumberAsString) {
+    private void setAsaNumberAsString(String asaNumberAsString) {
         this.asaNumberAsString = StringUtils.trimToEmpty(asaNumberAsString)
     }
 

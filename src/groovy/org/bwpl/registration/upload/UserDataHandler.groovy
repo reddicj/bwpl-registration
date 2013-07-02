@@ -1,6 +1,8 @@
 package org.bwpl.registration.upload
 
 import org.apache.commons.lang.RandomStringUtils
+import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang.WordUtils
 import org.bwpl.registration.Club
 import org.bwpl.registration.Role
 import org.bwpl.registration.User
@@ -19,10 +21,10 @@ class UserDataHandler implements CsvHandler {
             throw new UploadException("Line $lineNumber: $errors")
         }
 
-        String firstname = values[0]
-        String lastname = values[1]
-        String email = values[2]
-        String role = values[3]
+        String firstname = WordUtils.capitalize(StringUtils.trimToEmpty(values[0]), [' ', '-'] as char[])
+        String lastname = WordUtils.capitalize(StringUtils.trimToEmpty(values[1]), [' ', '-'] as char[])
+        String email = StringUtils.trimToEmpty(values[2])
+        String role = getRole(values[3])
 
         User user = User.findByUsername(email)
         if (user != null) return
@@ -87,10 +89,17 @@ class UserDataHandler implements CsvHandler {
         }
     }
 
-    private String getFieldCountError(String[] values) {
+    private static String getFieldCountError(String[] values) {
 
         String expected = "Expected fields: ${fieldNames.join(", ")}"
         String actual = "Actual fields: ${values.join(", ")}"
         return "$expected, $actual"
+    }
+
+    private static String getRole(String data) {
+
+        String s = StringUtils.trimToEmpty(data)
+        s = StringUtils.upperCase(s)
+        return StringUtils.replace(s, " ", "_")
     }
 }
