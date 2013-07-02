@@ -20,11 +20,17 @@ class CoachRegistrationCheck {
             return ""
         }
         for (Registration existingRegistration : existingRegistrations) {
-            if (registration.team.division == existingRegistration.team.division) {
+            if (isInvalid(existingRegistration, registration)) {
                 return "Registered as a ${getInverseRole(registration.role)} for ${existingRegistration.team.club.name} (${existingRegistration.team.name})"
             }
         }
         return ""
+    }
+
+    private static boolean isInvalid(Registration existingRegistration, Registration registration) {
+
+        return (registration.team.division == existingRegistration.team.division) &&
+                (registration.team.id != existingRegistration.team.id)
     }
 
     private static String getInverseRole(String role) {
