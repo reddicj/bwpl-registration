@@ -26,18 +26,13 @@ class RegistrationTeamDataHandler implements CsvHandler {
         String errors = registrationData.getErrors(team)
         if (!errors.isEmpty()) throw new UploadException("Line $lineNumber: $errors")
 
-        Registration registration = Registration.findByTeamAndAsaNumber(team, registrationData.asaNumber)
-        if (registration) return
-        registration = Registration.findByTeamAndFirstNameAndLastName(team, registrationData.firstName, registrationData.lastName)
-        if (registration) return
-
-        registration = new Registration()
+        Registration registration = new Registration()
         registration.asaNumber = registrationData.asaNumber
         registration.firstName = registrationData.firstName
         registration.lastName = registrationData.lastName
         registration.role = registrationData.role
         registration.updateStatus(currentUser, Action.ADDED, Status.NEW, "")
         team.addToRegistrations(registration)
-        team.save()
+        team.save(flush: true)
     }
 }

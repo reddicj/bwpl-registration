@@ -82,6 +82,45 @@ class RegistrationUploaderTest {
     }
 
     @Test
+    void testUploadDuplicateTeamRegistrationsDiffRole() {
+
+        MultipartFile f = mock(MultipartFile.class)
+        when(f.isEmpty()).thenReturn(false)
+        when(f.contentType).thenReturn("text/csv")
+        when(f.originalFilename).thenReturn("fileName")
+        when(f.bytes).thenReturn(duplicateTeamRegistrationsDiffRole.getBytes("UTF-8"))
+
+        RegistrationUploader teamUploader = new RegistrationUploader()
+        teamUploader.securityUtils = TestUtils.mockSecurityUtils
+
+        Team t = Team.findByName("Poly1")
+        teamUploader.upload(t, f)
+        assertThat(Registration.count).isEqualTo(2)
+    }
+
+    @Test
+    void testUploadDuplicateTeamRegistrationsSameRole() {
+
+        MultipartFile f = mock(MultipartFile.class)
+        when(f.isEmpty()).thenReturn(false)
+        when(f.contentType).thenReturn("text/csv")
+        when(f.originalFilename).thenReturn("fileName")
+        when(f.bytes).thenReturn(duplicateTeamRegistrationsSameRole.getBytes("UTF-8"))
+
+        RegistrationUploader teamUploader = new RegistrationUploader()
+        teamUploader.securityUtils = TestUtils.mockSecurityUtils
+
+        Team t = Team.findByName("Poly1")
+        try {
+            teamUploader.upload(t, f)
+            Assert.fail()
+        }
+        catch (UploadException e) {
+            assertThat(e.message).contains("is already registered")
+        }
+    }
+
+    @Test
     void testUploadTeamAndRegistrationData() {
 
         MultipartFile f = mock(MultipartFile.class)
@@ -111,6 +150,14 @@ class RegistrationUploaderTest {
         "James,Reddick,666 ,  Player\n" +
         "Gary,Simons , 123\n" +
         "Jerry,Birmingham , 456, Cleaner\n"
+
+    private static final String duplicateTeamRegistrationsDiffRole =
+        "James,Reddick,666,player\n" +
+        "James,Reddick,666,COACH"
+
+    private static final String duplicateTeamRegistrationsSameRole =
+        "James,Reddick,666,player\n" +
+        "James,Reddick,666,PLAYER"
 
     private static String teamAndRegistrationData =
         "Poly,Poly1,Elan,Stark,783421,Player\n" +

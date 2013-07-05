@@ -44,7 +44,7 @@ class RegistrationData {
         return registrationData
     }
 
-    static RegistrationData fromFormParams(Team team, def params) {
+    static RegistrationData fromFormParams(def params) {
 
         RegistrationData registrationData = new RegistrationData()
         registrationData.with {
@@ -104,10 +104,14 @@ class RegistrationData {
 
     private String getTeamRegistrationExistsError(Team team) {
 
-        Registration registration = Registration.findByTeamAndAsaNumber(team, asaNumber)
-        if (registration) return "ASA number $registration.asaNumber ($registration.name) for $registration.team.name ($registration.team.club.name) already exists."
-        registration = Registration.findByTeamAndFirstNameAndLastName(team, firstName, lastName)
-        if (registration) return "$registration.name for $registration.team.name ($registration.team.club.name) already exists."
+        Registration registration = Registration.findByTeamAndAsaNumberAndRole(team, asaNumber, role)
+        if (registration) {
+            return "${this.toString()} is already registered as a $role for $team.name ($team.club.name)."
+        }
         return ""
+    }
+
+    String toString() {
+        return "$firstName $lastName ($asaNumberAsString)"
     }
 }

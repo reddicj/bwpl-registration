@@ -43,6 +43,6 @@ class RegistrationDataHandler implements CsvHandler {
             registration.updateStatus(currentUser, Action.ADDED, Status.INVALID, "")
             team.addToRegistrations(registration)
         }
-        team.save()
+        team.save(flush: true)
     }
 }

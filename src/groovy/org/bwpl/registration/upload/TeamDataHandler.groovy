@@ -39,7 +39,7 @@ class TeamDataHandler implements CsvHandler {
         team.isMale = isMale
         team.division = division
         club.addToTeams(team)
-        club.save()
+        club.save(flush: true)
     }
 
     private String getErrors(String[] values) {
