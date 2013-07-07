@@ -48,7 +48,7 @@ class RegistrationController {
     def add = {
 
         Team t = Team.get(params.teamId)
-        RegistrationData registrationData = RegistrationData.fromFormParams(t, params)
+        RegistrationData registrationData = RegistrationData.fromFormParams(params)
         String errors = registrationData.getErrors(t)
 
         if (!errors.isEmpty()) {
@@ -77,7 +77,7 @@ class RegistrationController {
 
         Team t = Team.get(params.teamId)
         Registration r = Registration.get(params.id)
-        RegistrationData registrationData = RegistrationData.fromFormParams(t, params)
+        RegistrationData registrationData = RegistrationData.fromFormParams(params)
         String errors = registrationData.getFieldValueErrors()
 
         if (!errors.isEmpty()) {
