@@ -30,15 +30,6 @@ class TeamDataHandler implements CsvHandler {
             return
         }
 
-        Division division = Division.findByCompetitionAndRankAndIsMale(competition, rank, isMale)
-        if (!division) {
-            division = new Division()
-            division.rank = rank
-            division.isMale = isMale
-            division.name = Division.getDefaultName(rank, isMale)
-            competition.addToDivisions(division).save(flush: true)
-        }
-
         if (!club) {
             club = new Club()
             club.name = clubName
@@ -46,12 +37,21 @@ class TeamDataHandler implements CsvHandler {
             club.save()
         }
 
+        Division division = Division.findByCompetitionAndRankAndIsMale(competition, rank, isMale)
+        if (!division) {
+            division = new Division()
+            division.rank = rank
+            division.isMale = isMale
+            division.name = Division.getDefaultName(rank, isMale)
+            competition.addToDivisions(division)
+        }
+
         Team team = new Team()
         team.name = teamName
         team.isMale = isMale
         division.addToTeams(team)
-        club.addToTeams(team)
-        competition.save()
+        club.addToTeams(team).save(flush: true)
+        competition.save(flush: true)
     }
 
     private String getErrors(String[] values) {

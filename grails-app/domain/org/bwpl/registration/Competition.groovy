@@ -16,6 +16,14 @@ class Competition {
     String name
     String urlName
 
+    List<Division> getDivisions(boolean isMale) {
+
+        List<Division> divs = new ArrayList<Division>(divisions)
+        divs = divs.findAll{it.isMale == isMale}
+        divs.sort{it.rank}
+        return divs
+    }
+
     void addDivision(boolean isMale) {
 
         int newRank = 1

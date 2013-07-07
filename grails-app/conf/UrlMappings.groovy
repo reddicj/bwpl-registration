@@ -8,7 +8,7 @@ class UrlMappings {
 			}
 		}
 
-		"/"(controller: "club")
+		"/"(controller: "competition")
 
 		"500"(view:'/error')
 	}

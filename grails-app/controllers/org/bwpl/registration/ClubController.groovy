@@ -37,8 +37,9 @@ class ClubController {
     @Secured(["ROLE_READ_ONLY"])
     def show = {
 
+        Competition competition = Competition.get(params.competition)
         Club club = Club.get(params.id)
-        List<Team> teams = new ArrayList<Team>(club.teams)
+        List<Team> teams = club.getTeams(competition)
         teams.sort{it.name}
         List<Registration> registrations = RegistrationDataUtils.getRegistrations(club.registrations, params.rfilter, params.sort)
         boolean hasAnyRegistrations = !club.registrations.isEmpty()

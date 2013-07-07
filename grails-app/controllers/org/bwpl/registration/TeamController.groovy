@@ -21,7 +21,7 @@ class TeamController {
     def show = {
 
         Team team = Team.get(params.id)
-        List<Team> teams = new ArrayList<Team>(team.club.teams)
+        List<Team> teams = team.club.getTeams(team.division.competition)
         teams.sort{it.name}
         List<Registration> registrations = RegistrationDataUtils.getRegistrations(team.registrations, params.rfilter, params.sort)
         boolean hasAnyRegistrations = !team.club.registrations.isEmpty()

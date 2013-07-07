@@ -22,6 +22,13 @@ class Club {
     String name
     String asaName
 
+    List<Team> getTeams(Competition competition) {
+
+        List<Team> result = new ArrayList<Team>(teams.findAll {it.division.competition.id == competition.id})
+        result.sort{it.name}
+        return result
+    }
+
     boolean hasTeam(String name) {
 
         for (Team team : teams) {

@@ -14,7 +14,21 @@ class CompetitionController {
 
         List<Competition> competitions = Competition.list()
         competitions.sort{it.name}
-        [competitions:competitions]
+        [title: "Competitions", competitions:competitions]
+    }
+
+    def show = {
+
+        Competition competition = Competition.get(params.id)
+        if (competition.divisions.isEmpty()) {
+            flash.errors = "There are no divisions or teams for the competition: $competition.name"
+            redirect(action: "list")
+        }
+        else {
+            List<Division> divisions = competition.getDivisions(true)
+            if (divisions.isEmpty()) divisions = competition.getDivisions(false)
+            redirect(controller: "division", action: "show", id: divisions[0].id)
+        }
     }
 
     @Secured(["ROLE_REGISTRATION_SECRETARY"])
