@@ -110,4 +110,25 @@ class TeamController {
         flash.message = sb.toString().trim()
         redirect(action: "show", id: team.id)
     }
+
+    def delete = {
+
+        Team team = Team.get(params.id)
+        team.delete()
+        redirect(controller: "division", action: "show", id: team.division.id)
+    }
+
+    def create = {
+
+        Division division = Division.get(params.division)
+        render(view: "edit", model: [title: "Add Team", division: division])
+    }
+
+    def edit = {
+
+        Team team = Team.get(params.id)
+        [title: "Edit Team", division: team.division, team: team]
+    }
+
+
 }

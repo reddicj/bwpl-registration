@@ -5,6 +5,7 @@
     <meta name="layout" content="main">
 </head>
 <body>
+<g:render template="/nav/divisionTabs"/>
 <table class="bwpl-table">
     <thead>
     <tr>
@@ -23,7 +24,7 @@
             <g:if test="${canUpdate}">
                 <td>
                     <g:link controller="team" action="edit" id="${team.id}">Edit</g:link> |
-                    <g:link controller="team" action="delete" id="${team.id}">Delete</g:link>
+                    <g:link controller="team" action="delete" id="${team.id}" onclick="return confirm('Are you sure you want to delete team: ${team.name}?');">Delete</g:link>
                 </td>
             </g:if>
         </tr>
