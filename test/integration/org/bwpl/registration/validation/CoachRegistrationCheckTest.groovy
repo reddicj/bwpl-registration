@@ -1,12 +1,6 @@
 package org.bwpl.registration.validation
 
-import org.bwpl.registration.Club
-import org.bwpl.registration.Competition
-import org.bwpl.registration.Division
-import org.bwpl.registration.Registration
-import org.bwpl.registration.Team
-import org.bwpl.registration.TestUtils
-import org.junit.Before
+import org.bwpl.registration.*
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
@@ -110,10 +104,15 @@ class CoachRegistrationCheckTest {
         Registration r1
         Registration r2
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c1 = new Club(name: "Poly", asaName: "Poly")
-        Team t1 = new Team(name: "Poly Men", isMale: true, division: 1)
-        c1.addToTeams(t1)
-        c1.save(failOnError: true)
+        Team t1 = new Team(name: "Poly Men", isMale: true)
+        division.addToTeams(t1)
+        c1.addToTeams(t1).save()
+
         r1 = new Registration()
         r1.with {
             asaNumber = 123
