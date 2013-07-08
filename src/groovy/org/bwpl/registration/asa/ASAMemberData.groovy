@@ -2,6 +2,7 @@ package org.bwpl.registration.asa
 
 import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.StringMunger
 import org.bwpl.registration.utils.ValidationUtils
 import org.joda.time.DateTime
 
@@ -76,9 +77,14 @@ class ASAMemberData {
 
     boolean isNameMatch(String firstName, String lastName) {
 
-        if (!StringUtils.containsIgnoreCase(name, lastName)) return false
-        String nameSubStringBeforeLastNameMatch = StringUtils.substringBefore(name, lastName)
-        return StringUtils.containsIgnoreCase(nameSubStringBeforeLastNameMatch, firstName)
+        if (StringUtils.isEmpty(firstName)) return false
+        if (StringUtils.isEmpty(lastName)) return false
+        String mungedFirstName = StringMunger.munge(firstName.toLowerCase())
+        String mungedLastName = StringMunger.munge(lastName.toLowerCase())
+        String mungedName = StringMunger.munge(name.toLowerCase())
+        if (!StringUtils.containsIgnoreCase(mungedName, mungedLastName)) return false
+        String nameSubStringBeforeLastNameMatch = StringUtils.substringBefore(mungedName, mungedLastName)
+        return StringUtils.containsIgnoreCase(nameSubStringBeforeLastNameMatch, mungedFirstName)
     }
 
     boolean isCorrectlyRegisteredWithClub(String clubName, String role) {
