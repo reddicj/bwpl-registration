@@ -1,12 +1,20 @@
 package org.bwpl.registration.asa
 
+import static org.fest.assertions.Assertions.assertThat
+
 import org.bwpl.registration.utils.DateTimeUtils
 import org.junit.Test
-
-import static org.fest.assertions.Assertions.assertThat
 import static org.junit.Assert.fail
 
-class ASAMemberTest {
+class ASAMemberDataTest {
+
+    @Test
+    void testIsNameMatch() {
+
+        ASAMemberData asaMemberData = new ASAMemberData(923329)
+        asaMemberData.name = "Kim O`keefe"
+        assertThat(asaMemberData.isNameMatch("Kim", "O'Keefe")).isTrue()
+    }
 
     @Test
     void testValidData() {
@@ -23,6 +31,7 @@ class ASAMemberTest {
         assertThat(asaMemberData.isMale).isTrue()
         assertThat(asaMemberData.asaNumber).isEqualTo(283261)
         assertThat(asaMemberData.clubs[0]).isEqualTo("Poly")
+        assertThat(asaMemberData.isNameMatch("James", "Reddick")).isTrue()
     }
 
     @Test
