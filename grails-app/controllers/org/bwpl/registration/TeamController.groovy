@@ -1,14 +1,13 @@
 package org.bwpl.registration
 
 import grails.plugins.springsecurity.Secured
+import org.bwpl.registration.utils.ClubTeamModelHelper
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.DateTimeUtils
-import org.bwpl.registration.utils.RegistrationDataUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.Action
-import org.bwpl.registration.validation.RegistrationStats
 import org.bwpl.registration.validation.Status
 
 class TeamController {
@@ -21,29 +20,8 @@ class TeamController {
     def show = {
 
         Team team = Team.get(params.id)
-        List<Team> teams = team.club.getTeams(team.division.competition)
-        teams.sort{it.name}
-        List<Registration> registrations = RegistrationDataUtils.getRegistrations(team.registrations, params.rfilter, params.sort)
-        boolean hasAnyRegistrations = !team.club.registrations.isEmpty()
-        boolean canUpdate = securityUtils.canUserUpdate(team.club)
-        boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
-        boolean doDisplayValidateButton = canUpdate && !registrations.isEmpty() && !params.rfilter
-
-        def model = [user: securityUtils.currentUser,
-                     title: team.club.nameAndASAName,
-                     navItems: nav.getNavItems(),
-                     subNavItems: nav.getTeamNavItems(team),
-                     club: team.club,
-                     userClub: securityUtils.currentUserClub,
-                     teams: teams,
-                     hasAnyRegistrations: hasAnyRegistrations,
-                     registrations: registrations,
-                     stats: new RegistrationStats(registrations),
-                     canUpdate: canUpdate,
-                     isUserRegistrationSecretary: isUserRegistrationSecretary,
-                     doDisplayValidateButton: doDisplayValidateButton]
-
-        render(view: "/club/show", model: model)
+        ClubTeamModelHelper teamModelHelper = ClubTeamModelHelper.getClubTeamModelHelper(team, nav, securityUtils, params)
+        render(view: "/club/show", model: teamModelHelper.model)
     }
 
     @Secured(["ROLE_READ_ONLY"])
@@ -81,7 +59,7 @@ class TeamController {
         } catch (UploadException e) {
             flash.errors = e.message
         }
-        redirect(action: "show", id: team.id.toString())
+        redirect(action: "show", id: team.id.toString(), params: [competition: params.competition])
     }
 
     // Secured by SecurityFilters.TeamControllerAccessFilter
@@ -108,14 +86,14 @@ class TeamController {
             sb << "You cannot delete registrations that have already been validated."
         }
         flash.message = sb.toString().trim()
-        redirect(action: "show", id: team.id)
+        redirect(action: "show", id: team.id, params: [competition: params.competition])
     }
 
     def delete = {
 
         Team team = Team.get(params.id)
         team.delete()
-        redirect(controller: "division", action: "show", id: team.division.id)
+        redirect(controller: "division", action: "show", id: team.division.id, params: [competition: params.competition])
     }
 
     def create = {
@@ -130,5 +108,11 @@ class TeamController {
         [title: "Edit Team", division: team.division, team: team]
     }
 
+    def update = {
 
+        Team team = Team.get(params.id)
+        team.name = params.name
+        team.isMale = "M".equalsIgnoreCase(params.gender)
+        team.save()
+    }
 }

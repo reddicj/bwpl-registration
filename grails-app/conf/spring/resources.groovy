@@ -1,3 +1,4 @@
+import org.bwpl.registration.utils.ClubTeamModelHelper
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.utils.DateTimeUtils

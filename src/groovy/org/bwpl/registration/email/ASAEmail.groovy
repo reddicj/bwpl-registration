@@ -2,6 +2,7 @@ package org.bwpl.registration.email
 
 import groovy.text.SimpleTemplateEngine
 import org.bwpl.registration.Club
+import org.bwpl.registration.Competition
 import org.bwpl.registration.Registration
 import org.bwpl.registration.User
 import org.bwpl.registration.validation.Status
@@ -12,6 +13,7 @@ class ASAEmail {
 
     User currentUser
     Club club
+    Competition competition
 
     String getMailToLink() {
         return "mailto:${getTo(true)}?subject=${getSubject(true)}&body=${getBody(true, "\n", " ")}"
@@ -50,7 +52,7 @@ class ASAEmail {
 
     private String getRegistrations(String lineBreak) {
 
-        List<Registration> invalidRegistrations = new ArrayList<Registration>(club.registrations)
+        List<Registration> invalidRegistrations = new ArrayList<Registration>(club.getRegistrations(competition))
         invalidRegistrations = invalidRegistrations.findAll {it.statusAsEnum == Status.INVALID}
         invalidRegistrations.sort {it.name}
 

@@ -1,6 +1,7 @@
 package org.bwpl.registration.nav
 
 import org.bwpl.registration.Club
+import org.bwpl.registration.Competition
 import org.bwpl.registration.Team
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.Status
@@ -20,23 +21,23 @@ class NavItems {
         return navItems
     }
 
-    List<NavItem> getClubNavItems(Club club, String rfilter) {
+    List<NavItem> getClubNavItems(Competition competition, Club club, String rfilter) {
 
         List<NavItem> navItems = []
         if ("deleted" == rfilter) {
-            if (doDisplayDeleteAllDeleted(club)) {
+            if (doDisplayDeleteAllDeleted(competition, club)) {
                 navItems << NavItem.getUndeleteAllDeletedRegistrations(club.id)
                 navItems << NavItem.getDeleteAllDeletedRegistrations(club.id)
             }
             return navItems
         }
-        if (club.registrations.isEmpty()) return navItems
+        if (club.getRegistrations(competition).isEmpty()) return navItems
         navItems << NavItem.getExportClubRegistrations(club.id)
-        if (doDisplayASAEmail(club)) navItems << NavItem.getASAEmail(club.id)
+        if (doDisplayASAEmail(competition, club)) navItems << NavItem.getASAEmail(club.id)
         return navItems
     }
 
-    List<NavItem> getTeamNavItems(Team team) {
+    List<NavItem> getTeamNavItems(Competition competition, Team team) {
 
         List<NavItem> navItems = []
         if (team == null) return
@@ -47,7 +48,7 @@ class NavItems {
         }
         if ((!team.registrations.isEmpty()) && (team.club.teams.size() == 1)) {
             navItems << NavItem.getExportClubRegistrations(team.club.id)
-            if (doDisplayASAEmail(team.club)) navItems << NavItem.getASAEmail(team.club.id)
+            if (doDisplayASAEmail(competition, team.club)) navItems << NavItem.getASAEmail(team.club.id)
         }
         if ((!team.registrations.isEmpty()) && (team.club.teams.size() > 1)) {
             navItems << NavItem.getExportTeamRegistrations(team.id)
@@ -55,16 +56,16 @@ class NavItems {
         return navItems
     }
 
-    private boolean doDisplayASAEmail(Club club) {
+    private boolean doDisplayASAEmail(Competition competition, Club club) {
 
         if (!securityUtils.canUserUpdate(club)) return false
-        return !club.getRegistrations(Status.INVALID).isEmpty()
+        return !club.getRegistrations(competition, Status.INVALID).isEmpty()
     }
 
-    private boolean doDisplayDeleteAllDeleted(Club club) {
+    private boolean doDisplayDeleteAllDeleted(Competition competition, Club club) {
 
         if (!securityUtils.canUserUpdate(club)) return false
-        return !club.getRegistrations(Status.DELETED).isEmpty()
+        return !club.getRegistrations(competition, Status.DELETED).isEmpty()
     }
 
     private void addUserClubNavItem(List<NavItem> navItems) {

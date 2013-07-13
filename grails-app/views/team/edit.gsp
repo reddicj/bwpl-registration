@@ -13,7 +13,7 @@
             </g:eachError>
         </ul>
     </g:hasErrors>
-    <g:form method="post">
+    <g:form method="post" action="update" params="[competition: params.competition]">
         <g:hiddenField name="division" value="${division?.id}"/>
         <g:hiddenField name="id" value="${team?.id}"/>
         <fieldset class="form">
@@ -35,8 +35,7 @@
             </div>
         </fieldset>
         <fieldset class="form">
-            <g:actionSubmit action="updateAndReturnToList" value="Update and exit" class="buttons"/>
-            <g:actionSubmit action="update" value="Update" class="buttons"/>
+            <g:actionSubmit value="Update" class="buttons"/>
         </fieldset>
     </g:form>
 </div>

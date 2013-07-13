@@ -49,19 +49,19 @@ class Club {
         return false
     }
 
-    Set<Registration> getRegistrations() {
+    Set<Registration> getRegistrations(Competition competition) {
 
-        Set<Registration> registrations = new HashSet<Registration>()
-        teams.each {
-            registrations.addAll(it.registrations)
-        }
-        return registrations
+        def query = Registration.where { team.club == this }
+        query = query.where { team.division.competition == competition }
+        return new HashSet<Registration>(query.list())
     }
 
-    Set<Registration> getRegistrations(Status status) {
+    Set<Registration> getRegistrations(Competition competition, Status theStatus) {
 
-        Set<Registration> registrations = registrations
-        return registrations.findAll {it.statusAsEnum == status}
+        def query = Registration.where { team.club == this }
+        query = query.where { team.division.competition == competition }
+        query = query.where { status == theStatus.toString() }
+        return new HashSet<Registration>(query.list())
     }
 
     @Override
@@ -83,10 +83,9 @@ class Club {
         else return "$name ($asaName)"
     }
 
-    String getRegistrationsAsCsvString(boolean doWriteHeader = false) {
+    String getRegistrationsAsCsvString(Competition competition, boolean doWriteHeader = false) {
 
-        List<Team> teams = new ArrayList<Team>(teams)
-        teams.sort{it.name}
+        List<Team> teams = getTeams(competition)
         StringBuilder sb = new StringBuilder()
         if (doWriteHeader) {
             sb << "$Club.csvFieldNames,$Team.csvFieldNames,$Registration.csvFieldNames\n"

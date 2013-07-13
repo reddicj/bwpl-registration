@@ -54,7 +54,7 @@ class RegistrationController {
         if (!errors.isEmpty()) {
             flash.errors = "Error adding registration for $t.name ($t.club.name) - $errors"
             def redirectParams = [teamId: params.teamId, firstName: params["firstName"], lastName: params["lastName"],
-                                  role: params["role"], asaNumber: params["asaNumber"]]
+                                  role: params["role"], asaNumber: params["asaNumber"], competition: params.competition]
             redirect(action: "create", params: redirectParams)
             return
         }
@@ -69,7 +69,7 @@ class RegistrationController {
         t.save()
 
         flash.message = "Registration $r.name for $r.team.name ($r.team.club.name) added."
-        redirect(controller: "team", action: "show", id: t.id)
+        redirect(controller: "team", action: "show", id: t.id, params: [competition: params.competition])
     }
 
     @Secured(["ROLE_CLUB_SECRETARY"])
@@ -82,7 +82,7 @@ class RegistrationController {
 
         if (!errors.isEmpty()) {
             flash.errors = "Error updating registration $r.name for $r.team.name ($r.team.club.name) - $errors"
-            redirect(action: "edit", id: params.id)
+            redirect(action: "edit", id: params.id, params: [competition: params.competition])
             return
         }
 
@@ -90,12 +90,12 @@ class RegistrationController {
 
             if (r.statusAsEnum == Status.DELETED) {
                 flash.errors = "Cannot update a registration that has been deleted."
-                redirect(action: "edit", id: r.id)
+                redirect(action: "edit", id: r.id, params: [competition: params.competition])
                 return
             }
             if (!r.canUpdate()) {
                 flash.errors = "Cannot update a registration that has already been validated."
-                redirect(action: "edit", id: r.id)
+                redirect(action: "edit", id: r.id, params: [competition: params.competition])
                 return
             }
         }
@@ -112,7 +112,7 @@ class RegistrationController {
         r.save()
 
         flash.message = "Registration $r.name for $t.name ($t.club.name) updated."
-        redirect(controller: "registration", action: "show", id: r.id)
+        redirect(controller: "registration", action: "show", id: r.id, params: [competition: params.competition])
     }
 
     @Secured(["ROLE_CLUB_SECRETARY"])
@@ -139,7 +139,7 @@ class RegistrationController {
         r.team.removeFromRegistrations(r)
         r.delete()
         flash.message = msg
-        redirect(controller: "club", action: "show", id: id, params: [rfilter: "deleted"])
+        redirect(controller: "club", action: "show", id: id, params: [competition: params.competition, rfilter: "deleted"])
     }
 
     @Secured(["ROLE_CLUB_SECRETARY"])
@@ -211,7 +211,7 @@ class RegistrationController {
         } catch (UploadException e) {
             flash.errors = e.message
         }
-        redirect(action: "search")
+        redirect(action: "search", params: [competition: params.competition])
     }
 
     @Secured(["ROLE_CLUB_SECRETARY"])
@@ -276,7 +276,8 @@ class RegistrationController {
             return registrations.findAll {it.statusAsEnum in [Status.NEW, Status.INVALID]}
         }
         if (StringUtils.isNotEmpty(params.clubId)) {
-            Set<Registration> registrations = Club.get(params.clubId).registrations
+            Competition competition = Competition.findByUrlName(params.competition)
+            Set<Registration> registrations = Club.get(params.clubId).getRegistrations(competition)
             return registrations.findAll {it.statusAsEnum in [Status.NEW, Status.INVALID]}
         }
         return new HashSet<Registration>()

@@ -2,13 +2,9 @@ class UrlMappings {
 
 	static mappings = {
 
-		"/$controller/$action?/$id?"{
-			constraints {
-				// apply constraints here
-			}
-		}
-
-		"/"(controller: "competition")
+        "/"(controller: "competition", action: "list")
+        "/competition/$action/$id?"(controller: "competition")
+        name competitionMapping: "/$competition/$controller/$action?/$id?"()
 
 		"500"(view:'/error')
 	}

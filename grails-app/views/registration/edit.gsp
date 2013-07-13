@@ -15,18 +15,17 @@
             </g:eachError>
         </ul>
     </g:hasErrors>
-    <g:form method="post">
+    <g:form method="post" action="$actionName" params="[competition: params.competition]">
         <g:hiddenField name="teamId" value="${team.id}"/>
         <fieldset class="form">
             <g:if test="${actionName == "edit"}">
                 <g:hiddenField name="id" value="${r?.id}"/>
                 <g:render template="editForm"/>
-                <g:actionSubmit action="update" value="Update" class="buttons"/>
             </g:if>
             <g:else>
                 <g:render template="createForm"/>
-                <g:actionSubmit action="add" value="Update" class="buttons"/>
             </g:else>
+            <g:actionSubmit value="Update" class="buttons"/>
         </fieldset>
     </g:form>
 </div>

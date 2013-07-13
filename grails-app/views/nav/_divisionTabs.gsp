@@ -4,12 +4,12 @@
         <g:each in="${divisions}" var="division">
             <g:if test="${division.id.toString() == params.id}">
                 <li id="active">
-                    <g:link elementId="current" controller="division" action="show" id="${division.id}">${division.name}</g:link>
+                    <g:link elementId="current" controller="division" action="show" id="${division.id}" params="[competition: params.competition]">${division.name}</g:link>
                 </li>
             </g:if>
             <g:else>
                 <li>
-                    <g:link controller="division" action="show" id="${division.id}">${division.name}</g:link>
+                    <g:link controller="division" action="show" id="${division.id}" params="[competition: params.competition]">${division.name}</g:link>
                 </li>
             </g:else>
         </g:each>

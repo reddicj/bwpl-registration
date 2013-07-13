@@ -27,7 +27,7 @@ class CompetitionController {
         else {
             List<Division> divisions = competition.getDivisions(true)
             if (divisions.isEmpty()) divisions = competition.getDivisions(false)
-            redirect(controller: "division", action: "show", id: divisions[0].id)
+            redirect(controller: "division", action: "show", id: divisions[0].id, params: [competition: competition.urlName])
         }
     }
 
