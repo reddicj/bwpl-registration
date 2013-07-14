@@ -27,7 +27,7 @@ class ASAEmail {
 
     String getSubject(boolean doEncode) {
 
-        String subject = "ASA Membership Check for ${club.name}"
+        String subject = "ASA Membership Check for ${club.asaName}"
         if (doEncode) return encode(subject)
         return subject
     }
@@ -35,7 +35,7 @@ class ASAEmail {
     String getBody(boolean doEncode, String lineBreak, String space) {
 
         SimpleTemplateEngine templateEngine = new SimpleTemplateEngine()
-        def binding = [clubName:club.name,
+        def binding = [clubName:club.asaName,
                        regSecName:"James Reddick",
                        regSecEmail:"reddicj@gmail.com",
                        clubSecName: currentUser.name,
