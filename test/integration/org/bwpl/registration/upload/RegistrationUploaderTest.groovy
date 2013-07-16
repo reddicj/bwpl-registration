@@ -57,6 +57,15 @@ class RegistrationUploaderTest {
         Team t = Team.findByName("Poly1")
         teamUploader.upload(t, f)
         assertThat(Registration.count).isEqualTo(2)
+
+        Registration r1 = Registration.findByAsaNumber(666)
+        Registration r2 = Registration.findByAsaNumber(123)
+
+        assertThat(r1.firstName).isEqualTo("James")
+        assertThat(r1.lastName).isEqualTo("Reddick")
+        assertThat(r2.firstName).isEqualTo("Gary")
+        assertThat(r2.lastName).isEqualTo("Simons")
+
     }
 
     @Test
@@ -143,8 +152,8 @@ class RegistrationUploaderTest {
     }
 
     private static final String goodData =
-        "James,Reddick,666,player\n" +
-        "Gary,Simons,123,COACH"
+        "JAMES,Reddick,666,player\n" +
+        "Gary,SIMONS,123,COACH"
 
     private static final String badData =
         "James,Reddick,666 ,  Player\n" +
