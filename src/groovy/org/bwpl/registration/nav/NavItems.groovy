@@ -1,6 +1,7 @@
 package org.bwpl.registration.nav
 
 import org.bwpl.registration.Club
+import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.Status
@@ -30,7 +31,7 @@ class NavItems {
             }
             return navItems
         }
-        if (club.registrations.isEmpty()) return navItems
+        if (!hasAnyNonDeletedRegistrations(club.registrations)) return navItems
         navItems << NavItem.getExportClubRegistrations(club.id)
         if (doDisplayASAEmail(club)) navItems << NavItem.getASAEmail(club.id)
         return navItems
@@ -43,16 +44,23 @@ class NavItems {
         if (securityUtils.canUserUpdate(team.club)) {
             navItems << NavItem.getUploadRegistrations(team.id)
             navItems << NavItem.getAddRegistration(team.id)
-            if (!team.registrations.isEmpty()) navItems << NavItem.getDeleteAllRegistrations(team.id)
+            if (hasAnyNonDeletedRegistrations(team.registrations)) navItems << NavItem.getDeleteAllRegistrations(team.id)
         }
-        if ((!team.registrations.isEmpty()) && (team.club.teams.size() == 1)) {
+        if ((hasAnyNonDeletedRegistrations(team.registrations)) && (team.club.teams.size() == 1)) {
             navItems << NavItem.getExportClubRegistrations(team.club.id)
             if (doDisplayASAEmail(team.club)) navItems << NavItem.getASAEmail(team.club.id)
         }
-        if ((!team.registrations.isEmpty()) && (team.club.teams.size() > 1)) {
+        if ((hasAnyNonDeletedRegistrations(team.registrations)) && (team.club.teams.size() > 1)) {
             navItems << NavItem.getExportTeamRegistrations(team.id)
         }
         return navItems
+    }
+
+    private static boolean hasAnyNonDeletedRegistrations(Collection<Registration> registrations) {
+
+        if (registrations == null) return false
+        int countOfNonDeleted = registrations.count {it.statusAsEnum != Status.DELETED}
+        return countOfNonDeleted > 0
     }
 
     private boolean doDisplayASAEmail(Club club) {

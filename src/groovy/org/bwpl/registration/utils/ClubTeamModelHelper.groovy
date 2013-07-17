@@ -32,6 +32,7 @@ class ClubTeamModelHelper {
 
         if (teams != null) return teams
         teams = new ArrayList<Team>(getClub().teams)
+        teams.sort{it.name}
         return teams
     }
 
@@ -44,10 +45,10 @@ class ClubTeamModelHelper {
 
     Map<String, Object> getModel() {
 
-        boolean hasAnyRegistrations = hasAnyNonDeletedRegistrations()
+        boolean hasAnyNonDeletedClubRegistrations = this.hasAnyNonDeletedClubRegistrations()
         boolean canUpdate = securityUtils.canUserUpdate(getClub())
         boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
-        boolean doDisplayValidateButton = canUpdate && hasAnyRegistrations && !params.rfilter
+        boolean doDisplayValidateButton = canUpdate && !getRegistrations().isEmpty() && !params.rfilter
 
         return [user: securityUtils.currentUser,
                 title: getClub().nameAndASAName,
@@ -56,7 +57,7 @@ class ClubTeamModelHelper {
                 club: getClub(),
                 userClub: securityUtils.currentUserClub,
                 teams: getTeams(),
-                hasAnyRegistrations: hasAnyRegistrations,
+                hasAnyNonDeletedClubRegistrations: hasAnyNonDeletedClubRegistrations,
                 registrations: getRegistrations(),
                 stats: new RegistrationStats(getRegistrations()),
                 canUpdate: canUpdate,
@@ -71,9 +72,9 @@ class ClubTeamModelHelper {
         else return clubTeam.club
     }
 
-    private boolean hasAnyNonDeletedRegistrations() {
+    private boolean hasAnyNonDeletedClubRegistrations() {
 
-        int nonDeletedRegistrationsCount = getRegistrations().count{it.statusAsEnum != Status.DELETED}
+        int nonDeletedRegistrationsCount = getClub().registrations.count{it.statusAsEnum != Status.DELETED}
         return nonDeletedRegistrationsCount > 0
     }
 
