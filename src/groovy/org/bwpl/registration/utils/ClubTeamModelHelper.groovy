@@ -31,8 +31,7 @@ class ClubTeamModelHelper {
     List<Team> getTeams() {
 
         if (teams != null) return teams
-        teams = getClub().getTeams()
-        teams.sort{it.name}
+        teams = new ArrayList<Team>(getClub().teams)
         return teams
     }
 
