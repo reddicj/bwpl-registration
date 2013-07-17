@@ -3,15 +3,14 @@ package org.bwpl.registration
 import grails.plugins.springsecurity.Secured
 import org.apache.commons.lang.RandomStringUtils
 import org.apache.commons.lang.StringUtils
+import org.bwpl.registration.utils.ClubTeamModelHelper
 import org.bwpl.registration.email.ASAEmail
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.TeamUploader
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.DateTimeUtils
-import org.bwpl.registration.utils.RegistrationDataUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.Action
-import org.bwpl.registration.validation.RegistrationStats
 import org.bwpl.registration.validation.Status
 
 class ClubController {
@@ -19,7 +18,6 @@ class ClubController {
     static defaultAction = "list"
     NavItems nav
     SecurityUtils securityUtils
-    DateTimeUtils dateTimeUtils
 
     def list = {
 
@@ -38,36 +36,16 @@ class ClubController {
     def show = {
 
         Club club = Club.get(params.id)
-        List<Team> teams = new ArrayList<Team>(club.teams)
-        teams.sort{it.name}
-        List<Registration> registrations = RegistrationDataUtils.getRegistrations(club.registrations, params.rfilter, params.sort)
-        boolean hasAnyRegistrations = !club.registrations.isEmpty()
-        boolean canUpdate = securityUtils.canUserUpdate(club)
-        boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
-        boolean doDisplayValidateButton = canUpdate && !registrations.isEmpty() && !params.rfilter
-
-        def model = [user: securityUtils.currentUser,
-                     title: club.nameAndASAName,
-                     navItems: nav.getNavItems(),
-                     subNavItems: nav.getClubNavItems(club, params.rfilter),
-                     club: club,
-                     userClub: securityUtils.currentUserClub,
-                     teams: teams,
-                     hasAnyRegistrations: hasAnyRegistrations,
-                     registrations: registrations,
-                     stats: new RegistrationStats(registrations),
-                     canUpdate: canUpdate,
-                     isUserRegistrationSecretary: isUserRegistrationSecretary,
-                     doDisplayValidateButton: doDisplayValidateButton]
+        ClubTeamModelHelper clubModelHelper = ClubTeamModelHelper.getClubTeamModelHelper(club, nav, securityUtils, params)
 
         if ("deleted" == params.rfilter) {
-            return model
+            return clubModelHelper.model
         }
-        else if ((teams.size() > 1) && (!registrations.isEmpty())) {
-            return model
+        else if ((clubModelHelper.teams.size() > 1) && (!clubModelHelper.registrations.isEmpty())) {
+            return clubModelHelper.model
         }
         else {
-            redirect([controller: "team", action: "show", id: teams[0].id])
+            redirect([controller: "team", action: "show", id: clubModelHelper.teams[0].id, params: [competition: params.competition]])
         }
     }
 

@@ -1,14 +1,13 @@
 package org.bwpl.registration
 
 import grails.plugins.springsecurity.Secured
+import org.bwpl.registration.utils.ClubTeamModelHelper
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.DateTimeUtils
-import org.bwpl.registration.utils.RegistrationDataUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.Action
-import org.bwpl.registration.validation.RegistrationStats
 import org.bwpl.registration.validation.Status
 
 class TeamController {
@@ -21,29 +20,8 @@ class TeamController {
     def show = {
 
         Team team = Team.get(params.id)
-        List<Team> teams = new ArrayList<Team>(team.club.teams)
-        teams.sort{it.name}
-        List<Registration> registrations = RegistrationDataUtils.getRegistrations(team.registrations, params.rfilter, params.sort)
-        boolean hasAnyRegistrations = !team.club.registrations.isEmpty()
-        boolean canUpdate = securityUtils.canUserUpdate(team.club)
-        boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
-        boolean doDisplayValidateButton = canUpdate && !registrations.isEmpty() && !params.rfilter
-
-        def model = [user: securityUtils.currentUser,
-                     title: team.club.nameAndASAName,
-                     navItems: nav.getNavItems(),
-                     subNavItems: nav.getTeamNavItems(team),
-                     club: team.club,
-                     userClub: securityUtils.currentUserClub,
-                     teams: teams,
-                     hasAnyRegistrations: hasAnyRegistrations,
-                     registrations: registrations,
-                     stats: new RegistrationStats(registrations),
-                     canUpdate: canUpdate,
-                     isUserRegistrationSecretary: isUserRegistrationSecretary,
-                     doDisplayValidateButton: doDisplayValidateButton]
-
-        render(view: "/club/show", model: model)
+        ClubTeamModelHelper teamModelHelper = ClubTeamModelHelper.getClubTeamModelHelper(team, nav, securityUtils, params)
+        render(view: "/club/show", model: teamModelHelper.model)
     }
 
     @Secured(["ROLE_READ_ONLY"])
