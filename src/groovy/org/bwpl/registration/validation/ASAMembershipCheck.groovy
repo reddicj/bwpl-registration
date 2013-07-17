@@ -42,6 +42,9 @@ class ASAMembershipCheck {
             }
             return errors
         }
+        catch (ASAMemberDataValidationException e) {
+
+        }
         catch (ASAMemberDataNotFoundException e) {
             errors << NOT_FOUND_MSG
             return errors

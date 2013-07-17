@@ -3,15 +3,17 @@ package org.bwpl.registration.asa
 import groovy.util.slurpersupport.GPathResult
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.HttpResponseException
+import org.apache.commons.lang.StringUtils
 import org.apache.http.conn.HttpHostConnectException
 
 class ASAMemberDataRetrieval {
 
     public static final String ASA_MEMBERSHIP_CHECK_URL = "https://www.swimmingresults.org/membershipcheck/member_details.php"
     public static final String ASA_NUMBER_PARAMETER_NAME = "myiref"
+    private static final String ASA_MEMBERSHIP_CHECK_ERROR_MESSAGE = "There was an error processing your request"
 
     private static final int ASA_NUMBER_JAMES_REDDICK = 283261
-    private static final String serviceAvailabilityErrorMessage = getServiceAvailabilityMessage()
+    private static final String SERVICE_AVAILABILITY_ERROR_MESSAGE = getServiceAvailabilityMessage()
 
     private final String url
 
@@ -30,7 +32,11 @@ class ASAMemberDataRetrieval {
         try {
 
             final GPathResult html = http.get(query: ["$ASA_NUMBER_PARAMETER_NAME": Integer.toString(asaNumber)])
-            GPathResult element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
+            GPathResult element = html.BODY.depthFirst().find { StringUtils.containsIgnoreCase(it.text(), ASA_MEMBERSHIP_CHECK_ERROR_MESSAGE) }
+            if (element != null) {
+                throw new ASAMemberDataRetrievalException(SERVICE_AVAILABILITY_ERROR_MESSAGE)
+            }
+            element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
             if (element == null) {
                 throw new ASAMemberDataNotFoundException("Error getting data for ASA number: $asaNumber. Error reading html data.")
             }
@@ -74,7 +80,7 @@ class ASAMemberDataRetrieval {
             asaData = get(ASA_NUMBER_JAMES_REDDICK)
         }
         catch (ASAMemberDataRetrievalException e) {
-            return serviceAvailabilityErrorMessage
+            return SERVICE_AVAILABILITY_ERROR_MESSAGE
         }
         catch (ASAMemberDataValidationException e) {
             return "Error reading data from the ASA Membership system - $e.message"
@@ -87,7 +93,7 @@ class ASAMemberDataRetrieval {
                    (!asaData.clubs.findAll{it.name.contains("Polytechnic")}.isEmpty()) &&
                      asaData.membershipCategory == "ASA Cat 2"
 
-        if (!ok) return serviceAvailabilityErrorMessage
+        if (!ok) return SERVICE_AVAILABILITY_ERROR_MESSAGE
         return ""
     }
 
