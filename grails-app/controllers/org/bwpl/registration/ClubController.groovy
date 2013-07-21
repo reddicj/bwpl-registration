@@ -17,7 +17,6 @@ class ClubController {
 
     NavItems nav
     SecurityUtils securityUtils
-    DateTimeUtils dateTimeUtils
 
     def list = {
 

@@ -2,6 +2,7 @@ package org.bwpl.registration.nav
 
 import org.bwpl.registration.Club
 import org.bwpl.registration.Competition
+import org.bwpl.registration.Registration
 import org.bwpl.registration.Team
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.Status
@@ -31,7 +32,7 @@ class NavItems {
             }
             return navItems
         }
-        if (club.getRegistrations(competition).isEmpty()) return navItems
+        if (!hasAnyNonDeletedRegistrations(club.registrations)) return navItems
         navItems << NavItem.getExportClubRegistrations(club.id)
         if (doDisplayASAEmail(competition, club)) navItems << NavItem.getASAEmail(club.id)
         return navItems
@@ -44,19 +45,26 @@ class NavItems {
         if (securityUtils.canUserUpdate(team.club)) {
             navItems << NavItem.getUploadRegistrations(team.id)
             navItems << NavItem.getAddRegistration(team.id)
-            if (!team.registrations.isEmpty()) navItems << NavItem.getDeleteAllRegistrations(team.id)
+            if (hasAnyNonDeletedRegistrations(team.registrations)) navItems << NavItem.getDeleteAllRegistrations(team.id)
         }
-        if ((!team.registrations.isEmpty()) && (team.club.teams.size() == 1)) {
+        if ((hasAnyNonDeletedRegistrations(team.registrations)) && (team.club.teams.size() == 1)) {
             navItems << NavItem.getExportClubRegistrations(team.club.id)
             if (doDisplayASAEmail(competition, team.club)) navItems << NavItem.getASAEmail(team.club.id)
         }
-        if ((!team.registrations.isEmpty()) && (team.club.teams.size() > 1)) {
+        if ((hasAnyNonDeletedRegistrations(team.registrations)) && (team.club.teams.size() > 1)) {
             navItems << NavItem.getExportTeamRegistrations(team.id)
         }
         return navItems
     }
 
-    private boolean doDisplayASAEmail(Competition competition, Club club) {
+    private static boolean hasAnyNonDeletedRegistrations(Collection<Registration> registrations) {
+
+        if (registrations == null) return false
+        int countOfNonDeleted = registrations.count {it.statusAsEnum != Status.DELETED}
+        return countOfNonDeleted > 0
+    }
+
+        private boolean doDisplayASAEmail(Competition competition, Club club) {
 
         if (!securityUtils.canUserUpdate(club)) return false
         return !club.getRegistrations(competition, Status.INVALID).isEmpty()

@@ -51,7 +51,7 @@ class ClubTeamModelHelper {
 
     Map<String, Object> getModel() {
 
-        boolean hasAnyRegistrations = !getRegistrations().isEmpty()
+        boolean hasAnyNonDeletedClubRegistrations = this.hasAnyNonDeletedClubRegistrations()
         boolean canUpdate = securityUtils.canUserUpdate(getClub())
         boolean isUserRegistrationSecretary = securityUtils.isCurrentUserRegistrationSecretary()
         boolean doDisplayValidateButton = canUpdate && !getRegistrations().isEmpty() && !params.rfilter
@@ -63,7 +63,7 @@ class ClubTeamModelHelper {
                 club: getClub(),
                 userClub: securityUtils.currentUserClub,
                 teams: getTeams(),
-                hasAnyRegistrations: hasAnyRegistrations,
+                hasAnyNonDeletedClubRegistrations: hasAnyNonDeletedClubRegistrations,
                 registrations: getRegistrations(),
                 stats: new RegistrationStats(getRegistrations()),
                 canUpdate: canUpdate,
@@ -83,6 +83,12 @@ class ClubTeamModelHelper {
 
         if (clubTeam instanceof Club) return clubTeam
         else return clubTeam.club
+    }
+
+    private boolean hasAnyNonDeletedClubRegistrations() {
+
+        int nonDeletedRegistrationsCount = getClub().registrations.count{it.statusAsEnum != Status.DELETED}
+        return nonDeletedRegistrationsCount > 0
     }
 
     private List<NavItem> getSubNavItems() {

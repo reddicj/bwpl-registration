@@ -57,11 +57,11 @@ class RegistrationData {
     }
 
     private void setFirstName(String firstName) {
-        this.firstName = WordUtils.capitalize(StringUtils.trimToEmpty(firstName), [' ', '-'] as char[])
+        this.firstName = WordUtils.capitalizeFully(StringUtils.trimToEmpty(firstName), [' ', '-'] as char[])
     }
 
     private void setLastName(String lastName) {
-        this.lastName = WordUtils.capitalize(StringUtils.trimToEmpty(lastName), [' ', '-', '\''] as char[])
+        this.lastName = WordUtils.capitalizeFully(StringUtils.trimToEmpty(lastName), [' ', '-', '\''] as char[])
     }
 
     private void setRole(String role) {

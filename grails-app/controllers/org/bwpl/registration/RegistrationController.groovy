@@ -135,10 +135,12 @@ class RegistrationController {
 
         Registration r = Registration.get(params.id)
         long id = r.team.club.id
-        String msg = "Registration for $r.name for $r.team.name ($r.team.club.name) removed permanently."
-        r.team.removeFromRegistrations(r)
-        r.delete()
-        flash.message = msg
+        if (r.statusAsEnum == Status.DELETED) {
+            String msg = "Registration for $r.name for $r.team.name ($r.team.club.name) removed permanently."
+            r.team.removeFromRegistrations(r)
+            r.delete()
+            flash.message = msg
+        }
         redirect(controller: "club", action: "show", id: id, params: [competition: params.competition, rfilter: "deleted"])
     }
 
@@ -231,7 +233,7 @@ class RegistrationController {
                 validator.validate(r)
             }
             catch (ASAMemberDataRetrievalException e) {
-                flash.errors = "ASA Membership Check system is unavailable."
+                flash.errors = "ASA Membership Check system is unavailable - $e.message"
             }
             catch (ASAMemberDataValidationException e) {
                 flash.errors = "Error reading data from the ASA Membership system - $e.message"

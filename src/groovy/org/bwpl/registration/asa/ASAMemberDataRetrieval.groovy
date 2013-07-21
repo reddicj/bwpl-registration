@@ -3,6 +3,7 @@ package org.bwpl.registration.asa
 import groovy.util.slurpersupport.GPathResult
 import groovyx.net.http.HTTPBuilder
 import groovyx.net.http.HttpResponseException
+import org.apache.commons.lang.StringUtils
 import org.apache.http.conn.HttpHostConnectException
 
 class ASAMemberDataRetrieval {
@@ -10,8 +11,10 @@ class ASAMemberDataRetrieval {
     public static final String ASA_MEMBERSHIP_CHECK_URL = "https://www.swimmingresults.org/membershipcheck/member_details.php"
     public static final String ASA_NUMBER_PARAMETER_NAME = "myiref"
 
+    private static final List<String> ASA_MEMBERSHIP_CHECK_ERROR_MESSAGES =
+        ["There was an error processing your request", "The system is not connected to the database"]
+
     private static final int ASA_NUMBER_JAMES_REDDICK = 283261
-    private static final String serviceAvailabilityErrorMessage = getServiceAvailabilityMessage()
 
     private final String url
 
@@ -25,59 +28,36 @@ class ASAMemberDataRetrieval {
 
     ASAMemberData get(final int asaNumber) {
 
-        final ASAMemberData asaMemberData = new ASAMemberData(asaNumber)
         final HTTPBuilder http = new HTTPBuilder(url)
         try {
 
             final GPathResult html = http.get(query: ["$ASA_NUMBER_PARAMETER_NAME": Integer.toString(asaNumber)])
-            GPathResult element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
-            if (element == null) {
-                throw new ASAMemberDataNotFoundException("Error getting data for ASA number: $asaNumber. Error reading html data.")
-            }
-            GPathResult divElement = element.parent().parent().parent()
-            GPathResult tableElement = divElement.TABLE[0]
-
-            asaMemberData.name = tableElement.TR[0].TD[1].text()
-            asaMemberData.dateOfBirth = tableElement.TR[1].TD[1].text()
-            asaMemberData.gender = tableElement.TR[1].TD[3].text()
-            asaMemberData.membershipCategory = tableElement.TR[2].TD[3].text()
-
-            tableElement = divElement.TABLE[1]
-            for (int i = 1; i < tableElement.TR.size(); i++) {
-                asaMemberData.addClub(tableElement.TR[i].TD[1].text(), tableElement.TR[i].TD[3].text(), tableElement.TR[i].TD[2].text())
-            }
-
-            /*
-            tableElement = divElement.TABLE[2]
-            for (int i = 1; i < tableElement.TR.size(); i++) {
-                if (StringUtils.containsIgnoreCase(tableElement.TR[i].TD[1].text(), "Membership Category")) {
-                    asaMemberData.membershipCategory = tableElement.TR[i].TD[2].text()
-                    asaMemberData.membershipFromDate = tableElement.TR[i].TD[3].text()
-                    break
-                }
-            } */
+            checkForServiceErrors(html)
+            checkASANumberCanBeFound(html, asaNumber)
+            return ASAMemberData.fromHtml(asaNumber, html)
         }
-
         catch (HttpHostConnectException e) {
             throw new ASAMemberDataRetrievalException(e)
         }
         catch (HttpResponseException e) {
             throw new ASAMemberDataRetrievalException(e)
         }
-        return asaMemberData
     }
 
     String getServiceError() {
 
-        ASAMemberData asaData = null
+        ASAMemberData asaData
         try {
             asaData = get(ASA_NUMBER_JAMES_REDDICK)
         }
         catch (ASAMemberDataRetrievalException e) {
-            return serviceAvailabilityErrorMessage
+            return getServiceErrorMessage(ASA_NUMBER_JAMES_REDDICK, e.message)
         }
         catch (ASAMemberDataValidationException e) {
             return "Error reading data from the ASA Membership system - $e.message"
+        }
+        catch (ASAMemberDataNotFoundException e) {
+            return getServiceAvailabilityMessage()
         }
 
         boolean ok = asaData.name.contains("James") &&
@@ -87,14 +67,42 @@ class ASAMemberDataRetrieval {
                    (!asaData.clubs.findAll{it.name.contains("Polytechnic")}.isEmpty()) &&
                      asaData.membershipCategory == "ASA Cat 2"
 
-        if (!ok) return serviceAvailabilityErrorMessage
+        if (!ok) return getServiceAvailabilityMessage()
         return ""
+    }
+
+    private static void checkForServiceErrors(GPathResult html) {
+
+        ASA_MEMBERSHIP_CHECK_ERROR_MESSAGES.each { errorMsg ->
+            GPathResult element = html.BODY.depthFirst().find { StringUtils.containsIgnoreCase(it.text(), errorMsg) }
+            if (element != null) {
+                throw new ASAMemberDataRetrievalException(errorMsg)
+            }
+        }
+    }
+
+    private static void checkASANumberCanBeFound(GPathResult html, int asaNumber) {
+
+        GPathResult element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
+        if (element == null) {
+            throw new ASAMemberDataNotFoundException("Error getting data for ASA number: $asaNumber. Error reading html data.")
+        }
+    }
+
+    private static String getServiceErrorMessage(int asaNumber, String errorMsg) {
+
+        StringBuilder msg = new StringBuilder()
+        msg << "ASA Membership Check system is unavailable. "
+        msg << "It reports an error when checking for ASA number $asaNumber. "
+        msg << "The error is: $errorMsg. "
+        msg << "Please email the ASA to let them know."
+        return msg.toString()
     }
 
     private static String getServiceAvailabilityMessage() {
 
         StringBuilder msg = new StringBuilder()
-        msg << "Validation error - cannot get data from the ASA Membership system. "
+        msg << "Validation error - cannot get data from the ASA Membership Check system. "
         msg << "It may be unavailable so try again later. "
         msg << "If it is available then the ASA may have changed the format of their data "
         msg << "and therefore this validation process cannot read the ASA data. "

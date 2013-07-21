@@ -1,6 +1,6 @@
 <div>
     <ul class="bwpl-tabs">
-        <g:if test="${(teams.size() > 1) && hasAnyRegistrations}">
+        <g:if test="${(teams.size() > 1) && hasAnyNonDeletedClubRegistrations}">
             <g:if test="${(controllerName == "club") && (!params.rfilter)}">
                 <li id="active">
                     <g:link elementId="current" controller="club" action="show" id="${club.id}" params="[competition: params.competition]">All</g:link>

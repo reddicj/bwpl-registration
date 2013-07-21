@@ -6,8 +6,6 @@ import org.bwpl.registration.Team
 import org.bwpl.registration.asa.ASAMemberData
 import org.bwpl.registration.asa.ASAMemberDataNotFoundException
 import org.bwpl.registration.asa.ASAMemberDataRetrieval
-import org.bwpl.registration.asa.ASAMemberDataRetrievalException
-import org.bwpl.registration.asa.ASAMemberDataValidationException
 
 class ASAMembershipCheck {
 
@@ -18,7 +16,7 @@ class ASAMembershipCheck {
 
         List<String> errors = []
         if (registration == null) {
-            throw new IllegalAccessException("Registration is null")
+            throw new IllegalArgumentException("Registration is null")
         }
 
         try {
