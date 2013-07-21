@@ -2,6 +2,8 @@ package org.bwpl.registration.validation
 
 import org.bwpl.registration.Registration
 import org.bwpl.registration.asa.ASAMemberDataRetrieval
+import org.bwpl.registration.asa.ASAMemberDataRetrievalException
+import org.bwpl.registration.asa.ASAMemberDataValidationException
 
 class ValidationQueue {
 
@@ -45,7 +47,20 @@ class ValidationQueue {
 
         Registration r = queue.remove()
         r = Registration.get(r.id)
-        validator.validate(r)
+
+        try {
+            validator.validate(r)
+        }
+        catch (ASAMemberDataRetrievalException e) {
+            asaMemberCheckError = e.message
+            queue = new LinkedList<Registration>()
+            return
+        }
+        catch (ASAMemberDataValidationException e) {
+            asaMemberCheckError = e.message
+            queue = new LinkedList<Registration>()
+            return
+        }
         processed << r
     }
 
