@@ -259,9 +259,9 @@ class ValidatorTest {
         r1.statusDate = new Date()
 
         Registration r2 = new Registration()
-        r2.asaNumber = 914
-        r2.firstName = "Gary"
-        r2.lastName = "Simons"
+        r2.asaNumber = 9064
+        r2.firstName = "Luke"
+        r2.lastName = "Jones"
         r2.role = "Player"
         r2.status = Status.NEW
         r2.statusNote = ""
