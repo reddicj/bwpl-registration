@@ -1,5 +1,6 @@
 package org.bwpl.registration.asa
 
+import groovy.util.slurpersupport.GPathResult
 import org.apache.commons.lang.StringUtils
 import org.bwpl.registration.utils.DateTimeUtils
 import org.bwpl.registration.utils.StringMunger
@@ -14,6 +15,23 @@ class ASAMemberData {
     Boolean isMale
     String membershipCategory
     List<ASAMemberClub> clubs = []
+
+    static ASAMemberData fromHtml(int asaNumber, GPathResult html) {
+
+        ASAMemberData asaMemberData = new ASAMemberData(asaNumber)
+        GPathResult element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
+        GPathResult divElement = element.parent().parent().parent()
+        GPathResult tableElement = divElement.TABLE[0]
+        asaMemberData.setName(tableElement.TR[0].TD[1].text())
+        asaMemberData.setDateOfBirth(tableElement.TR[1].TD[1].text())
+        asaMemberData.setGender(tableElement.TR[1].TD[3].text())
+        asaMemberData.setMembershipCategory(tableElement.TR[2].TD[3].text())
+        tableElement = divElement.TABLE[1]
+        for (int i = 1; i < tableElement.TR.size(); i++) {
+            asaMemberData.addClub(tableElement.TR[i].TD[1].text(), tableElement.TR[i].TD[3].text(), tableElement.TR[i].TD[2].text())
+        }
+        return asaMemberData
+    }
 
     ASAMemberData(int asaNumber) {
         this.asaNumber = asaNumber
