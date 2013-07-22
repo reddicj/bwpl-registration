@@ -1,6 +1,8 @@
 package org.bwpl.registration.validation
 
 import org.bwpl.registration.Registration
+import org.bwpl.registration.asa.ASAMemberDataRetrievalException
+import org.bwpl.registration.asa.ASAMemberDataValidationException
 import org.bwpl.registration.utils.SecurityUtils
 
 class Validator {
@@ -29,12 +31,23 @@ class Validator {
         registration.save(flush: true)
     }
 
-    void validateAll() {
+    String validateAll() {
 
+        StringBuilder errors = new StringBuilder()
         Set<Registration> registrations = Registration.findAll {status != Status.DELETED.toString()}
         registrations.each { r ->
-            validate(r)
+
+            try {
+                validate(r)
+            }
+            catch (ASAMemberDataRetrievalException e) {
+                errors << "Error validating $r.name ($r.asaNumber): $e.message\n"
+            }
+            catch (ASAMemberDataValidationException e) {
+                errors << "Error validating $r.name ($r.asaNumber): $e.message\n"
+            }
         }
+        return errors.toString().trim()
     }
 
     private List<String> getErrorMessages(Registration registration) {

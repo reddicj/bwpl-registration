@@ -3,13 +3,23 @@ package org.bwpl.registration.utils
 import grails.plugin.mail.MailService
 import org.bwpl.registration.Club
 import org.bwpl.registration.Registration
-import org.bwpl.registration.Role
-import org.bwpl.registration.UserRole
 import org.bwpl.registration.validation.Status
 
 class EmailUtils {
 
+    private static final String REGISTRATION_SECRETARY_EMAIL = "reddicj@gmail.com"
+
     MailService mailService
+
+    void emailError(String errorTitle, String errorDetails) {
+
+        mailService.sendMail {
+            from REGISTRATION_SECRETARY_EMAIL
+            to REGISTRATION_SECRETARY_EMAIL
+            subject "BWPL Registration System Error: $errorTitle"
+            text errorDetails
+        }
+    }
 
     void emailDataExport() {
 
@@ -17,8 +27,8 @@ class EmailUtils {
         mailService.sendMail {
 
             multipart true
-            from "reddicj@gmail.com"
-            to "reddicj@gmail.com"
+            from REGISTRATION_SECRETARY_EMAIL
+            to REGISTRATION_SECRETARY_EMAIL
             subject "BWPL Registration System - Data Export"
             text "BWPL Registration System export - see attached zip file."
             attach "bwpl-data-${dateTimeStamp}.zip", "application/zip", ZipUtils.exportDataZipFileAsByteArray()
@@ -58,7 +68,7 @@ class EmailUtils {
     private void emailInvalidatedRegistrationsForClub(Club club, String emailAddress, Set<Registration> registrations) {
 
         mailService.sendMail {
-            from "reddicj@gmail.com"
+            from REGISTRATION_SECRETARY_EMAIL
             to emailAddress
             subject "BWPL Registration System - Invalidated Registrations for $club.name"
             text getEmailBody(club, registrations, "invalidated")
@@ -68,7 +78,7 @@ class EmailUtils {
     private void emailValidatedRegistrationsForClub(Club club, String emailAddress, Set<Registration> registrations) {
 
         mailService.sendMail {
-            from "reddicj@gmail.com"
+            from REGISTRATION_SECRETARY_EMAIL
             to emailAddress
             subject "BWPL Registration System - Validated Registrations for $club.name"
             text getEmailBody(club, registrations, "validated")
