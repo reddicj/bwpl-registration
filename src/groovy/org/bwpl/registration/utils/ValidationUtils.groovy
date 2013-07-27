@@ -56,7 +56,7 @@ class ValidationUtils {
         }
     }
 
-    static void checkValueContainsValidNameCharacters(String name, String value, List<String> errors) {
+    static void checkValueContainsValidClubTeamNameCharacters(String name, String value, List<String> errors) {
 
         boolean isValid = value =~ "^[A-Za-z0-9\\- ]+\$"
         if (!isValid) {
@@ -64,19 +64,11 @@ class ValidationUtils {
         }
     }
 
-    static void checkValueContainsValidFirstNameCharacters(String name, String value, List<String> errors) {
+    static void checkValueContainsValidRegistrationNameCharacters(String name, String value, List<String> errors) {
 
-        boolean isValid = StringUtils.isAlphaSpace(value)
+        boolean isValid = value =~ "^[A-Za-z]+[ \\-']{0,1}[A-Za-z]+\$"
         if (!isValid) {
             errors << "$name contains invalid firstname characters: $value"
-        }
-    }
-
-    static void checkValueContainsValidLastNameCharacters(String name, String value, List<String> errors) {
-
-        boolean isValid = value =~ "^[A-Za-z]+[ \\-']*[A-Za-z]+\$"
-        if (!isValid) {
-            errors << "$name contains invalid lastname characters: $value"
         }
     }
 

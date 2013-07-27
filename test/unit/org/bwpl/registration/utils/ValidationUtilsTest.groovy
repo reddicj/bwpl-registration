@@ -23,16 +23,18 @@ class ValidationUtilsTest {
     }
 
     @Test
-    void testCheckValueContainsValidLastNameCharacters() {
+    void testCheckValueContainsValidRegistrationNameCharacters() {
 
         List<String> errors = []
-        ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "O'Sullivan", errors)
+        ValidationUtils.checkValueContainsValidRegistrationNameCharacters("Firstname", "Jean-Pierre", errors)
         assertThat(errors).isEmpty()
-        ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "Reddick", errors)
+        ValidationUtils.checkValueContainsValidRegistrationNameCharacters("Lastname", "O'Sullivan", errors)
         assertThat(errors).isEmpty()
-        ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "Gardner Bond", errors)
+        ValidationUtils.checkValueContainsValidRegistrationNameCharacters("Lastname", "Reddick", errors)
         assertThat(errors).isEmpty()
-        ValidationUtils.checkValueContainsValidLastNameCharacters("Lastname", "Gardner-Bond", errors)
+        ValidationUtils.checkValueContainsValidRegistrationNameCharacters("Lastname", "Gardner Bond", errors)
+        assertThat(errors).isEmpty()
+        ValidationUtils.checkValueContainsValidRegistrationNameCharacters("Lastname", "Gardner-Bond", errors)
         assertThat(errors).isEmpty()
     }
 

@@ -88,10 +88,10 @@ class RegistrationData {
         List<String> errors = []
 
         checkForNullOrEmptyValue("Firstname", firstName, errors)
-        checkValueContainsValidFirstNameCharacters("Firstname", firstName, errors)
+        checkValueContainsValidRegistrationNameCharacters("Firstname", firstName, errors)
 
         checkForNullOrEmptyValue("Lastname", lastName, errors)
-        checkValueContainsValidLastNameCharacters("Lastname", lastName, errors)
+        checkValueContainsValidRegistrationNameCharacters("Lastname", lastName, errors)
 
         checkForNullOrEmptyValue("Role", role, errors)
         checkValueInListIgnoreCase("Role", role, ["Player", "Coach"], errors)
