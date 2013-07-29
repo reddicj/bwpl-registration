@@ -65,6 +65,10 @@ class DateTimeUtils {
     static final String duringValidationCutOffMessage =
         "Invalid until Sunday 8pm. The Registration was validated after the Wednesday midnight deadline."
 
+    static String printTodaysDate() {
+        return printDate(new Date())
+    }
+
     static String printDate(Date d) {
 
         if (d == null) return ""
