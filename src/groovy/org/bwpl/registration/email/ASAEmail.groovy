@@ -41,11 +41,12 @@ class ASAEmail {
                        space: space]
         String body = templateEngine.createTemplate(bodyTemplate).make(binding).toString()
         if (!doEncode) {
-            body = "$body$lineBreak$lineBreak${getRegistrations(lineBreak)}"
+            return "$body$lineBreak$lineBreak${getRegistrations(lineBreak)}"
         }
-
-        if (doEncode) return encode(body)
-        return body
+        else {
+            // don't add the registrations when generating a mailto link cos it exceeds the url limit
+            return encode(body)
+        }
     }
 
     private String getRegistrations(String lineBreak) {
