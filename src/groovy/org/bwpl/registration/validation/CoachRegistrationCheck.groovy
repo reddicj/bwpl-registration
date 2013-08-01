@@ -23,6 +23,8 @@ class CoachRegistrationCheck {
 
     private static boolean isInvalid(Registration existingRegistration, Registration registration) {
 
+        if ((registration.role == "Coach") && (existingRegistration.role == "Coach")) return false
+
         return (registration.team.division == existingRegistration.team.division) &&
                (registration.team.gender == existingRegistration.team.gender) &&
                (registration.team.id != existingRegistration.team.id)
