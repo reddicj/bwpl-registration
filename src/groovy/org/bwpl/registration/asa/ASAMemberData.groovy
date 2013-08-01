@@ -134,6 +134,7 @@ class ASAMemberData {
 
     boolean isValidNonPlayerCategory() {
         return isValidPlayerCategory() ||
+               "ASA Cat 1".equals(membershipCategory) ||
                "ASA Cat 3".equals(membershipCategory) ||
                "SASA Non-Swim Teach/Coach".equals(membershipCategory) ||
                "WASA Cat 3".equals(membershipCategory)
