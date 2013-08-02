@@ -108,22 +108,23 @@ class Registration {
 
     Status getStatusAsEnum() {
 
-        Status s = Status.fromString(status)
-        if (Status.VALID != s) return s
-        if (!isInASAMemberCheck) return s
-        DateTime validationDate = new DateTime(this.statusDate)
-        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return Status.INVALID
-        return Status.fromString(status)
+        if (doInvalidateStatusDuringValidationCutoff()) return Status.INVALID
+        else return Status.fromString(status)
     }
 
     String getStatusNote() {
 
+        if (doInvalidateStatusDuringValidationCutoff()) return DateTimeUtils.duringValidationCutOffMessage
+        else return statusNote
+    }
+
+    boolean doInvalidateStatusDuringValidationCutoff() {
+
         Status s = Status.fromString(status)
-        if (Status.VALID != s) return statusNote
-        if (!isInASAMemberCheck) return statusNote
-        DateTime validationDate = new DateTime(this.statusDate)
-        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return DateTimeUtils.duringValidationCutOffMessage
-        return statusNote
+        if (Status.VALID != s) return false
+        if (!isInASAMemberCheck) return false
+        if (dateTimeUtils.isDuringValidationCutOff(new DateTime(dateFirstValidationAttempted))) return true
+        return false
     }
 
     @Override
@@ -158,6 +159,10 @@ class Registration {
         if (this.statusEntries == null) return null
         List<RegistrationStatus> statusEntries = getStatusEntriesAsList()
         return statusEntries.head()
+    }
+
+    Date getDateFirstValidationAttempted() {
+        return null
     }
 
     void updateStatus(User user, Action action, Status status, String notes) {

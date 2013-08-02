@@ -33,22 +33,14 @@ class RegistrationStatus {
 
     Status getStatusAsEnum() {
 
-        Status s = Status.fromString(status)
-        if (Status.VALID != s) return s
-        if (!registration.isInASAMemberCheck) return s
-        DateTime validationDate = new DateTime(date)
-        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return Status.INVALID
-        return s
+        if (registration.doInvalidateStatusDuringValidationCutoff()) return Status.INVALID
+        else return Status.fromString(status)
     }
 
     String getStatusNotes() {
 
-        Status s = Status.fromString(status)
-        if (Status.VALID != s) return notes
-        if (!registration.isInASAMemberCheck) return notes
-        DateTime validationDate = new DateTime(date)
-        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return DateTimeUtils.duringValidationCutOffMessage
-        return notes
+        if (registration.doInvalidateStatusDuringValidationCutoff()) return DateTimeUtils.duringValidationCutOffMessage
+        else return notes
     }
 
     Action getActionAsEnum() {
