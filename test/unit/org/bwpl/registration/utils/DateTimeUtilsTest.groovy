@@ -1,6 +1,8 @@
 package org.bwpl.registration.utils
 
 import org.joda.time.DateTime
+import org.joda.time.format.DateTimeFormat
+import org.joda.time.format.DateTimeFormatter
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
@@ -59,9 +61,28 @@ class DateTimeUtilsTest {
     }
 
     @Test
+    void testWedMidnight() {
+
+        DateTimeFormatter dateFormatter = DateTimeFormat.forPattern("dd-MM-yyyy")
+        DateTime wed = null
+
+        DateTime sat = DateTimeUtils.parse("03-08-2013")
+        wed = sat.withDayOfWeek(WEDNESDAY).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+        assertThat(dateFormatter.print(wed)).isEqualTo("31-07-2013")
+
+        DateTime sun = DateTimeUtils.parse("04-08-2013")
+        wed = sun.withDayOfWeek(WEDNESDAY).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+        assertThat(dateFormatter.print(wed)).isEqualTo("31-07-2013")
+
+        DateTime mon = DateTimeUtils.parse("05-08-2013")
+        wed = mon.withDayOfWeek(WEDNESDAY).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+        assertThat(dateFormatter.print(wed)).isEqualTo("07-08-2013")
+    }
+
+    @Test
     void testGetPrevWedMidnight() {
 
-        DateTime prevWed = DateTimeUtils.wedMidnight
+        DateTime prevWed = new DateTimeUtils().wedMidnight
         assertThat(prevWed.dayOfWeek).isEqualTo(WEDNESDAY)
         assertThat(prevWed.hourOfDay).isEqualTo(23)
         assertThat(prevWed.minuteOfHour).isEqualTo(59)
@@ -73,7 +94,7 @@ class DateTimeUtilsTest {
 
         DateTime mon = new DateTime().withDayOfWeek(MONDAY).withHourOfDay(0).withMinuteOfHour(1)
         DateTime sun = new DateTime().withDayOfWeek(SUNDAY).withHourOfDay(23).withMinuteOfHour(59)
-        assertThat(DateTimeUtils.isBeforeWedMidnight(mon)).isTrue()
-        assertThat(DateTimeUtils.isBeforeWedMidnight(sun)).isFalse()
+        assertThat(new DateTimeUtils().isBeforeWedMidnight(mon)).isTrue()
+        assertThat(new DateTimeUtils().isBeforeWedMidnight(sun)).isFalse()
     }
 }

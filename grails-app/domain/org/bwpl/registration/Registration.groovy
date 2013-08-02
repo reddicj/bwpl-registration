@@ -123,7 +123,7 @@ class Registration {
         Status s = Status.fromString(status)
         if (Status.VALID != s) return false
         if (!isInASAMemberCheck) return false
-        if (dateTimeUtils.isDuringValidationCutOff(new DateTime(dateFirstValidationAttempted))) return true
+        if (dateTimeUtils.isDuringValidationCutOff(new DateTime(dateAdded))) return true
         return false
     }
 
@@ -140,7 +140,7 @@ class Registration {
         sb << "\"$asaNumber\","
         sb << "\"$role\","
         sb << "\"${statusAsEnum.toString()}\","
-        sb << "\"$statusNote\""
+        sb << "\"${getStatusNote()}\""
         return sb.toString()
     }
 
@@ -161,8 +161,15 @@ class Registration {
         return statusEntries.head()
     }
 
-    Date getDateFirstValidationAttempted() {
-        return null
+    Date getDateAdded() {
+
+        List<RegistrationStatus> statusList = getStatusEntriesAsList()
+        for (RegistrationStatus status : statusList) {
+            if (status.status == Status.NEW.toString()) {
+                return status.date
+            }
+        }
+        return statusDate
     }
 
     void updateStatus(User user, Action action, Status status, String notes) {

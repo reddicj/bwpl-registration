@@ -94,7 +94,7 @@ class EmailUtils {
         sortedList.each { r ->
             sb << "$r.name, $r.asaNumber, $r.team.name ($r.team.gender)"
             if (r.statusAsEnum == Status.INVALID) {
-                sb << " - $r.statusNote"
+                sb << " - ${r.getStatusNote()}"
             }
             sb << "\n"
         }
