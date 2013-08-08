@@ -4,7 +4,7 @@ import grails.plugins.springsecurity.Secured
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.upload.UserUploader
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.utils.EmailUtils
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.utils.ZipUtils
@@ -39,7 +39,7 @@ class AdminController {
     @Secured(["ROLE_REGISTRATION_SECRETARY"])
     def export = {
 
-        String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
+        String dateTimeStamp = BwplDateTime.now.toFileNameDateTimeString()
         String fileName = "bwpl-data-${dateTimeStamp}.zip"
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "application/zip"

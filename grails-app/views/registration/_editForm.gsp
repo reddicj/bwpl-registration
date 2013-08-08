@@ -1,5 +1,5 @@
 <%@ page import="org.bwpl.registration.validation.Status" %>
-<%@ page import="org.bwpl.registration.utils.DateTimeUtils" %>
+<%@ page import="org.bwpl.registration.utils.BwplDateTime" %>
 <div class="fieldcontain">
     <table class="bwpl-form-table">
         <tbody>
@@ -37,7 +37,7 @@
                     <td>Details:</td><td colspan="3"><g:textArea name="statusNotes" rows="3" cols="70"/></td>
                 </tr>
                 <tr>
-                    <td>E.g.</td><td>ASA confirmation email received ${DateTimeUtils.printTodaysDate()}.</td>
+                    <td>E.g.</td><td>ASA confirmation email received ${BwplDateTime.now.toDateString()}.</td>
                 </tr>
             </tbody>
         </table>

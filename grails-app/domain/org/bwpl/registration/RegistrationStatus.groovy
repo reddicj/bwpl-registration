@@ -1,9 +1,8 @@
 package org.bwpl.registration
 
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
-import org.joda.time.DateTime
 
 class RegistrationStatus {
 
@@ -19,8 +18,6 @@ class RegistrationStatus {
 
     static belongsTo = [registration: Registration]
 
-    def dateTimeUtils
-
     Date date
     User user
     String action
@@ -28,7 +25,7 @@ class RegistrationStatus {
     String notes
 
     String getDateAsString() {
-        return DateTimeUtils.printDateTime(date)
+        return BwplDateTime.fromJavaDate(date).toDateTimeString()
     }
 
     Status getStatusAsEnum() {
@@ -39,7 +36,7 @@ class RegistrationStatus {
 
     String getStatusNotes() {
 
-        if (registration.doInvalidateStatusDuringValidationCutoff()) return DateTimeUtils.duringValidationCutOffMessage
+        if (registration.doInvalidateStatusDuringValidationCutoff()) return Registration.duringValidationCutOffMessage
         else return notes
     }
 

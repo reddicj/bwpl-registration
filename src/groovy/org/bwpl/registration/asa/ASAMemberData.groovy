@@ -2,10 +2,9 @@ package org.bwpl.registration.asa
 
 import groovy.util.slurpersupport.GPathResult
 import org.apache.commons.lang.StringUtils
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.utils.StringMunger
 import org.bwpl.registration.utils.ValidationUtils
-import org.joda.time.DateTime
 
 class ASAMemberData {
 
@@ -56,8 +55,7 @@ class ASAMemberData {
         if (!ValidationUtils.isValidAsaDateOfBirth(dob)) {
             throw new ASAMemberDataValidationException("Invalid date format: [$dob]")
         }
-        DateTime dt = DateTimeUtils.parseASADateOfBirth(dob)
-        this.dateOfBirth = dt.toDate()
+        this.dateOfBirth = BwplDateTime.fromASADateOfBirthString(dob).toJavaDate()
     }
 
     void setGender(String gender) {

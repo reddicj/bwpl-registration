@@ -2,12 +2,14 @@ package org.bwpl.registration
 
 import org.apache.commons.lang.StringUtils
 import org.apache.commons.lang.WordUtils
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
-import org.joda.time.DateTime
 
 class Registration {
+
+    static final String duringValidationCutOffMessage =
+        "Invalid until Sunday 8pm. The Registration was added after the Wednesday midnight deadline."
 
     static final String csvFieldNames =
         "\"Firstname\",\"Lastname\",\"ASA number\",\"Role\",\"Status\",\"Notes\""
@@ -31,7 +33,7 @@ class Registration {
     static belongsTo = [team: Team]
     static hasMany = [statusEntries: RegistrationStatus]
 
-    def dateTimeUtils
+    def grailsApplication
 
     Integer asaNumber
     String firstName
@@ -86,16 +88,15 @@ class Registration {
     }
 
     String getDateOfBirthAsString() {
+
         if (dateOfBirth == null) return ""
-        return DateTimeUtils.printDate(dateOfBirth)
+        return BwplDateTime.fromJavaDate(dateOfBirth).toDateString()
     }
 
     boolean isUnder18() {
 
         if (dateOfBirth == null) return false
-        DateTime now = new DateTime()
-        DateTime dob = new DateTime(dateOfBirth)
-        return DateTimeUtils.isPeriodLessThan18Years(dob, now)
+        return BwplDateTime.fromJavaDate(dateOfBirth).isDiffLessThan18Years(BwplDateTime.now)
     }
 
     String getName() {
@@ -114,17 +115,23 @@ class Registration {
 
     String getStatusNote() {
 
-        if (doInvalidateStatusDuringValidationCutoff()) return DateTimeUtils.duringValidationCutOffMessage
+        if (doInvalidateStatusDuringValidationCutoff()) return duringValidationCutOffMessage
         else return statusNote
     }
 
     boolean doInvalidateStatusDuringValidationCutoff() {
 
+        BwplDateTime seasonStartDate = BwplDateTime.fromString(grailsApplication.config.bwpl.registration.season.start.date)
+        return doInvalidateStatusDuringValidationCutoff(seasonStartDate, BwplDateTime.now)
+    }
+
+    protected boolean doInvalidateStatusDuringValidationCutoff(BwplDateTime seasonStartDate, BwplDateTime currentDate) {
+
         Status s = Status.fromString(status)
         if (Status.VALID != s) return false
         if (!isInASAMemberCheck) return false
-        if (dateTimeUtils.isDuringValidationCutOff(new DateTime(dateAdded))) return true
-        return false
+        BwplDateTime theDateAdded = BwplDateTime.fromJavaDate(dateAdded)
+        return currentDate.isDuringValidationCutOff(seasonStartDate, theDateAdded)
     }
 
     @Override
@@ -208,7 +215,7 @@ class Registration {
 
     boolean canUpdate() {
 
-        if (dateTimeUtils.isBeforeSeasonStart()) return true
+        if (bwplDateTime.isBeforeSeasonStart()) return true
         if (statusAsEnum == Status.NEW) return true
         return !hasBeenValidated()
     }

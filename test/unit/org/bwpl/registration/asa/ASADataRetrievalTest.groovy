@@ -1,6 +1,6 @@
 package org.bwpl.registration.asa
 
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
@@ -22,7 +22,7 @@ class ASADataRetrievalTest {
         ASAMemberDataRetrieval asaDataRetrieval = new ASAMemberDataRetrieval()
         ASAMemberData asaData = asaDataRetrieval.get(283261)
         assertThat(asaData.name).startsWith("James").endsWith("Reddick")
-        assertThat(asaData.dateOfBirth).isEqualTo(DateTimeUtils.parse("05-04-1972").toDate())
+        assertThat(asaData.dateOfBirth).isEqualTo(BwplDateTime.fromString("05-04-1972").toJavaDate())
         assertThat(asaData.asaNumber).isEqualTo(283261)
         assertThat(asaData.isMale).isTrue()
         assertThat(asaData.membershipCategory).isEqualTo("ASA Cat 2")

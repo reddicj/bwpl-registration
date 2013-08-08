@@ -23,7 +23,7 @@ class EmailUtils {
 
     void emailDataExport() {
 
-        String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
+        String dateTimeStamp = BwplDateTime.now.toFileNameDateTimeString()
         mailService.sendMail {
 
             multipart true

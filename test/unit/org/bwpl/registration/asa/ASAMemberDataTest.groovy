@@ -1,9 +1,9 @@
 package org.bwpl.registration.asa
 
-import static org.fest.assertions.Assertions.assertThat
-
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.junit.Test
+
+import static org.fest.assertions.Assertions.assertThat
 import static org.junit.Assert.fail
 
 class ASAMemberDataTest {
@@ -27,7 +27,7 @@ class ASAMemberDataTest {
             clubs << "Poly"
         }
 
-        assertThat(asaMemberData.dateOfBirth).isEqualTo(DateTimeUtils.parse("05-04-1972").toDate())
+        assertThat(asaMemberData.dateOfBirth).isEqualTo(BwplDateTime.fromString("05-04-1972").toJavaDate())
         assertThat(asaMemberData.isMale).isTrue()
         assertThat(asaMemberData.asaNumber).isEqualTo(283261)
         assertThat(asaMemberData.clubs[0]).isEqualTo("Poly")

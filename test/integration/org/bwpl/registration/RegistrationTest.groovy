@@ -1,13 +1,12 @@
 package org.bwpl.registration
 
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
 import org.joda.time.DateTime
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
-import static org.joda.time.DateTimeConstants.SUNDAY
 
 class RegistrationTest {
 
@@ -60,8 +59,8 @@ class RegistrationTest {
         t.save()
 
         r = Registration.findByAsaNumber(123)
-        r.dateTimeUtils = new TestDateTimeUtils("02-08-2013 23:59")
-        assertThat(r.statusAsEnum).isEqualTo(Status.INVALID)
+        BwplDateTime currentDate = BwplDateTime.fromString("02-08-2013 23:59", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isTrue()
     }
 
     @Test
@@ -78,8 +77,8 @@ class RegistrationTest {
         t.save()
 
         r = Registration.findByAsaNumber(123)
-        r.dateTimeUtils = new TestDateTimeUtils("02-08-2013 23:59")
-        assertThat(r.statusAsEnum).isEqualTo(Status.VALID)
+        BwplDateTime currentDate = BwplDateTime.fromString("02-08-2013 23:59", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isFalse()
     }
 
     @Test
@@ -96,8 +95,8 @@ class RegistrationTest {
         t.save()
 
         r = Registration.findByAsaNumber(123)
-        r.dateTimeUtils = new TestDateTimeUtils("04-08-2013 20:30")
-        assertThat(r.statusAsEnum).isEqualTo(Status.VALID)
+        BwplDateTime currentDate = BwplDateTime.fromString("04-08-2013 20:30", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isFalse()
     }
 
     private static Registration getRegistration(Status status, String statusDateTime) {
@@ -109,7 +108,7 @@ class RegistrationTest {
         r.role = "Player"
         r.status = status.toString()
         r.statusNote = ""
-        r.statusDate = DateTimeUtils.parse(statusDateTime, "dd-MM-yyyy HH:mm").toDate()
+        r.statusDate = BwplDateTime.fromString(statusDateTime, "dd-MM-yyyy HH:mm").toJavaDate()
         r.isInASAMemberCheck = true
         return r
     }
@@ -117,7 +116,7 @@ class RegistrationTest {
     private static RegistrationStatus getStatus(String dateTime, Action action, Status status) {
 
         RegistrationStatus s = new RegistrationStatus()
-        s.date = DateTimeUtils.parse(dateTime, "dd-MM-yyyy HH:mm").toDate()
+        s.date = BwplDateTime.fromString(dateTime, "dd-MM-yyyy HH:mm").toJavaDate()
         s.user = TestUtils.user
         s.action = action.toString()
         s.status = status.toString()
@@ -125,27 +124,9 @@ class RegistrationTest {
         return s
     }
 
-    private static class TestDateTimeUtils extends DateTimeUtils {
+    private static BwplDateTime getSeasonStartDate() {
 
-        private DateTime date
-
-        TestDateTimeUtils(String date) {
-            this.date = parse(date, "dd-MM-yyyy HH:mm")
-        }
-
-        @Override
-        DateTime getSeasonStartDate() {
-            return parse("01-07-2013")
-        }
-
-        @Override
-        DateTime getWedMidnight() {
-            return parse("31-07-2013 23:59", "dd-MM-yyyy HH:mm")
-        }
-
-        @Override
-        boolean isSunEve() {
-            return (date.dayOfWeek == SUNDAY) && (date.hourOfDay >= 20)
-        }
+        DateTime dt = new DateTime()
+        return BwplDateTime.fromJodaDate(dt.minusWeeks(4))
     }
 }

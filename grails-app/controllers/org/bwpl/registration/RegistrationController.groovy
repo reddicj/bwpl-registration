@@ -9,7 +9,7 @@ import org.bwpl.registration.data.RegistrationData
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.upload.UploadException
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.*
 
@@ -201,7 +201,7 @@ class RegistrationController {
     @Secured(["ROLE_READ_ONLY"])
     def export = {
 
-        String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
+        String dateTimeStamp = BwplDateTime.now.toFileNameDateTimeString()
         String fileName = "bwpl-registrations-${dateTimeStamp}.csv"
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "text/csv"
