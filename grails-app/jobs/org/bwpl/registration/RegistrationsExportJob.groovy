@@ -2,15 +2,15 @@ package org.bwpl.registration
 
 import org.bwpl.registration.utils.EmailUtils
 
-class DataExportJob {
+class RegistrationsExportJob {
 
     static triggers = {
-        cron name: 'nightlyTrigger', cronExpression: "0 0 4 ? * *"
+        cron name: 'weeklySaturdayTrigger', cronExpression: "0 0 2 ? * 7"
     }
 
     EmailUtils emailUtils
 
     def execute() {
-        emailUtils.emailDataExport()
+        emailUtils.emailRegistrationsExport()
     }
 }

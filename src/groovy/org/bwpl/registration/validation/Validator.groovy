@@ -21,7 +21,7 @@ class Validator {
             registration.isInASAMemberCheck = true
         }
         else if ((errorMessages.size() == 1) && (ASAMembershipCheck.NOT_FOUND_MSG == errorMessages[0]) && registration.isManuallyValid()) {
-            registration.updateStatus(securityUtils.currentUser, Action.VALIDATED, Status.VALID, registration.statusNote)
+            registration.updateStatus(securityUtils.currentUser, Action.VALIDATED, Status.VALID, registration.getStatusNote())
             registration.isInASAMemberCheck = false
         }
         else {

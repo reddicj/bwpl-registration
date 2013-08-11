@@ -2,12 +2,14 @@ package org.bwpl.registration
 
 import org.apache.commons.lang.StringUtils
 import org.apache.commons.lang.WordUtils
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
-import org.joda.time.DateTime
 
 class Registration {
+
+    static final String duringValidationCutOffMessage =
+        "Invalid until Sunday 8pm. The Registration was added after the Wednesday midnight deadline."
 
     static final String csvFieldNames =
         "\"Firstname\",\"Lastname\",\"ASA number\",\"Role\",\"Status\",\"Notes\""
@@ -31,7 +33,7 @@ class Registration {
     static belongsTo = [team: Team]
     static hasMany = [statusEntries: RegistrationStatus]
 
-    def dateTimeUtils
+    def grailsApplication
 
     Integer asaNumber
     String firstName
@@ -86,16 +88,15 @@ class Registration {
     }
 
     String getDateOfBirthAsString() {
+
         if (dateOfBirth == null) return ""
-        return DateTimeUtils.printDate(dateOfBirth)
+        return BwplDateTime.fromJavaDate(dateOfBirth).toDateString()
     }
 
     boolean isUnder18() {
 
         if (dateOfBirth == null) return false
-        DateTime now = new DateTime()
-        DateTime dob = new DateTime(dateOfBirth)
-        return DateTimeUtils.isPeriodLessThan18Years(dob, now)
+        return BwplDateTime.fromJavaDate(dateOfBirth).isDiffLessThan18Years(BwplDateTime.now)
     }
 
     String getName() {
@@ -108,22 +109,29 @@ class Registration {
 
     Status getStatusAsEnum() {
 
-        Status s = Status.fromString(status)
-        if (Status.VALID != s) return s
-        if (!isInASAMemberCheck) return s
-        DateTime validationDate = new DateTime(this.statusDate)
-        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return Status.INVALID
-        return Status.fromString(status)
+        if (doInvalidateStatusDuringValidationCutoff()) return Status.INVALID
+        else return Status.fromString(status)
     }
 
     String getStatusNote() {
 
+        if (doInvalidateStatusDuringValidationCutoff()) return duringValidationCutOffMessage
+        else return statusNote
+    }
+
+    boolean doInvalidateStatusDuringValidationCutoff() {
+
+        BwplDateTime seasonStartDate = BwplDateTime.fromString(grailsApplication.config.bwpl.registration.season.start.date)
+        return doInvalidateStatusDuringValidationCutoff(seasonStartDate, BwplDateTime.now)
+    }
+
+    protected boolean doInvalidateStatusDuringValidationCutoff(BwplDateTime seasonStartDate, BwplDateTime currentDate) {
+
         Status s = Status.fromString(status)
-        if (Status.VALID != s) return statusNote
-        if (!isInASAMemberCheck) return statusNote
-        DateTime validationDate = new DateTime(this.statusDate)
-        if (dateTimeUtils.isDuringValidationCutOff(validationDate)) return DateTimeUtils.duringValidationCutOffMessage
-        return statusNote
+        if (Status.VALID != s) return false
+        if (!isInASAMemberCheck) return false
+        BwplDateTime theDateAdded = BwplDateTime.fromJavaDate(dateAdded)
+        return currentDate.isDuringValidationCutOff(seasonStartDate, theDateAdded)
     }
 
     @Override
@@ -139,7 +147,7 @@ class Registration {
         sb << "\"$asaNumber\","
         sb << "\"$role\","
         sb << "\"${statusAsEnum.toString()}\","
-        sb << "\"$statusNote\""
+        sb << "\"${getStatusNote()}\""
         return sb.toString()
     }
 
@@ -158,6 +166,17 @@ class Registration {
         if (this.statusEntries == null) return null
         List<RegistrationStatus> statusEntries = getStatusEntriesAsList()
         return statusEntries.head()
+    }
+
+    Date getDateAdded() {
+
+        List<RegistrationStatus> statusList = getStatusEntriesAsList()
+        for (RegistrationStatus status : statusList) {
+            if (status.status == Status.NEW.toString()) {
+                return status.date
+            }
+        }
+        return statusDate
     }
 
     void updateStatus(User user, Action action, Status status, String notes) {
@@ -196,7 +215,7 @@ class Registration {
 
     boolean canUpdate() {
 
-        if (dateTimeUtils.isBeforeSeasonStart()) return true
+        if (bwplDateTime.isBeforeSeasonStart()) return true
         if (statusAsEnum == Status.NEW) return true
         return !hasBeenValidated()
     }

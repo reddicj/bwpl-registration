@@ -1,6 +1,11 @@
 package org.bwpl.registration.validation
 
-import org.bwpl.registration.*
+import org.bwpl.registration.Club
+import org.bwpl.registration.Competition
+import org.bwpl.registration.Division
+import org.bwpl.registration.Registration
+import org.bwpl.registration.Team
+import org.bwpl.registration.TestUtils
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
@@ -93,9 +98,9 @@ class CoachRegistrationCheckTest {
 
         CoachRegistrationCheck coachRegistrationCheck = new CoachRegistrationCheck()
         String error = coachRegistrationCheck.getError(r4)
-        assertThat(error).isEqualTo("Registered as a coach for Poly (Poly Men)")
+        assertThat(error).isNotEmpty()
         error = coachRegistrationCheck.getError(r3)
-        assertThat(error).isEqualTo("Registered as a player for Penguin (Penguin Men)")
+        assertThat(error).isNotEmpty()
     }
 
     @Test
@@ -138,6 +143,52 @@ class CoachRegistrationCheckTest {
         }
         t1.addToRegistrations(r2)
         t1.save()
+
+        CoachRegistrationCheck coachRegistrationCheck = new CoachRegistrationCheck()
+        String error = coachRegistrationCheck.getError(r2)
+        assertThat(error).isEmpty()
+        error = coachRegistrationCheck.getError(r1)
+        assertThat(error).isEmpty()
+    }
+
+    @Test
+    void testAddSameCoachTwoTeamsSameClub() {
+
+        Registration r1
+        Registration r2
+
+        Club c1 = new Club(name: "Poly", asaName: "Poly")
+        Team t1 = new Team(name: "Poly 1", isMale: true, division: 1)
+        Team t2 = new Team(name: "Poly 2", isMale: true, division: 2)
+        c1.addToTeams(t1)
+        c1.addToTeams(t2)
+        c1.save()
+
+        r1 = new Registration()
+        r1.with {
+            asaNumber = 123
+            firstName = "James"
+            lastName = "Reddick"
+            role = "Coach"
+            status = Status.INVALID
+            statusNote = ""
+            updateStatus(TestUtils.getUser(), Action.ADDED, Status.NEW, "")
+        }
+        t1.addToRegistrations(r1)
+        t1.save()
+
+        r2 = new Registration()
+        r2.with {
+            asaNumber = 123
+            firstName = "James"
+            lastName = "Reddick"
+            role = "Coach"
+            status = Status.INVALID
+            statusNote = ""
+            updateStatus(TestUtils.getUser(), Action.ADDED, Status.NEW, "")
+        }
+        t2.addToRegistrations(r2)
+        t2.save()
 
         CoachRegistrationCheck coachRegistrationCheck = new CoachRegistrationCheck()
         String error = coachRegistrationCheck.getError(r2)

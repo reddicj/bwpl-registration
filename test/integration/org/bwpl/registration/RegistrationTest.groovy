@@ -1,6 +1,9 @@
 package org.bwpl.registration
 
+import org.bwpl.registration.utils.BwplDateTime
+import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
+import org.joda.time.DateTime
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
@@ -44,5 +47,90 @@ class RegistrationTest {
         t = Team.findByName("Poly1")
         List<Registration> rs = Registration.findAllByTeamAndAsaNumber(t, 123)
         assertThat(rs.size()).isEqualTo(2)
+    }
+
+    @Test
+    void testStatusDuringValidationCutoffIsInvalid() {
+
+        Club c = new Club(name: "Poly", asaName: "Poly")
+        Team t = new Team(name: "Poly1", isMale: true)
+        c.addToTeams(t)
+        c.save()
+        Registration r = getRegistration(Status.VALID, "01-08-2013 23:00")
+        r.addToStatusEntries(getStatus("01-08-2013 14:00", Action.ADDED, Status.NEW))
+        r.addToStatusEntries(getStatus("01-08-2013 23:00", Action.VALIDATED, Status.VALID))
+        t.addToRegistrations(r)
+        t.save()
+
+        r = Registration.findByAsaNumber(123)
+        BwplDateTime currentDate = BwplDateTime.fromString("02-08-2013 23:59", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isTrue()
+    }
+
+    @Test
+    void testStatusDuringValidationCutoffIsValid() {
+
+        Club c = new Club(name: "Poly", asaName: "Poly")
+        Team t = new Team(name: "Poly1", isMale: true)
+        c.addToTeams(t)
+        c.save()
+        Registration r = getRegistration(Status.VALID, "01-08-2013 23:00")
+        r.addToStatusEntries(getStatus("31-07-2013 14:00", Action.ADDED, Status.NEW))
+        r.addToStatusEntries(getStatus("01-08-2013 23:00", Action.VALIDATED, Status.VALID))
+        t.addToRegistrations(r)
+        t.save()
+
+        r = Registration.findByAsaNumber(123)
+        BwplDateTime currentDate = BwplDateTime.fromString("02-08-2013 23:59", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isFalse()
+    }
+
+    @Test
+    void testStatusDuringValidationCutoffIsValidOnSunEve() {
+
+        Club c = new Club(name: "Poly", asaName: "Poly")
+        Team t = new Team(name: "Poly1", isMale: true)
+        c.addToTeams(t)
+        c.save()
+        Registration r = getRegistration(Status.VALID, "01-08-2013 23:00")
+        r.addToStatusEntries(getStatus("01-08-2013 14:00", Action.ADDED, Status.NEW))
+        r.addToStatusEntries(getStatus("01-08-2013 23:00", Action.VALIDATED, Status.VALID))
+        t.addToRegistrations(r)
+        t.save()
+
+        r = Registration.findByAsaNumber(123)
+        BwplDateTime currentDate = BwplDateTime.fromString("04-08-2013 20:30", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isFalse()
+    }
+
+    private static Registration getRegistration(Status status, String statusDateTime) {
+
+        Registration r = new Registration()
+        r.asaNumber = 123
+        r.firstName = "James"
+        r.lastName = "Reddick"
+        r.role = "Player"
+        r.status = status.toString()
+        r.statusNote = ""
+        r.statusDate = BwplDateTime.fromString(statusDateTime, "dd-MM-yyyy HH:mm").toJavaDate()
+        r.isInASAMemberCheck = true
+        return r
+    }
+
+    private static RegistrationStatus getStatus(String dateTime, Action action, Status status) {
+
+        RegistrationStatus s = new RegistrationStatus()
+        s.date = BwplDateTime.fromString(dateTime, "dd-MM-yyyy HH:mm").toJavaDate()
+        s.user = TestUtils.user
+        s.action = action.toString()
+        s.status = status.toString()
+        s.notes = ""
+        return s
+    }
+
+    private static BwplDateTime getSeasonStartDate() {
+
+        DateTime dt = new DateTime()
+        return BwplDateTime.fromJodaDate(dt.minusWeeks(4))
     }
 }

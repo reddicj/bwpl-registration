@@ -3,12 +3,12 @@ package org.bwpl.registration
 import grails.plugins.springsecurity.Secured
 import org.apache.commons.lang.RandomStringUtils
 import org.apache.commons.lang.StringUtils
-import org.bwpl.registration.utils.ClubTeamModelHelper
 import org.bwpl.registration.email.ASAEmail
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.TeamUploader
 import org.bwpl.registration.upload.UploadException
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
+import org.bwpl.registration.utils.ClubTeamModelHelper
 import org.bwpl.registration.utils.SecurityUtils
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
@@ -53,7 +53,7 @@ class ClubController {
 
         Competition competition = Competition.findByUrlName(params.competition)
         Club club = Club.get(params.id)
-        String dateTimeStamp = DateTimeUtils.printFileNameDateTime(new Date())
+        String dateTimeStamp = BwplDateTime.now.toFileNameDateTimeString()
         String fileName = "bwpl-registrations-${club.nameAsMungedString}-${dateTimeStamp}.csv"
         response.setHeader("Content-disposition", "attachment; filename=$fileName")
         response.contentType = "text/csv"

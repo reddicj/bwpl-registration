@@ -228,9 +228,9 @@ class ValidatorTest {
         r4 = Registration.findById(r4.id)
         r3 = Registration.findById(r3.id)
         assertThat(r4.statusAsEnum).isEqualTo(Status.INVALID)
-        assertThat(r4.statusNote).contains("Registered as a coach for Poly (Poly Men)")
+        assertThat(r4.statusNote).contains("Registered as")
         assertThat(r3.statusAsEnum).isEqualTo(Status.INVALID)
-        assertThat(r3.statusNote).contains("Registered as a player for Penguin (Penguin Men)")
+        assertThat(r3.statusNote).contains("Registered as")
     }
 
     @Test

@@ -1,6 +1,6 @@
 package org.bwpl.registration
 
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
 import org.junit.Test
@@ -37,7 +37,7 @@ class RegistrationStatusTest {
         assertThat(r.statusEntries.size()).isEqualTo(1)
         assertThat(r.currentStatus.actionAsEnum).isEqualTo(Action.ADDED)
         assertThat(r.currentStatus.statusAsEnum).isEqualTo(Status.NEW)
-        assertThat(r.currentStatus.dateAsString).startsWith(DateTimeUtils.printDate(new Date()))
+        assertThat(r.currentStatus.dateAsString).startsWith(BwplDateTime.now.toDateString())
         assertThat(r.hasBeenValidated()).isFalse()
 
         r.updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.INVALID, "")
@@ -48,7 +48,7 @@ class RegistrationStatusTest {
         assertThat(r.statusEntries.size()).isEqualTo(2)
         assertThat(r.currentStatus.actionAsEnum).isEqualTo(Action.VALIDATED)
         assertThat(r.currentStatus.statusAsEnum).isEqualTo(Status.INVALID)
-        assertThat(r.currentStatus.dateAsString).startsWith(DateTimeUtils.printDate(new Date()))
+        assertThat(r.currentStatus.dateAsString).startsWith(BwplDateTime.now.toDateString())
         assertThat(r.hasBeenValidated()).isFalse()
 
         r.updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.INVALID, "")
@@ -59,7 +59,7 @@ class RegistrationStatusTest {
         assertThat(r.statusEntries.size()).isEqualTo(2)
         assertThat(r.currentStatus.actionAsEnum).isEqualTo(Action.VALIDATED)
         assertThat(r.currentStatus.statusAsEnum).isEqualTo(Status.INVALID)
-        assertThat(r.currentStatus.dateAsString).startsWith(DateTimeUtils.printDate(new Date()))
+        assertThat(r.currentStatus.dateAsString).startsWith(BwplDateTime.now.toDateString())
         assertThat(r.hasBeenValidated()).isFalse()
 
         r.updateStatus(TestUtils.getUser(), Action.VALIDATED, Status.VALID, "")
@@ -70,7 +70,7 @@ class RegistrationStatusTest {
         assertThat(r.statusEntries.size()).isEqualTo(3)
         assertThat(r.currentStatus.actionAsEnum).isEqualTo(Action.VALIDATED)
         assertThat(r.currentStatus.statusAsEnum).isEqualTo(Status.VALID)
-        assertThat(r.currentStatus.dateAsString).startsWith(DateTimeUtils.printDate(new Date()))
+        assertThat(r.currentStatus.dateAsString).startsWith(BwplDateTime.now.toDateString())
         assertThat(r.hasBeenValidated()).isTrue()
 
         r.updateStatus(TestUtils.getUser(), Action.DELETED, Status.DELETED, "")
@@ -81,7 +81,7 @@ class RegistrationStatusTest {
         assertThat(r.statusEntries.size()).isEqualTo(4)
         assertThat(r.currentStatus.actionAsEnum).isEqualTo(Action.DELETED)
         assertThat(r.currentStatus.statusAsEnum).isEqualTo(Status.DELETED)
-        assertThat(r.currentStatus.dateAsString).startsWith(DateTimeUtils.printDate(new Date()))
+        assertThat(r.currentStatus.dateAsString).startsWith(BwplDateTime.now.toDateString())
         assertThat(r.hasBeenValidated()).isTrue()
     }
 }

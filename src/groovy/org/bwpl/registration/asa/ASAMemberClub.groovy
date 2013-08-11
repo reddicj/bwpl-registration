@@ -1,6 +1,6 @@
 package org.bwpl.registration.asa
 
-import org.bwpl.registration.utils.DateTimeUtils
+import org.bwpl.registration.utils.BwplDateTime
 
 class ASAMemberClub {
 
@@ -11,7 +11,7 @@ class ASAMemberClub {
     ASAMemberClub(String name, String fromDate, String membership) {
 
         this.name = name
-        this.fromDate = DateTimeUtils.parse(fromDate, "dd-MM-yy").toDate()
+        this.fromDate = BwplDateTime.fromString(fromDate, "dd-MM-yy").toJavaDate()
         this.isMember = "Non Member" != membership
     }
 }
