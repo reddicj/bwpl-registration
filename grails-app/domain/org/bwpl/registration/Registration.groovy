@@ -215,7 +215,8 @@ class Registration {
 
     boolean canUpdate() {
 
-        if (bwplDateTime.isBeforeSeasonStart()) return true
+        BwplDateTime seasonStartDate = BwplDateTime.fromString(grailsApplication.config.bwpl.registration.season.start.date)
+        if (BwplDateTime.now.isBefore(seasonStartDate)) return true
         if (statusAsEnum == Status.NEW) return true
         return !hasBeenValidated()
     }
