@@ -52,8 +52,13 @@ class RegistrationTest {
     @Test
     void testStatusDuringValidationCutoffIsInvalid() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
+        division.addToTeams(t)
         c.addToTeams(t)
         c.save()
         Registration r = getRegistration(Status.VALID, "01-08-2013 23:00")
@@ -70,8 +75,13 @@ class RegistrationTest {
     @Test
     void testStatusDuringValidationCutoffIsValid() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
+        division.addToTeams(t)
         c.addToTeams(t)
         c.save()
         Registration r = getRegistration(Status.VALID, "01-08-2013 23:00")
@@ -88,8 +98,13 @@ class RegistrationTest {
     @Test
     void testStatusDuringValidationCutoffIsValidOnSunEve() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
+        division.addToTeams(t)
         c.addToTeams(t)
         c.save()
         Registration r = getRegistration(Status.VALID, "01-08-2013 23:00")
