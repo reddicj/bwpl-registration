@@ -19,7 +19,7 @@ class BwplProperties {
     }
 
     List<String> getEmailListWeekendRegistrationsReport() {
-        return new ArrayList<String>(configuration.getList("email.list.weekend.registrations.report"))
+        return new ArrayList<String>(configuration.getList("email.list.weekly.registrations.report"))
     }
 
     List<String> getEmailListWeeklyValidationReport() {

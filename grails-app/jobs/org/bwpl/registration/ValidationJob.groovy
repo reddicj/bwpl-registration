@@ -27,9 +27,12 @@ class ValidationJob {
             if (StringUtils.isBlank(asaMembershipCheckServiceError)) {
 
                 String errors = validator.validateAll()
-                emailUtils.emailError("Errors with weekly validation", errors)
+                if (StringUtils.isNotBlank(errors)) {
+                    emailUtils.emailError("Errors with weekly validation", errors)
+                }
                 emailUtils.emailInvalidatedRegistrations()
                 emailUtils.emailValidatedRegistrations()
+                emailUtils.emailValidationSummary(errors)
                 break
             }
             if (i > 3) {

@@ -4,13 +4,11 @@ import grails.plugins.springsecurity.Secured
 import org.bwpl.registration.nav.NavItems
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.upload.UserUploader
-import org.bwpl.registration.utils.BwplDateTime
-import org.bwpl.registration.utils.EmailUtils
-import org.bwpl.registration.utils.SecurityUtils
-import org.bwpl.registration.utils.ZipUtils
+import org.bwpl.registration.utils.*
 
 class AdminController {
 
+    BwplProperties bwplProperties
     SecurityUtils securityUtils
     NavItems nav
     EmailUtils emailUtils
@@ -52,5 +50,10 @@ class AdminController {
             close()
         }
         response.flushBuffer()
+    }
+
+    @Secured(["ROLE_REGISTRATION_SECRETARY"])
+    def config = {
+        render(bwplProperties.toHtmlString())
     }
 }
