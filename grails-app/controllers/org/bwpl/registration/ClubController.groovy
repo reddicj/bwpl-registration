@@ -45,7 +45,7 @@ class ClubController {
             return clubModelHelper.model
         }
         else {
-            redirect([controller: "team", action: "show", id: clubModelHelper.teams[0].id, params: [competition: params.competition]])
+            redirect([controller: "team", action: "show", id: clubModelHelper.teams[0].id])
         }
     }
 
