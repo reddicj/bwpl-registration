@@ -23,12 +23,11 @@ class SecurityUtils {
 
     boolean canUserUpdate(Club club) {
 
+        if (club == null) throw new IllegalArgumentException("The club is null")
         User currentUser = (User) springSecurityService.currentUser
-        if (currentUser == null) return false
+        if (currentUser == null) throw new IllegalStateException("Current user on session is null")
         if (currentUser.hasRole("ROLE_REGISTRATION_SECRETARY")) return true
-
-        if (club == null) return false
-        return currentUser in club.secretaries
+        return club.hasSecretary(currentUser.username)
     }
 
     Club getCurrentUserClub() {
