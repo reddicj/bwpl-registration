@@ -9,8 +9,8 @@
                 <td>Lastname:</td><td><g:textField name="lastName" required="true"  value="${r?.lastName}"/></td>
             </g:if>
             <g:else>
-                <td>Firstname:</td><td><input type="text" disabled="true" name="firstName" value="${r?.firstName}"></td>
-                <td>Lastname:</td><td><input type="text" disabled="true" name="firstName" value="${r?.lastName}"></td>
+                <td>Firstname:</td><td><input type="text" name="firstName" value="${r?.firstName}" readonly/></td>
+                <td>Lastname:</td><td><input type="text" name="lastName" value="${r?.lastName}" readonly/></td>
             </g:else>
         </tr>
         <tr>
@@ -19,8 +19,8 @@
                 <td>ASA Number:</td><td><g:textField name="asaNumber" required="true" value="${r?.asaNumber}"/></td>
             </g:if>
             <g:else>
-                <td>Role:</td><td><input type="text" disabled="true" name="role" value="${r?.role}"/></td>
-                <td>ASA Number:</td><td><input type="text" disabled="true" name="asaNumber" value="${r?.asaNumber}"/></td>
+                <td>Role:</td><td><input type="text" name="role" value="${r?.role}" readonly/></td>
+                <td>ASA Number:</td><td><input type="text" name="asaNumber" value="${r?.asaNumber}" readonly/></td>
             </g:else>
         </tr>
         </tbody>
