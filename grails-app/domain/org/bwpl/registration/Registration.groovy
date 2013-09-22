@@ -182,7 +182,7 @@ class Registration {
     void updateStatus(User user, Action action, Status status, String notes) {
 
         RegistrationStatus currentEntry = currentStatus
-        boolean doAddNewStatus = doAddNewStatus(currentStatus, status)
+        boolean doAddNewStatus = doAddNewStatus(status, currentStatus)
         if (doAddNewStatus) {
 
             Date dateStamp = new Date()
@@ -232,9 +232,10 @@ class Registration {
         return (statusAsEnum == Status.VALID) && (!isInASAMemberCheck)
     }
 
-    private static boolean doAddNewStatus(RegistrationStatus currentStatus, Status newStatus) {
+    private boolean doAddNewStatus(Status newStatus, RegistrationStatus currentStatus) {
 
         if (currentStatus == null) return true
-        return currentStatus.statusAsEnum != newStatus
+        if (StringUtils.isEmpty(status)) return true
+        return Status.fromString(status) != newStatus
     }
 }

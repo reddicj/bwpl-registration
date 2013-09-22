@@ -36,7 +36,7 @@ class ValidatorTest {
         validator.validate(r1)
 
         r1 = Registration.findById(r1.id)
-        assertThat(r1.statusAsEnum).isEqualTo(Status.VALID)
+        assertThat(r1.status).isEqualTo(Status.VALID.toString())
         assertThat(r1.isInASAMemberCheck).isTrue()
     }
 
@@ -236,8 +236,7 @@ class ValidatorTest {
         validator.validate(r1)
 
         r1 = Registration.findById(r1.id)
-        assertThat(r1.statusAsEnum).isEqualTo(Status.VALID)
-        assertThat(r1.statusNote).isEqualTo("Automatically validated.")
+        assertThat(r1.status).isEqualTo(Status.VALID.toString())
         assertThat(r1.isInASAMemberCheck).isTrue()
     }
 
@@ -276,8 +275,8 @@ class ValidatorTest {
         validator.validateAll()
 
         r1 = Registration.findById(r1.id)
-        assertThat(r1.statusAsEnum).isEqualTo(Status.VALID)
+        assertThat(r1.status).isEqualTo(Status.VALID.toString())
         r2 = Registration.findById(r2.id)
-        assertThat(r2.statusAsEnum).isEqualTo(Status.VALID)
+        assertThat(r2.status).isEqualTo(Status.VALID.toString())
     }
 }

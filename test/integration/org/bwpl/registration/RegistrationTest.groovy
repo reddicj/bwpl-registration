@@ -3,7 +3,6 @@ package org.bwpl.registration
 import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
-import org.joda.time.DateTime
 import org.junit.Test
 
 import static org.fest.assertions.Assertions.assertThat
@@ -125,8 +124,6 @@ class RegistrationTest {
     }
 
     private static BwplDateTime getSeasonStartDate() {
-
-        DateTime dt = new DateTime()
-        return BwplDateTime.fromJodaDate(dt.minusWeeks(4))
+        return BwplDateTime.fromString("01-06-2013")
     }
 }
