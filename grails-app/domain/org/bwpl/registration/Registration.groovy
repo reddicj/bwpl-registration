@@ -1,7 +1,6 @@
 package org.bwpl.registration
 
 import org.apache.commons.lang.StringUtils
-import org.apache.commons.lang.WordUtils
 import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
@@ -59,32 +58,6 @@ class Registration {
             }
         }
         return sb.toString().trim()
-    }
-
-    static List<Registration> search(String firstName, String lastName) {
-
-        List<Registration> results = null
-        if (!StringUtils.isAlpha(firstName)) return []
-        if (!StringUtils.isAlpha(lastName)) return []
-        if (StringUtils.isNotBlank(firstName)) {
-            firstName = WordUtils.capitalize(firstName.trim())
-            if (StringUtils.isNotBlank(lastName)) {
-                lastName = WordUtils.capitalize(lastName.trim())
-                results = findAllByFirstNameAndLastName(firstName, lastName)
-            }
-            else {
-                results = findAllByFirstName(firstName)
-            }
-        }
-        else if (StringUtils.isNotBlank(lastName)) {
-            lastName = WordUtils.capitalize(lastName.trim())
-            results = findAllByLastName(lastName)
-        }
-        else {
-            results = []
-        }
-        results.sort{it.name}
-        return results
     }
 
     String getDateOfBirthAsString() {
@@ -201,6 +174,7 @@ class Registration {
         }
         else {
 
+            // We update the status entry date to record when a registration was last validated.
             Date dateStamp = new Date()
             currentEntry.date = dateStamp
             currentEntry.user = user
@@ -209,7 +183,8 @@ class Registration {
 
             this.prevStatus = this.status
             this.statusNote = notes
-            this.statusDate = dateStamp
+            // Note this.statusDate is only updated if a new status entry is added.
+            // This allows us to query for registrations that have had recent status changes.
         }
     }
 
