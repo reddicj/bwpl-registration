@@ -30,14 +30,18 @@ class RegistrationStatus {
 
     Status getStatusAsEnum() {
 
+        Status s = Status.fromString(status)
+        if (s != Status.VALID) return s
         if (registration.doInvalidateStatusDuringValidationCutoff()) return Status.INVALID
-        else return Status.fromString(status)
+        return s
     }
 
     String getStatusNotes() {
 
+        Status s = Status.fromString(status)
+        if (s != Status.VALID) return notes
         if (registration.doInvalidateStatusDuringValidationCutoff()) return Registration.duringValidationCutOffMessage
-        else return notes
+        return notes
     }
 
     Action getActionAsEnum() {
