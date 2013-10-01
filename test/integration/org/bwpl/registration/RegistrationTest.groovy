@@ -45,7 +45,7 @@ class RegistrationTest {
     }
 
     @Test
-    void testStatusDuringValidationCutoffIsInvalid() {
+    void testStatusIsInvalidForRegistrationAddedAfterWedDeadline() {
 
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
@@ -59,43 +59,92 @@ class RegistrationTest {
 
         r = Registration.findByAsaNumber(123)
         BwplDateTime currentDate = BwplDateTime.fromString("02-08-2013 23:59", "dd-MM-yyyy HH:mm")
-        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isTrue()
+        assertThat(r.doInvalidateAddedAfterWedDeadline(seasonStartDate, currentDate)).isTrue()
+        assertThat(r.doInvalidateValidatedAfterFriDeadline(seasonStartDate, currentDate)).isFalse()
     }
 
     @Test
-    void testStatusDuringValidationCutoffIsValid() {
+    void testStatusIsInvalidForRegistrationValidatedAfterFriDeadline() {
 
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
         c.addToTeams(t)
         c.save()
-        Registration r = getRegistration(Status.VALID, "01-08-2013 23:00")
+
+        String dateTimeValidated = "03-08-2013 10:00"
+        Registration r = getRegistration(Status.VALID, dateTimeValidated)
         r.addToStatusEntries(getStatus("31-07-2013 14:00", Action.ADDED, Status.NEW))
-        r.addToStatusEntries(getStatus("01-08-2013 23:00", Action.VALIDATED, Status.VALID))
+        r.addToStatusEntries(getStatus(dateTimeValidated, Action.VALIDATED, Status.VALID))
         t.addToRegistrations(r)
         t.save()
 
         r = Registration.findByAsaNumber(123)
-        BwplDateTime currentDate = BwplDateTime.fromString("02-08-2013 23:59", "dd-MM-yyyy HH:mm")
-        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isFalse()
+        BwplDateTime currentDate = BwplDateTime.fromString("03-08-2013 12:00", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateAddedAfterWedDeadline(seasonStartDate, currentDate)).isFalse()
+        assertThat(r.doInvalidateValidatedAfterFriDeadline(seasonStartDate, currentDate)).isTrue()
     }
 
     @Test
-    void testStatusDuringValidationCutoffIsValidOnSunEve() {
+    void testStatusIsValidForRegistrationAddedAndValidatedBeforeDeadlines() {
 
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
         c.addToTeams(t)
         c.save()
-        Registration r = getRegistration(Status.VALID, "01-08-2013 23:00")
+
+        String dateTimeValidated = "01-08-2013 23:00"
+        Registration r = getRegistration(Status.VALID, dateTimeValidated)
+        r.addToStatusEntries(getStatus("31-07-2013 14:00", Action.ADDED, Status.NEW))
+        r.addToStatusEntries(getStatus(dateTimeValidated, Action.VALIDATED, Status.VALID))
+        t.addToRegistrations(r)
+        t.save()
+
+        r = Registration.findByAsaNumber(123)
+        BwplDateTime currentDate = BwplDateTime.fromString("02-08-2013 23:59", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateAddedAfterWedDeadline(seasonStartDate, currentDate)).isFalse()
+        assertThat(r.doInvalidateValidatedAfterFriDeadline(seasonStartDate, currentDate)).isFalse()
+    }
+
+    @Test
+    void testStatusIsValidForRegistrationAddedAfterWedDeadlineOnSunEve() {
+
+        Club c = new Club(name: "Poly", asaName: "Poly")
+        Team t = new Team(name: "Poly1", isMale: true)
+        c.addToTeams(t)
+        c.save()
+
+        String dateTimeValidated = "01-08-2013 23:00"
+        Registration r = getRegistration(Status.VALID, dateTimeValidated)
         r.addToStatusEntries(getStatus("01-08-2013 14:00", Action.ADDED, Status.NEW))
-        r.addToStatusEntries(getStatus("01-08-2013 23:00", Action.VALIDATED, Status.VALID))
+        r.addToStatusEntries(getStatus(dateTimeValidated, Action.VALIDATED, Status.VALID))
         t.addToRegistrations(r)
         t.save()
 
         r = Registration.findByAsaNumber(123)
         BwplDateTime currentDate = BwplDateTime.fromString("04-08-2013 20:30", "dd-MM-yyyy HH:mm")
-        assertThat(r.doInvalidateStatusDuringValidationCutoff(seasonStartDate, currentDate)).isFalse()
+        assertThat(r.doInvalidateAddedAfterWedDeadline(seasonStartDate, currentDate)).isFalse()
+        assertThat(r.doInvalidateValidatedAfterFriDeadline(seasonStartDate, currentDate)).isFalse()
+    }
+
+    @Test
+    void testStatusIsValidForRegistrationValidatedAfterFriDeadlineOnSunEve() {
+
+        Club c = new Club(name: "Poly", asaName: "Poly")
+        Team t = new Team(name: "Poly1", isMale: true)
+        c.addToTeams(t)
+        c.save()
+
+        String dateTimeValidated = "03-08-2013 10:00"
+        Registration r = getRegistration(Status.VALID, dateTimeValidated)
+        r.addToStatusEntries(getStatus("31-07-2013 14:00", Action.ADDED, Status.NEW))
+        r.addToStatusEntries(getStatus(dateTimeValidated, Action.VALIDATED, Status.VALID))
+        t.addToRegistrations(r)
+        t.save()
+
+        r = Registration.findByAsaNumber(123)
+        BwplDateTime currentDate = BwplDateTime.fromString("04-08-2013 20:30", "dd-MM-yyyy HH:mm")
+        assertThat(r.doInvalidateAddedAfterWedDeadline(seasonStartDate, currentDate)).isFalse()
+        assertThat(r.doInvalidateValidatedAfterFriDeadline(seasonStartDate, currentDate)).isFalse()
     }
 
     private static Registration getRegistration(Status status, String statusDateTime) {

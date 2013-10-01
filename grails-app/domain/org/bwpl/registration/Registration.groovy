@@ -7,8 +7,11 @@ import org.bwpl.registration.validation.Status
 
 class Registration {
 
-    static final String duringValidationCutOffMessage =
+    static final String afterWedMidnightMessage =
         "Invalid until Sunday 8pm. The Registration was added after the Wednesday midnight deadline."
+
+    static final String afterFriMidnightMessage =
+        "Invalid until Sunday 8pm. The Registration was validated after the Friday midnight deadline."
 
     static final String csvFieldNames =
         "\"Firstname\",\"Lastname\",\"ASA number\",\"Role\",\"Status\",\"Notes\""
@@ -82,29 +85,46 @@ class Registration {
 
     Status getStatusAsEnum() {
 
-        if (doInvalidateStatusDuringValidationCutoff()) return Status.INVALID
+        if (doInvalidateAddedAfterWedDeadline()) return Status.INVALID
+        if (doInvalidateValidatedAfterFriDeadline()) return Status.INVALID
         else return Status.fromString(status)
     }
 
     String getStatusNote() {
 
-        if (doInvalidateStatusDuringValidationCutoff()) return duringValidationCutOffMessage
+        if (doInvalidateAddedAfterWedDeadline()) return afterWedMidnightMessage
+        if (doInvalidateValidatedAfterFriDeadline()) return afterFriMidnightMessage
         else return statusNote
     }
 
-    boolean doInvalidateStatusDuringValidationCutoff() {
+    boolean doInvalidateAddedAfterWedDeadline() {
 
         BwplDateTime seasonStartDate = BwplDateTime.fromString(grailsApplication.config.bwpl.registration.season.start.date)
-        return doInvalidateStatusDuringValidationCutoff(seasonStartDate, BwplDateTime.now)
+        return doInvalidateAddedAfterWedDeadline(seasonStartDate, BwplDateTime.now)
     }
 
-    protected boolean doInvalidateStatusDuringValidationCutoff(BwplDateTime seasonStartDate, BwplDateTime currentDate) {
+    boolean doInvalidateValidatedAfterFriDeadline() {
+
+        BwplDateTime seasonStartDate = BwplDateTime.fromString(grailsApplication.config.bwpl.registration.season.start.date)
+        return doInvalidateValidatedAfterFriDeadline(seasonStartDate, BwplDateTime.now)
+    }
+
+    protected boolean doInvalidateAddedAfterWedDeadline(BwplDateTime seasonStartDate, BwplDateTime currentDate) {
 
         Status s = Status.fromString(status)
         if (Status.VALID != s) return false
         if (!isInASAMemberCheck) return false
         BwplDateTime theDateAdded = BwplDateTime.fromJavaDate(dateAdded)
-        return currentDate.isDuringValidationCutOff(seasonStartDate, theDateAdded)
+        return currentDate.isAddedAfterWedDeadline(seasonStartDate, theDateAdded)
+    }
+
+    protected boolean doInvalidateValidatedAfterFriDeadline(BwplDateTime seasonStartDate, BwplDateTime currentDate) {
+
+        Status s = Status.fromString(status)
+        if (Status.VALID != s) return false
+        if (!isInASAMemberCheck) return false
+        BwplDateTime theDateValidated = BwplDateTime.fromJavaDate(statusDate)
+        return currentDate.isValidatedAfterFriDeadline(seasonStartDate, theDateValidated)
     }
 
     @Override

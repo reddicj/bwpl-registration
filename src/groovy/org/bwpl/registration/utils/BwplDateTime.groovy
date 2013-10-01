@@ -7,8 +7,7 @@ import org.joda.time.Period
 import org.joda.time.format.DateTimeFormat
 import org.joda.time.format.DateTimeFormatter
 
-import static org.joda.time.DateTimeConstants.SUNDAY
-import static org.joda.time.DateTimeConstants.WEDNESDAY
+import static org.joda.time.DateTimeConstants.*
 
 class BwplDateTime {
 
@@ -59,6 +58,12 @@ class BwplDateTime {
         return fromJodaDate(wed)
     }
 
+    BwplDateTime getFriMidnight() {
+
+        DateTime fri = currentDateTime.withDayOfWeek(FRIDAY).withHourOfDay(23).withMinuteOfHour(59).withSecondOfMinute(59)
+        return fromJodaDate(fri)
+    }
+
     boolean isDiffLessThan18Years(BwplDateTime endDate) {
 
         Period p = new Period(currentDateTime, endDate.toJodaDateTime())
@@ -82,8 +87,12 @@ class BwplDateTime {
         return (currentDateTime.dayOfWeek == SUNDAY) && (currentDateTime.hourOfDay >= 20)
     }
 
-    boolean isDuringValidationCutOff(BwplDateTime seasonStartDate, BwplDateTime dateTime) {
+    boolean isAddedAfterWedDeadline(BwplDateTime seasonStartDate, BwplDateTime dateTime) {
         return dateTime.isAfter(seasonStartDate) && dateTime.isAfter(wedMidnight) && (!isSunEve())
+    }
+
+    boolean isValidatedAfterFriDeadline(BwplDateTime seasonStartDate, BwplDateTime dateTime) {
+        return dateTime.isAfter(seasonStartDate) && dateTime.isAfter(friMidnight) && (!isSunEve())
     }
 
     String toDateString() {
