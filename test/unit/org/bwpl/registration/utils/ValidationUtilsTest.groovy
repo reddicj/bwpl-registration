@@ -44,4 +44,32 @@ class ValidationUtilsTest {
         assertThat(ValidationUtils.isValidAsaDateOfBirth("5th April 1972")).isTrue()
         assertThat(ValidationUtils.isValidAsaDateOfBirth("5 April 72")).isFalse()
     }
+
+    @Test
+    void testCheckNumberIsInRange() {
+
+        List<String> errors = []
+        ValidationUtils.checkNumberIsInRange("ASA number", "1", errors, 1, 10)
+        assertThat(errors).isEmpty()
+        ValidationUtils.checkNumberIsInRange("ASA number", "10", errors, 1, 10)
+        assertThat(errors).isEmpty()
+
+        errors = []
+        ValidationUtils.checkNumberIsInRange("ASA number", "11", errors, 1, 10)
+        assertThat(errors).isNotEmpty()
+
+        errors = []
+        ValidationUtils.checkNumberIsInRange("ASA number", "0", errors, 1, 10)
+        assertThat(errors).isNotEmpty()
+    }
+
+    @Test
+    void testCheckNumberIsInRangeForMaxASANumber() {
+
+        List<String> errors = []
+        ValidationUtils.checkNumberIsInRange("ASA number", "99999999", errors, 1, 99999999)
+        assertThat(errors).isEmpty()
+        ValidationUtils.checkNumberIsInRange("ASA number", "9999999999", errors, 1, 99999999)
+        assertThat(errors).isNotEmpty()
+    }
 }

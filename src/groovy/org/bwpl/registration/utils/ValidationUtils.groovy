@@ -45,7 +45,22 @@ class ValidationUtils {
     static void checkValueIsNumeric(String name, String value, List<String> errors) {
 
         if (!StringUtils.isNumeric(value)) {
-            errors << "$name is not a number: $value"
+            errors << "$name is not a valid number: $value"
+        }
+    }
+
+    static void checkNumberIsInRange(String name, String value, List<String> errors, int lowerBound, int upperBound) {
+
+        if (!StringUtils.isNumeric(value)) return
+        final String errorMessage = "$name must be a number between $lowerBound to $upperBound"
+        try {
+            int valueAsInt = Integer.parseInt(value)
+            if ((valueAsInt < lowerBound) || (valueAsInt > upperBound)) {
+                errors << errorMessage
+            }
+        }
+        catch (NumberFormatException e) {
+            errors << errorMessage
         }
     }
 
