@@ -1,8 +1,6 @@
 package org.bwpl.registration.query
 
-import org.bwpl.registration.Club
-import org.bwpl.registration.Registration
-import org.bwpl.registration.Team
+import org.bwpl.registration.*
 import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Status
 import org.junit.Test
@@ -25,8 +23,13 @@ class RegistrationSearchTest {
 
     private static void addData() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
+        division.addToTeams(t)
         c.addToTeams(t)
         c.save()
 

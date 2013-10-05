@@ -101,8 +101,13 @@ class RegistrationTest {
     @Test
     void testStatusIsValidForRegistrationAddedAndValidatedBeforeDeadlines() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
+        division.addToTeams(t)
         c.addToTeams(t)
         c.save()
 
@@ -148,8 +153,13 @@ class RegistrationTest {
     @Test
     void testStatusIsValidForRegistrationValidatedAfterFriDeadlineOnSunEve() {
 
+        Competition competition = new Competition(name: "BWPL", urlName: "bwpl")
+        Division division = new Division(rank: 1, name: "Mens Div 1", isMale: true)
+        competition.addToDivisions(division).save()
+
         Club c = new Club(name: "Poly", asaName: "Poly")
         Team t = new Team(name: "Poly1", isMale: true)
+        division.addToTeams(t)
         c.addToTeams(t)
         c.save()
 
