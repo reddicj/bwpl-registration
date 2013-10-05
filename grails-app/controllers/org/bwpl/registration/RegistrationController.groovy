@@ -7,6 +7,8 @@ import org.bwpl.registration.asa.ASAMemberDataRetrievalException
 import org.bwpl.registration.asa.ASAMemberDataValidationException
 import org.bwpl.registration.data.RegistrationData
 import org.bwpl.registration.nav.NavItems
+import org.bwpl.registration.query.RegistrationSearch
+import org.bwpl.registration.query.SearchParameters
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.upload.UploadException
 import org.bwpl.registration.utils.BwplDateTime
@@ -19,6 +21,7 @@ class RegistrationController {
     NavItems nav
     RegistrationUploader registrationUploader
     Validator validator
+    RegistrationSearch registrationSearch
 
     @Secured(["ROLE_CLUB_SECRETARY"])
     def edit = {
@@ -162,11 +165,16 @@ class RegistrationController {
     @Secured(["ROLE_READ_ONLY"])
     def search = {
 
-        List<Registration> results = Registration.search(params["firstName"], params["lastName"])
+        SearchParameters searchParameters = new SearchParameters()
+        searchParameters.firstName = params["firstName"]
+        searchParameters.lastName = params["lastName"]
+        searchParameters.statusChangedDate = params["statusChangedDate"]
+        List<Registration> results = registrationSearch.search(searchParameters)
         [user: securityUtils.currentUser,
          navItems: nav.getNavItems(),
          firstName: StringUtils.trimToEmpty(params["firstName"]),
          lastName: StringUtils.trimToEmpty(params["lastName"]),
+         statusChangedDate: searchParameters.statusChangedDate.toJavaDate(),
          registrations: results,
          stats: new RegistrationStats(results)]
     }

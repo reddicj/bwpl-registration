@@ -32,7 +32,8 @@ class RegistrationStatus {
 
         Status s = Status.fromString(status)
         if (s != Status.VALID) return s
-        if (registration.doInvalidateStatusDuringValidationCutoff()) return Status.INVALID
+        if (registration.doInvalidateAddedAfterWedDeadline()) return Status.INVALID
+        if (registration.doInvalidateValidatedAfterFriDeadline()) return Status.INVALID
         return s
     }
 
@@ -40,7 +41,8 @@ class RegistrationStatus {
 
         Status s = Status.fromString(status)
         if (s != Status.VALID) return notes
-        if (registration.doInvalidateStatusDuringValidationCutoff()) return Registration.duringValidationCutOffMessage
+        if (registration.doInvalidateAddedAfterWedDeadline()) return Registration.afterWedMidnightMessage
+        if (registration.doInvalidateValidatedAfterFriDeadline()) return Registration.afterFriMidnightMessage
         return notes
     }
 

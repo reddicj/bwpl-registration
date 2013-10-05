@@ -1,5 +1,6 @@
 import org.bwpl.registration.utils.ClubTeamModelHelper
 import org.bwpl.registration.nav.NavItems
+import org.bwpl.registration.query.RegistrationSearch
 import org.bwpl.registration.upload.RegistrationUploader
 import org.bwpl.registration.utils.BwplProperties
 import org.bwpl.registration.utils.EmailUtils
@@ -32,5 +33,8 @@ beans = {
 
         bwplProperties = ref("bwplProperties")
         mailService = ref("mailService")
+    }
+
+    registrationSearch(RegistrationSearch) {
     }
 }

@@ -1,15 +1,17 @@
 package org.bwpl.registration
 
 import org.apache.commons.lang.StringUtils
-import org.apache.commons.lang.WordUtils
 import org.bwpl.registration.utils.BwplDateTime
 import org.bwpl.registration.validation.Action
 import org.bwpl.registration.validation.Status
 
 class Registration {
 
-    static final String duringValidationCutOffMessage =
+    static final String afterWedMidnightMessage =
         "Invalid until Sunday 8pm. The Registration was added after the Wednesday midnight deadline."
+
+    static final String afterFriMidnightMessage =
+        "Invalid until Sunday 8pm. The Registration was validated after the Friday midnight deadline."
 
     static final String csvFieldNames =
         "\"Firstname\",\"Lastname\",\"ASA number\",\"Role\",\"Status\",\"Notes\""
@@ -61,32 +63,6 @@ class Registration {
         return sb.toString().trim()
     }
 
-    static List<Registration> search(String firstName, String lastName) {
-
-        List<Registration> results = null
-        if (!StringUtils.isAlpha(firstName)) return []
-        if (!StringUtils.isAlpha(lastName)) return []
-        if (StringUtils.isNotBlank(firstName)) {
-            firstName = WordUtils.capitalize(firstName.trim())
-            if (StringUtils.isNotBlank(lastName)) {
-                lastName = WordUtils.capitalize(lastName.trim())
-                results = findAllByFirstNameAndLastName(firstName, lastName)
-            }
-            else {
-                results = findAllByFirstName(firstName)
-            }
-        }
-        else if (StringUtils.isNotBlank(lastName)) {
-            lastName = WordUtils.capitalize(lastName.trim())
-            results = findAllByLastName(lastName)
-        }
-        else {
-            results = []
-        }
-        results.sort{it.name}
-        return results
-    }
-
     String getDateOfBirthAsString() {
 
         if (dateOfBirth == null) return ""
@@ -109,29 +85,46 @@ class Registration {
 
     Status getStatusAsEnum() {
 
-        if (doInvalidateStatusDuringValidationCutoff()) return Status.INVALID
+        if (doInvalidateAddedAfterWedDeadline()) return Status.INVALID
+        if (doInvalidateValidatedAfterFriDeadline()) return Status.INVALID
         else return Status.fromString(status)
     }
 
     String getStatusNote() {
 
-        if (doInvalidateStatusDuringValidationCutoff()) return duringValidationCutOffMessage
+        if (doInvalidateAddedAfterWedDeadline()) return afterWedMidnightMessage
+        if (doInvalidateValidatedAfterFriDeadline()) return afterFriMidnightMessage
         else return statusNote
     }
 
-    boolean doInvalidateStatusDuringValidationCutoff() {
+    boolean doInvalidateAddedAfterWedDeadline() {
 
         BwplDateTime seasonStartDate = BwplDateTime.fromString(grailsApplication.config.bwpl.registration.season.start.date)
-        return doInvalidateStatusDuringValidationCutoff(seasonStartDate, BwplDateTime.now)
+        return doInvalidateAddedAfterWedDeadline(seasonStartDate, BwplDateTime.now)
     }
 
-    protected boolean doInvalidateStatusDuringValidationCutoff(BwplDateTime seasonStartDate, BwplDateTime currentDate) {
+    boolean doInvalidateValidatedAfterFriDeadline() {
+
+        BwplDateTime seasonStartDate = BwplDateTime.fromString(grailsApplication.config.bwpl.registration.season.start.date)
+        return doInvalidateValidatedAfterFriDeadline(seasonStartDate, BwplDateTime.now)
+    }
+
+    protected boolean doInvalidateAddedAfterWedDeadline(BwplDateTime seasonStartDate, BwplDateTime currentDate) {
 
         Status s = Status.fromString(status)
         if (Status.VALID != s) return false
         if (!isInASAMemberCheck) return false
         BwplDateTime theDateAdded = BwplDateTime.fromJavaDate(dateAdded)
-        return currentDate.isDuringValidationCutOff(seasonStartDate, theDateAdded)
+        return currentDate.isAddedAfterWedDeadline(seasonStartDate, theDateAdded)
+    }
+
+    protected boolean doInvalidateValidatedAfterFriDeadline(BwplDateTime seasonStartDate, BwplDateTime currentDate) {
+
+        Status s = Status.fromString(status)
+        if (Status.VALID != s) return false
+        if (!isInASAMemberCheck) return false
+        BwplDateTime theDateValidated = BwplDateTime.fromJavaDate(statusDate)
+        return currentDate.isValidatedAfterFriDeadline(seasonStartDate, theDateValidated)
     }
 
     @Override
@@ -201,6 +194,7 @@ class Registration {
         }
         else {
 
+            // We update the status entry date to record when a registration was last validated.
             Date dateStamp = new Date()
             currentEntry.date = dateStamp
             currentEntry.user = user
@@ -209,7 +203,8 @@ class Registration {
 
             this.prevStatus = this.status
             this.statusNote = notes
-            this.statusDate = dateStamp
+            // Note this.statusDate is only updated if a new status entry is added.
+            // This allows us to query for registrations that have had recent status changes.
         }
     }
 

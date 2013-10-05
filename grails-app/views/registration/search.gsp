@@ -4,19 +4,21 @@
 <head>
     <meta name="layout" content="main">
 </head>
+
 <body>
 <div>
-    <g:form method="get" action="search">
-        <table class="bwpl-form-table">
+    <table class="bwpl-form-table">
         <tbody>
         <tr>
-            <td>Firstname:<br/><g:textField name="firstName" value="${firstName}"/></td>
-            <td>Lastname:<br/><g:textField name="lastName" value="${lastName}"/></td>
-            <td><br/><g:submitButton name="search" value="Search" class="buttons"/></td>
+            <g:form method="get" action="search">
+                <td>Firstname:<br/><g:textField name="firstName" value="${firstName}"/></td>
+                <td>Lastname:<br/><g:textField name="lastName" value="${lastName}"/></td>
+                <td>Status changed since:<br/><g:datePicker precision="day" name="statusChangedDate" value="${statusChangedDate}"/></td>
+                <td><br/><g:submitButton name="searchByName" value="Search" class="buttons"/></td>
+            </g:form>
         </tr>
         </tbody>
-        </table>
-    </g:form>
+    </table>
 </div>
 <hr/>
 <g:if test="${registrations.isEmpty()}">
@@ -26,6 +28,7 @@
 </g:if>
 <g:else>
     <div>${stats.count} Registrations (${stats.countOfValid} valid, ${stats.countOfInvalid} invalid)</div>
+
     <div>&nbsp;</div>
     <g:render template="list" model="[registrations: registrations]"/>
 </g:else>

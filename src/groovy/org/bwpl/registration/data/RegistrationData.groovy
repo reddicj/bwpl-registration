@@ -98,6 +98,7 @@ class RegistrationData {
 
         checkForNullOrEmptyValue("ASA Number", asaNumberAsString, errors)
         checkValueIsNumeric("ASA number", asaNumberAsString, errors)
+        checkNumberIsInRange("ASA number", asaNumberAsString, errors, 1, 99999999)
 
         return errors.join(", ")
     }
