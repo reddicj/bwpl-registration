@@ -18,7 +18,7 @@ class ASAMemberData {
     static ASAMemberData fromHtml(int asaNumber, GPathResult html) {
 
         ASAMemberData asaMemberData = new ASAMemberData(asaNumber)
-        GPathResult element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
+        GPathResult element = html.BODY.depthFirst().find {it.text().trim() == "Fee Paying Club"}
         GPathResult divElement = element.parent().parent().parent()
         GPathResult tableElement = divElement.TABLE[0]
         asaMemberData.setName(tableElement.TR[0].TD[1].text())

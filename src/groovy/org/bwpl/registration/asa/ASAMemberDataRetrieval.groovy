@@ -83,7 +83,7 @@ class ASAMemberDataRetrieval {
 
     private static void checkASANumberCanBeFound(GPathResult html, int asaNumber) {
 
-        GPathResult element = html.BODY.depthFirst().find {it.text() == "Fee Paying Club"}
+        GPathResult element = html.BODY.depthFirst().find {it.text().trim() == "Fee Paying Club"}
         if (element == null) {
             throw new ASAMemberDataNotFoundException("Error getting data for ASA number: $asaNumber. Error reading html data.")
         }
