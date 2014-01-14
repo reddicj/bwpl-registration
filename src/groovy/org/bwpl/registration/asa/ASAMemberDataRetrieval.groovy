@@ -31,7 +31,7 @@ class ASAMemberDataRetrieval {
         final HTTPBuilder http = new HTTPBuilder(url)
         try {
 
-            final GPathResult html = http.get(query: ["$ASA_NUMBER_PARAMETER_NAME": Integer.toString(asaNumber)])
+            final GPathResult html = http.get(query: ["$ASA_NUMBER_PARAMETER_NAME": Integer.toString(asaNumber)], headers: ['User-Agent': 'Apache HTTPClient    '])
             checkForServiceErrors(html)
             checkASANumberCanBeFound(html, asaNumber)
             return ASAMemberData.fromHtml(asaNumber, html)
